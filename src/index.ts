@@ -1,9 +1,17 @@
-import {App, AppState, BasicMonster, Button, Colors, ConfusedMonster, Entity, EntityContainerDialog, Game, MessageLog, Panel, ProjectileEffect, Rect, RNG, SelectDialog, Sprite, TileMap, Vec2} from 'wglt';
+import {Actor, App, AppState, Button, Colors, Entity, Game, Item, ItemContainerDialog, MessageLog, Rect, RNG, SelectDialog, Sprite, TileMap} from 'wglt';
 import {SelectOption} from 'wglt/dist/gui/selectoption';
+import {XArray} from 'wglt/dist/xarray';
 
+import {ConfuseAbility} from './abilities/confuse';
+import {FireballAbility} from './abilities/fireball';
+import {LightningAbility} from './abilities/lightning';
 import {Player} from './entities/player';
+import {Spider} from './entities/spider';
+import {Troll} from './entities/troll';
 import {BottomPanel} from './gui/bottompanel';
 import {TopPanel} from './gui/toppanel';
+import {HealthPotion} from './items/healthpotion';
+import {Scroll} from './items/scroll';
 
 // Size of the map
 const MAP_WIDTH = 60;
@@ -19,36 +27,11 @@ const ROOM_MIN_SIZE = 6;
 const MAX_ROOMS = 30;
 const MAX_ROOM_MONSTERS = 3;
 const MAX_ROOM_ITEMS = 2;
-const TORCH_RADIUS = 10;
-
-// Spell values
-const HEAL_AMOUNT = 4;
-const LIGHTNING_DAMAGE = 20;
-const LIGHTNING_RANGE = 5;
-const CONFUSE_RANGE = 8;
-const CONFUSE_NUM_TURNS = 10;
-const FIREBALL_RANGE = 10;
-const FIREBALL_RADIUS = 3;
-const FIREBALL_DAMAGE = 12;
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
 
 const TARGET_SPRITE = new Sprite(0, 40, SPRITE_WIDTH, SPRITE_HEIGHT);
-const PLAYER_SPRITE = new Sprite(
-    0, 96, SPRITE_WIDTH, SPRITE_HEIGHT, 2, true, undefined, 0xffcf5cff);
-const ORC_SPRITE = new Sprite(
-    64, 144, SPRITE_WIDTH, SPRITE_HEIGHT, 2, true, undefined, 0x20e64fFF);
-const TROLL_SPRITE = new Sprite(
-    64, 216, SPRITE_WIDTH, SPRITE_HEIGHT, 2, true, undefined, 0x20e64fFF);
-const POTION_SPRITE = new Sprite(
-    658, 168, SPRITE_WIDTH, SPRITE_HEIGHT, 1, true, undefined, 0xFF0000FF);
-const SCROLL_SPRITE = new Sprite(
-    738, 168, SPRITE_WIDTH, SPRITE_HEIGHT, 1, true, undefined, 0xF0F0E0FF);
-const FIREBALL_SPRITE =
-    new Sprite(128, 32, SPRITE_WIDTH, SPRITE_HEIGHT, 3, false);
-const EXPLOSION_SPRITE =
-    new Sprite(176, 32, SPRITE_WIDTH, SPRITE_HEIGHT, 4, false, 4);
 const STAIRS_SPRITE = new Sprite(224, 432, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
 
 function createRoom(map: TileMap, room: Rect) {
@@ -149,8 +132,7 @@ function createMap() {
   // Touch up walls / half walls
   for (let y = 0; y < MAP_HEIGHT; y++) {
     for (let x = 0; x < MAP_WIDTH; x++) {
-      if (map.getTile(x, y) === TILE_WALL &&
-          map.getTile(x, y + 1) !== TILE_WALL) {
+      if (map.getTile(x, y) === TILE_WALL && map.getTile(x, y + 1) !== TILE_WALL) {
         map.setTile(0, x, y, TILE_HALF_WALL, true);
       }
     }
@@ -158,8 +140,7 @@ function createMap() {
 
   // Create stairs at the center of the last room
   const stairsLoc = rooms[rooms.length - 1].getCenter();
-  const stairs =
-      new Entity(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE, true);
+  const stairs = new Entity(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE, true);
   game.entities.push(stairs);
 
   // Initial FOV
@@ -180,17 +161,12 @@ function placeObjects(room: Rect) {
     // 80% chance of getting an orc
     if (rng.nextRange(0, 100) < 80) {
       // Create an orc
-      monster = new Entity(game, x, y, 'Orc', ORC_SPRITE, true);
+      monster = new Spider(game, x, y);
     } else {
       // Create a troll
-      monster = new Entity(game, x, y, 'Troll', TROLL_SPRITE, true);
+      monster = new Troll(game, x, y);
     }
 
-    monster.health = 20;
-    monster.canAttack = true;
-    monster.ai = new BasicMonster(monster);
-    monster.onAttack = attackCallback;
-    monster.onDeath = monsterDeath;
     game.entities.push(monster);
   }
 
@@ -203,212 +179,33 @@ function placeObjects(room: Rect) {
     const y = rng.nextRange(room.y1 + 1, room.y2 - 1);
 
     const dice = rng.nextRange(0, 100);
-    let itemName = null;
-    let itemSprite = null;
-    let itemUse = null;
+    let item = null;
 
     if (dice < 50) {
       // Create a healing potion (50% chance)
-      itemName = 'healing potion';
-      itemSprite = POTION_SPRITE;
-      itemUse = castHeal;
+      item = new HealthPotion(game, x, y);
 
     } else if (dice < 50 + 20) {
       // Create a lightning bolt scroll (20% chance)
-      itemName = 'scroll of lightning bolt';
-      itemSprite = SCROLL_SPRITE;
-      itemUse = castLightning;
+      item = new Scroll(game, x, y, new LightningAbility());
 
     } else if (dice < 50 + 20 + 15) {
       // Create a fireball scroll (15% chance)
-      itemName = 'scroll of fireball';
-      itemSprite = SCROLL_SPRITE;
-      itemUse = castFireball;
+      item = new Scroll(game, x, y, new FireballAbility());
 
     } else {
       // Create a confuse scroll (15% chance)
-      itemName = 'scroll of confusion';
-      itemSprite = SCROLL_SPRITE;
-      itemUse = castConfuse;
+      item = new Scroll(game, x, y, new ConfuseAbility());
     }
 
-    const item = new Entity(game, x, y, itemName, itemSprite, false);
-    item.canPickup = true;
-    item.onPickup = pickupCallback;
-    item.onUse = itemUse;
     game.entities.push(item);
-  }
-}
-
-function pickupCallback(entity: Entity, item: Entity) {
-  messageLog.add(entity.name + ' picked up a ' + item.name, Colors.LIGHT_GREEN);
-}
-
-function getClosestMonster(x: number, y: number, range: number) {
-  let minDist = range + 1;
-  let result = null;
-  for (let i = 0; i < game.entities.length; i++) {
-    const entity = game.entities[i];
-    if (entity !== player && entity.canAttack) {
-      const dist = entity.distance(x, y);
-      if (dist < minDist) {
-        minDist = dist;
-        result = entity;
-      }
-    }
-  }
-  return result;
-}
-
-function getMonsterAt(x: number, y: number) {
-  return getClosestMonster(x, y, 0);
-}
-
-function castHeal(item: Entity, entity: Entity) {
-  // Heal the player
-  if (player.health === player.maxHealth) {
-    messageLog.add('You are already at full health.', Colors.DARK_RED);
-    return;
-  }
-
-  messageLog.add('Your wounds start to feel better!', Colors.LIGHT_MAGENTA);
-  player.health += HEAL_AMOUNT;
-  player.inventory.remove(item);
-}
-
-function castLightning(item: Entity) {
-  // Find closest enemy (inside a maximum range) and damage it
-  const monster = getClosestMonster(player.x, player.y, LIGHTNING_RANGE);
-  if (!monster) {
-    messageLog.add('No enemy is close enough to strike.', Colors.LIGHT_RED);
-    return;
-  }
-
-  // Zap it!
-  messageLog.add(
-      'A lightning bolt strikes the ' + monster.name + ' with a loud thunder!',
-      Colors.LIGHT_BLUE);
-  messageLog.add(
-      'The damage is ' + LIGHTNING_DAMAGE + ' hit points', Colors.LIGHT_BLUE);
-  monster.takeDamage(LIGHTNING_DAMAGE);
-  player.inventory.remove(item);
-}
-
-function castFireball(item: Entity) {
-  // Ask the player for a target tile to throw a fireball at
-  messageLog.add(
-      'Left-click to cast fireball, or right-click to cancel.',
-      Colors.LIGHT_CYAN);
-  game.startTargeting((x: number, y: number) => {
-    const distance = player.distance(x, y);
-    if (distance > FIREBALL_RANGE) {
-      messageLog.add('Target out of range.', Colors.LIGHT_GRAY);
-      return;
-    }
-
-    const speed = 8;
-    const count = distance * (game.tileSize.width / speed);
-    const dx = (x * game.tileSize.width - player.pixelX) / count;
-    const dy = (y * game.tileSize.height - player.pixelY) / count;
-
-    game.effects.push(new ProjectileEffect(
-        FIREBALL_SPRITE, new Vec2(player.pixelX, player.pixelY),
-        new Vec2(dx, dy), count));
-
-    game.effects.push(new ProjectileEffect(
-        EXPLOSION_SPRITE,
-        new Vec2(x * game.tileSize.width, y * game.tileSize.height),
-        new Vec2(0, 0), 16));
-
-    messageLog.add(
-        'The fireball explodes, burning everything within ' + FIREBALL_RADIUS +
-            ' tiles!',
-        Colors.ORANGE);
-
-    for (let i = game.entities.length - 1; i >= 0; i--) {
-      const entity = game.entities[i];
-      if (entity.canAttack && entity.distance(x, y) <= FIREBALL_RADIUS) {
-        messageLog.add(
-            'The ' + entity.name + ' gets burned for ' + FIREBALL_DAMAGE +
-                ' hit points.',
-            Colors.ORANGE);
-        entity.takeDamage(FIREBALL_DAMAGE);
-      }
-    }
-
-    player.actionPoints = 0;
-    player.inventory.remove(item);
-  });
-}
-
-function castConfuse(item: Entity) {
-  // Ask the player for a target to confuse
-  messageLog.add(
-      'Left-click to cast confuse, or right-click to cancel.',
-      Colors.LIGHT_CYAN);
-  game.startTargeting((x: number, y: number) => {
-    if (player.distance(x, y) > CONFUSE_RANGE) {
-      messageLog.add('Target out of range.', Colors.LIGHT_GRAY);
-      return;
-    }
-
-    const monster = getMonsterAt(x, y);
-    if (!monster) {
-      messageLog.add('No monster there.', Colors.LIGHT_GRAY);
-      return;
-    }
-
-    monster.ai = new ConfusedMonster(monster);
-    messageLog.add(
-        'The eyes of the ' + monster.name +
-            ' look vacant, as he stumbles around!',
-        Colors.LIGHT_GREEN);
-    player.inventory.remove(item);
-  });
-}
-
-function attackCallback(attacker: Entity, target: Entity, damage: number) {
-  if (damage > 0) {
-    messageLog.add(
-        attacker.name + ' attacks ' + target.name + ' for ' + damage +
-            ' hit points.',
-        0x808080FF);
-  } else {
-    messageLog.add(
-        attacker.name + ' attacks ' + target.name + ' but it has no effect!',
-        0x808080FF);
-  }
-}
-
-function playerDeath() {
-  messageLog.add('You died!');
-}
-
-function monsterDeath(monster: Entity) {
-  messageLog.add(monster.name + ' is dead');
-  monster.blocks = false;
-  monster.ai = undefined;
-  monster.name = 'remains of ' + monster.name;
-  monster.sendToBack();
-
-  const xpGain = 10;
-  player.xp += xpGain;
-
-  while (player.xp >= player.maxXp) {
-    player.level++;
-    player.xp = 0;
-    player.maxXp *= 2;
-    messageLog.add('You reached level ' + player.level, 0xFF8000FF);
   }
 }
 
 function nextLevel() {
   // Advance to the next level
-  messageLog.add(
-      'You take a moment to rest, and recover your strength.',
-      Colors.LIGHT_MAGENTA);
-  messageLog.add(
-      'After a rare moment of peace, you descend deeper...', Colors.LIGHT_RED);
+  game.log('You take a moment to rest, and recover your strength.', Colors.LIGHT_MAGENTA);
+  game.log('After a rare moment of peace, you descend deeper...', Colors.LIGHT_RED);
 
   // Clear all entities other than the player
   game.entities.splice(0, game.entities.length);
@@ -435,20 +232,18 @@ game.targetSprite = TARGET_SPRITE;
 game.gui.renderer.baseRect = new Rect(0, 64, 24, 24);
 
 const rng = new RNG(1);
-const player = new Player(game, 30, 20, 'Player', PLAYER_SPRITE, true);
+const player = new Player(game, 30, 20);
 player.canAttack = true;
-player.onAttack = attackCallback;
-player.onDeath = playerDeath;
 player.level = 1;
 player.xp = 0;
 player.maxXp = 10;
 player.onBump = (other: Entity) => {
-  if (other.canPickup) {
+  if (other instanceof Item) {
     player.moveToward(other.x, other.y);
     player.pickup(other);
     return true;
   }
-  if (other.canAttack) {
+  if (other instanceof Actor) {
     player.attack(other);
     return true;
   }
@@ -467,28 +262,22 @@ game.player = player;
 game.entities.push(player);
 game.gui.renderer.baseRect = new Rect(0, 16, 24, 24);
 game.gui.renderer.buttonSlotRect = new Rect(64, 16, 20, 28);
-game.gui.onDrop = (dragElement: Panel, dropTarget: Panel) => {
-  console.log('onDrop', dragElement, dropTarget);
-  return true;
-};
-
-const messageLog = new MessageLog(new Rect(1, -84, 100, 50));
-messageLog.add('Welcome stranger! Prepare to perish!', Colors.DARK_RED);
-game.gui.add(messageLog);
+game.messageLog = new MessageLog(new Rect(1, -84, 100, 50));
+game.gui.add(game.messageLog);
+game.log('Welcome stranger! Prepare to perish!', Colors.DARK_RED);
 
 game.gui.add(new TopPanel(player));
 
 const bottomPanel = new BottomPanel();
 game.gui.add(bottomPanel);
 
-const inventoryDialog = new EntityContainerDialog(
-    new Rect(10, 50, 94, 126), 'INVENTORY', 16, player.inventory);
+const inventoryDialog =
+    new ItemContainerDialog(new Rect(10, 50, 94, 126), 'INVENTORY', 16, player.inventory as XArray<Item>);
 inventoryDialog.visible = false;
 game.gui.add(inventoryDialog);
 
 const inventoryButton = new Button(
-    new Rect(400 - 24, 224 - 24, 20, 28),
-    new Sprite(834, 168, 16, 24, 1, true, 30, 0xe08020ff), undefined, () => {
+    new Rect(400 - 24, 224 - 24, 20, 28), new Sprite(834, 168, 16, 24, 1, true, 30, 0xe08020ff), undefined, () => {
       inventoryDialog.visible = !inventoryDialog.visible;
     });
 bottomPanel.inventorySlot.add(inventoryButton);
@@ -499,8 +288,7 @@ createMap();
 const mainMenu = new AppState(app);
 mainMenu.gui.renderer.baseRect = new Rect(0, 16, 24, 24);
 mainMenu.gui.add(new SelectDialog(
-    new Rect(16, 64, 160, 100), 'MAIN MENU',
-    [{name: 'NEW GAME'}, {name: 'CONTINUE'}], (choice: SelectOption) => {
+    new Rect(16, 64, 160, 100), 'MAIN MENU', [{name: 'NEW GAME'}, {name: 'CONTINUE'}], (choice: SelectOption) => {
       if (choice.name === 'NEW GAME') {
         app.state = game;
       }

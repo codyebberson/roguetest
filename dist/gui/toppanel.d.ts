@@ -1,7 +1,8 @@
-import { Panel } from "wglt";
-import { Player } from "../entities/player";
+import { Panel } from 'wglt';
+import { Player } from '../entities/player';
 export declare class TopPanel extends Panel {
     readonly player: Player;
     constructor(player: Player);
+    private addButton;
     drawContents(): void;
 }
