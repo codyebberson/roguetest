@@ -19,7 +19,7 @@ export class TopPanel extends Panel {
     this.addButton(Keys.VK_QUESTION_MARK, 834, 192, Colors.LIGHT_BLUE);
 
     // Main menu
-    this.addButton(Keys.VK_ESCAPE, 898, 142, Colors.LIGHT_BLUE);
+    this.addButton(Keys.VK_Q, 898, 142, Colors.LIGHT_BLUE);
   }
 
   private addButton(key: Key, spriteX: number, spriteY: number, spriteColor: Color) {

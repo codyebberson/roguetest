@@ -1,4 +1,4 @@
-import { Ability, Game, Item, Actor } from "wglt";
+import { Ability, Actor, Game, Item } from 'wglt';
 export declare class Scroll extends Item {
     readonly ability: Ability;
     constructor(game: Game, x: number, y: number, ability: Ability);

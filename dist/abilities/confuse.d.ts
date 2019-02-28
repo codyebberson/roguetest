@@ -1,4 +1,4 @@
-import { Ability, Sprite, TargetType, Actor } from "wglt";
+import { Ability, Actor, Sprite, TargetType } from 'wglt';
 export declare class ConfuseAbility implements Ability {
     readonly sprite: Sprite;
     readonly name: string;

@@ -6,7 +6,7 @@ export class Scroll extends Item {
   readonly ability: Ability;
 
   constructor(game: Game, x: number, y: number, ability: Ability) {
-    super(game, x, y, 'scroll of ' + ability.name, SPRITE, true);
+    super(game, x, y, 'scroll of ' + ability.name, SPRITE, false);
     this.ability = ability;
     this.canPickup = true;
   }

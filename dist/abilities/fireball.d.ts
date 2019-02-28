@@ -1,4 +1,4 @@
-import { Ability, Sprite, TileMapCell, TargetType, Actor } from "wglt";
+import { Ability, Actor, Sprite, TargetType, TileMapCell } from 'wglt';
 export declare class FireballAbility implements Ability {
     readonly sprite: Sprite;
     readonly name: string;

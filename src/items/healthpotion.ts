@@ -6,7 +6,7 @@ const SPRITE = new Sprite(658, 168, 16, 24, 1, true, undefined, 0xFF0000FF);
 
 export class HealthPotion extends Item {
   constructor(game: Game, x: number, y: number) {
-    super(game, x, y, 'health potion', SPRITE, true);
+    super(game, x, y, 'health potion', SPRITE, false);
     this.canPickup = true;
   }
 
