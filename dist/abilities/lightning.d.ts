@@ -5,6 +5,7 @@ export declare class LightningAbility implements Ability {
     readonly targetType: TargetType;
     readonly minRange: number;
     readonly maxRange: number;
+    readonly cooldown: number;
     constructor();
     cast(caster: Actor): boolean;
     private getClosestMonster;

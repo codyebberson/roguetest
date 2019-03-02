@@ -5,6 +5,7 @@ export declare class FireballAbility implements Ability {
     readonly targetType: TargetType;
     readonly minRange: number;
     readonly maxRange: number;
+    readonly cooldown: number;
     constructor();
     cast(caster: Actor, target: TileMapCell): boolean;
 }

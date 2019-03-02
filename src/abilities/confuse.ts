@@ -9,6 +9,7 @@ export class ConfuseAbility implements Ability {
   readonly targetType: TargetType;
   readonly minRange: number;
   readonly maxRange: number;
+  readonly cooldown: number;
 
   constructor() {
     this.sprite = CONFUSE_SPRITE;
@@ -16,6 +17,7 @@ export class ConfuseAbility implements Ability {
     this.targetType = TargetType.ENTITY;
     this.minRange = 1;
     this.maxRange = CONFUSE_RANGE;
+    this.cooldown = 1;
   }
 
   cast(caster: Actor, target: Actor) {
@@ -28,7 +30,7 @@ export class ConfuseAbility implements Ability {
 
     target.ai = new ConfusedMonster(target);
     game.log('The eyes of the ' + target.name + ' look vacant, as he stumbles around!', Colors.LIGHT_GREEN);
-    caster.actionPoints--;
+    caster.ap--;
     return true;
   }
 }

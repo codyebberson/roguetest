@@ -1,4 +1,5 @@
 import {Ability, Actor, Colors, ProjectileEffect, Sprite, TargetType, TileMapCell, Vec2} from 'wglt';
+import {ExplosionEffect} from '../effects/explosioneffect';
 
 const FIREBALL_RANGE = 10;
 const FIREBALL_RADIUS = 3;
@@ -6,8 +7,8 @@ const FIREBALL_DAMAGE = 12;
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
-const FIREBALL_SPRITE = new Sprite(128, 32, SPRITE_WIDTH, SPRITE_HEIGHT, 3, false);
-const EXPLOSION_SPRITE = new Sprite(176, 32, SPRITE_WIDTH, SPRITE_HEIGHT, 4, false, 4);
+const FIRE_COLOR = Colors.ORANGE;
+const FIREBALL_SPRITE = new Sprite(512, 336, SPRITE_WIDTH, SPRITE_HEIGHT, undefined, undefined, undefined, FIRE_COLOR);
 
 export class FireballAbility implements Ability {
   readonly sprite: Sprite;
@@ -15,6 +16,7 @@ export class FireballAbility implements Ability {
   readonly targetType: TargetType;
   readonly minRange: number;
   readonly maxRange: number;
+  readonly cooldown: number;
 
   constructor() {
     this.sprite = FIREBALL_SPRITE;
@@ -22,6 +24,7 @@ export class FireballAbility implements Ability {
     this.targetType = TargetType.TILE;
     this.minRange = 1;
     this.maxRange = FIREBALL_RANGE;
+    this.cooldown = 1;
   }
 
   cast(caster: Actor, target: TileMapCell) {
@@ -43,9 +46,7 @@ export class FireballAbility implements Ability {
     game.effects.push(
         new ProjectileEffect(FIREBALL_SPRITE, new Vec2(player.pixelX, player.pixelY), new Vec2(dx, dy), count));
 
-    game.effects.push(new ProjectileEffect(
-        EXPLOSION_SPRITE, new Vec2(target.x * game.tileSize.width, target.y * game.tileSize.height), new Vec2(0, 0),
-        16));
+    game.effects.push(new ExplosionEffect(game, target, FIREBALL_RADIUS, 30));
 
     game.log('The fireball explodes, burning everything within ' + FIREBALL_RADIUS + ' tiles!', Colors.ORANGE);
 
@@ -57,7 +58,7 @@ export class FireballAbility implements Ability {
       }
     }
 
-    caster.actionPoints--;
+    caster.ap--;
     return true;
   }
 }

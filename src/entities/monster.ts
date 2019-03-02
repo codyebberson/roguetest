@@ -5,8 +5,7 @@ import {Player} from './player';
 export abstract class Monster extends Actor {
   constructor(game: Game, x: number, y: number, name: string, sprite: Sprite) {
     super(game, x, y, name, sprite, true);
-    this.health = 20;
-    this.canAttack = true;
+    this.hp = 20;
     this.ai = new BasicMonster(this);
   }
 

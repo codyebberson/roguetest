@@ -1,4 +1,4 @@
-import {Button, ButtonSlot, Color, Colors, Key, Keys, Panel, Rect, Sprite} from 'wglt';
+import {ButtonSlot, Colors, Keys, Panel, Rect} from 'wglt';
 
 import {Player} from '../entities/player';
 
@@ -10,24 +10,32 @@ export class TopPanel extends Panel {
     this.player = player;
 
     // Character / inventory
-    this.addButton(Keys.VK_C, 610, 144, Colors.LIGHT_BLUE);
+    this.add(new ButtonSlot(new Rect(0, 3, 20, 28), Keys.VK_C));
 
     // Talents / abilities
-    this.addButton(Keys.VK_N, 658, 360, Colors.LIGHT_BLUE);
+    this.add(new ButtonSlot(new Rect(0, 3, 20, 28), Keys.VK_N));
 
     // Inspect
-    this.addButton(Keys.VK_QUESTION_MARK, 834, 192, Colors.LIGHT_BLUE);
+    this.add(new ButtonSlot(new Rect(0, 3, 20, 28), Keys.VK_QUESTION_MARK));
 
     // Main menu
-    this.addButton(Keys.VK_Q, 898, 142, Colors.LIGHT_BLUE);
+    this.add(new ButtonSlot(new Rect(0, 3, 20, 28), Keys.VK_Q));
   }
 
-  private addButton(key: Key, spriteX: number, spriteY: number, spriteColor: Color) {
-    const buttonSlot = new ButtonSlot(new Rect(0, 3, 20, 28), key);
-    const button = new Button(
-        buttonSlot.rect.clone(), new Sprite(spriteX, spriteY, 16, 24, undefined, undefined, undefined, spriteColor));
-    buttonSlot.add(button);
-    this.add(buttonSlot);
+  get characterSlot(): ButtonSlot {
+    return this.children.get(0) as ButtonSlot;
+  }
+
+  get talentsSlot(): ButtonSlot {
+    return this.children.get(1) as ButtonSlot;
+  }
+
+  get inspectSlot(): ButtonSlot {
+    return this.children.get(2) as ButtonSlot;
+  }
+
+  get menuSlot(): ButtonSlot {
+    return this.children.get(3) as ButtonSlot;
   }
 
   drawContents() {
@@ -42,7 +50,7 @@ export class TopPanel extends Panel {
 
     // Health
     app.drawImage(2, 12, 128, 16, 12, 12);
-    app.drawString(this.player.health.toString(), 16, 15);
+    app.drawString(this.player.hp.toString(), 16, 15);
 
     // Mana
     app.drawImage(38, 12, 144, 16, 12, 12);

@@ -1,6 +1,5 @@
-import {Actor, App, AppState, Button, Colors, Entity, Game, Item, ItemContainerDialog, MessageLog, Rect, RNG, SelectDialog, Sprite, TileMap} from 'wglt';
+import {Actor, App, AppState, Button, Colors, Entity, FadeInEffect, FadeOutEffect, Game, Item, ItemContainerDialog, MessageLog, Rect, RNG, SelectDialog, Sprite, Talent, TalentsDialog, TileMap} from 'wglt';
 import {SelectOption} from 'wglt/dist/gui/selectoption';
-import {XArray} from 'wglt/dist/xarray';
 
 import {ConfuseAbility} from './abilities/confuse';
 import {FireballAbility} from './abilities/fireball';
@@ -31,7 +30,7 @@ const MAX_ROOM_ITEMS = 2;
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
 
-const TARGET_SPRITE = new Sprite(0, 40, SPRITE_WIDTH, SPRITE_HEIGHT);
+const TARGET_SPRITE = new Sprite(16, 40, SPRITE_WIDTH, SPRITE_HEIGHT);
 const STAIRS_SPRITE = new Sprite(224, 432, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
 
 function createRoom(map: TileMap, room: Rect) {
@@ -203,20 +202,28 @@ function placeObjects(room: Rect) {
 }
 
 function nextLevel() {
-  // Advance to the next level
-  game.log('You take a moment to rest, and recover your strength.', Colors.LIGHT_MAGENTA);
-  game.log('After a rare moment of peace, you descend deeper...', Colors.LIGHT_RED);
+  const fadeOut = new FadeOutEffect(30);
+  const fadeIn = new FadeInEffect(30);
 
-  // Clear all entities other than the player
-  game.entities.splice(0, game.entities.length);
-  game.entities.push(player);
+  fadeOut.onDone = () => {
+    // Advance to the next level
+    game.log('You take a moment to rest, and recover your strength.', Colors.LIGHT_MAGENTA);
+    game.log('After a rare moment of peace, you descend deeper...', Colors.LIGHT_RED);
 
-  // Reset the players targets
-  game.targetEntity = undefined;
-  game.targetTile = undefined;
-  game.path = undefined;
+    // Clear all entities other than the player
+    game.entities.splice(0, game.entities.length);
+    game.entities.push(player);
 
-  createMap();
+    // Reset the players targets
+    game.targetEntity = undefined;
+    game.targetTile = undefined;
+    game.path = undefined;
+
+    createMap();
+  };
+
+  game.effects.push(fadeOut);
+  game.effects.push(fadeIn);
 }
 
 const app = new App({
@@ -233,7 +240,6 @@ game.gui.renderer.baseRect = new Rect(0, 64, 24, 24);
 
 const rng = new RNG(1);
 const player = new Player(game, 30, 20);
-player.canAttack = true;
 player.level = 1;
 player.xp = 0;
 player.maxXp = 10;
@@ -266,21 +272,37 @@ game.messageLog = new MessageLog(new Rect(1, -84, 100, 50));
 game.gui.add(game.messageLog);
 game.log('Welcome stranger! Prepare to perish!', Colors.DARK_RED);
 
-game.gui.add(new TopPanel(player));
+const topPanel = new TopPanel(player);
+game.gui.add(topPanel);
 
 const bottomPanel = new BottomPanel();
 game.gui.add(bottomPanel);
 
-const inventoryDialog =
-    new ItemContainerDialog(new Rect(10, 50, 94, 126), 'INVENTORY', 16, player.inventory as XArray<Item>);
+const inventoryDialog = new ItemContainerDialog(new Rect(10, 50, 94, 126), 'INVENTORY', 16, player.inventory);
 inventoryDialog.visible = false;
 game.gui.add(inventoryDialog);
 
 const inventoryButton = new Button(
     new Rect(400 - 24, 224 - 24, 20, 28), new Sprite(834, 168, 16, 24, 1, true, 30, 0xe08020ff), undefined, () => {
       inventoryDialog.visible = !inventoryDialog.visible;
+      talentsDialog.visible = false;
     });
 bottomPanel.inventorySlot.add(inventoryButton);
+
+const talentsDialog = new TalentsDialog(new Rect(10, 50, 94, 126), 'TALENTS', 16, player.talents);
+talentsDialog.visible = false;
+game.gui.add(talentsDialog);
+
+const talentsButton = new Button(
+    new Rect(400 - 24, 224 - 24, 20, 28),
+    new Sprite(658, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE), undefined, () => {
+      talentsDialog.visible = !talentsDialog.visible;
+      inventoryDialog.visible = false;
+    });
+topPanel.talentsSlot.add(talentsButton);
+
+player.talents.add(new Talent(player, new FireballAbility()));
+player.talents.add(new Talent(player, new LightningAbility()));
 
 // Generate the map
 createMap();

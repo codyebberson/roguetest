@@ -1,19 +1,7 @@
-import {Ability, Actor, Colors, Entity, Game, ProjectileEffect, Sprite, TargetType, TileMapCell, Vec2} from 'wglt';
-
-// const FIREBALL_RANGE = 10;
-// const FIREBALL_RADIUS = 3;
-// const FIREBALL_DAMAGE = 12;
-
-// const SPRITE_WIDTH = 16;
-// const SPRITE_HEIGHT = 24;
-// const FIREBALL_SPRITE = new Sprite(128, 32, SPRITE_WIDTH, SPRITE_HEIGHT, 3, false);
-// const EXPLOSION_SPRITE = new Sprite(176, 32, SPRITE_WIDTH, SPRITE_HEIGHT, 4, false, 4);
+import {Ability, Actor, Colors, Entity, Game, ProjectileEffect, Sprite, TargetType, Vec2} from 'wglt';
 
 const LIGHTNING_DAMAGE = 20;
 const LIGHTNING_RANGE = 5;
-const SPRITE_WIDTH = 16;
-const SPRITE_HEIGHT = 24;
-const FIREBALL_SPRITE = new Sprite(128, 32, SPRITE_WIDTH, SPRITE_HEIGHT, 3, false);
 
 export class LightningAbility implements Ability {
   readonly sprite: Sprite;
@@ -21,13 +9,15 @@ export class LightningAbility implements Ability {
   readonly targetType: TargetType;
   readonly minRange: number;
   readonly maxRange: number;
+  readonly cooldown: number;
 
   constructor() {
-    this.sprite = FIREBALL_SPRITE;
+    this.sprite = new Sprite(158, 10, 16, 24, undefined, undefined, undefined, 0xFFFF00FF);
     this.name = 'lightning';
     this.targetType = TargetType.SELF;
     this.minRange = 1;
     this.maxRange = LIGHTNING_RANGE;
+    this.cooldown = 1;
   }
 
   cast(caster: Actor) {
@@ -41,9 +31,17 @@ export class LightningAbility implements Ability {
 
     // Zap it!
     game.log('A lightning bolt strikes the ' + monster.name + ' with a loud thunder!', Colors.LIGHT_BLUE);
-    game.log('The damage is ' + LIGHTNING_DAMAGE + ' hit points', Colors.LIGHT_BLUE);
-    monster.takeDamage(LIGHTNING_DAMAGE);
-    caster.actionPoints--;
+
+    // Create lightning animation
+    const explosion = new Sprite(256, 408, 16, 24, 2, true, 8, Colors.YELLOW);
+    const effect = new ProjectileEffect(explosion, new Vec2(monster.pixelX, monster.pixelY), new Vec2(0, 0), 32);
+    effect.onDone = () => {
+      game.log('The damage is ' + LIGHTNING_DAMAGE + ' hit points', Colors.LIGHT_BLUE);
+      monster.takeDamage(LIGHTNING_DAMAGE);
+      caster.ap--;
+    };
+    game.effects.push(effect);
+
     return true;
   }
 
