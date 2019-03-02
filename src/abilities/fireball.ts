@@ -30,8 +30,6 @@ export class FireballAbility implements Ability {
   cast(caster: Actor, target: TileMapCell) {
     const game = caster.game;
     const player = caster;
-
-    // game.startTargeting((x: number, y: number) => {
     const distance = player.distanceTo(target);
     if (distance > FIREBALL_RANGE) {
       game.log('Target out of range.', Colors.LIGHT_GRAY);
@@ -46,19 +44,22 @@ export class FireballAbility implements Ability {
     game.effects.push(
         new ProjectileEffect(FIREBALL_SPRITE, new Vec2(player.pixelX, player.pixelY), new Vec2(dx, dy), count));
 
-    game.effects.push(new ExplosionEffect(game, target, FIREBALL_RADIUS, 30));
+    const explosionEffect = new ExplosionEffect(game, target, FIREBALL_RADIUS, 30);
+    explosionEffect.onDone = () => {
+      game.log('The fireball explodes, burning everything within ' + FIREBALL_RADIUS + ' tiles!', Colors.ORANGE);
 
-    game.log('The fireball explodes, burning everything within ' + FIREBALL_RADIUS + ' tiles!', Colors.ORANGE);
-
-    for (let i = game.entities.length - 1; i >= 0; i--) {
-      const entity = game.entities[i];
-      if (entity instanceof Actor && entity.distanceTo(target) <= FIREBALL_RADIUS) {
-        game.log('The ' + entity.name + ' gets burned for ' + FIREBALL_DAMAGE + ' hit points.', Colors.ORANGE);
-        entity.takeDamage(FIREBALL_DAMAGE);
+      for (let i = game.entities.length - 1; i >= 0; i--) {
+        const entity = game.entities[i];
+        if (entity instanceof Actor && entity.distanceTo(target) <= FIREBALL_RADIUS) {
+          game.log('The ' + entity.name + ' gets burned for ' + FIREBALL_DAMAGE + ' hit points.', Colors.ORANGE);
+          entity.takeDamage(FIREBALL_DAMAGE);
+        }
       }
-    }
 
-    caster.ap--;
+      caster.ap--;
+    };
+
+    game.effects.push(explosionEffect);
     return true;
   }
 }
