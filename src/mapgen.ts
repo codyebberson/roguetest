@@ -3,12 +3,13 @@ import {Entity, Game, Rect, RNG, Sprite, TileMap, Vec2} from 'wglt';
 import {ConfuseAbility} from './abilities/confuse';
 import {FireballAbility} from './abilities/fireball';
 import {LightningAbility} from './abilities/lightning';
+import {Bat} from './entities/bat';
 import {Player} from './entities/player';
+import {Shark} from './entities/shark';
 import {Spider} from './entities/spider';
 import {Troll} from './entities/troll';
 import {HealthPotion} from './items/healthpotion';
 import {Scroll} from './items/scroll';
-import { Bat } from './entities/bat';
 
 // Size of the map
 const MAP_WIDTH = 64;
@@ -21,6 +22,10 @@ const TILE_HALF_WALL = getTileId(0, 20);
 const TILE_FLOOR = getTileId(13, 17);
 const TILE_WATER = getTileId(0, 18);
 const TILE_BRIDGE = getTileId(15, 27);
+const TILE_COBWEB_NORTHWEST = getTileId(28, 22);
+const TILE_COBWEB_NORTHEAST = getTileId(29, 22);
+const TILE_COBWEB_SOUTHWEST = getTileId(30, 22);
+const TILE_COBWEB_SOUTHEAST = getTileId(31, 22);
 
 function getTileId(tileX: number, tileY: number) {
   return 1 + tileY * 64 + tileX;
@@ -71,11 +76,9 @@ const STAIRS_SPRITE = new Sprite(224, 432, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
 
 export class MapGenerator {
   readonly game: Game;
-  readonly rng: RNG;
 
   constructor(game: Game) {
     this.game = game;
-    this.rng = new RNG(1);
 
     const map = new TileMap(game.app.gl, MAP_WIDTH, MAP_HEIGHT, 3);
     map.tileWidth = 16;
@@ -87,13 +90,14 @@ export class MapGenerator {
     const game = this.game;
     const map = game.tileMap as TileMap;
     const player = game.player as Player;
-    const rng = this.rng;
+    const rng = game.rng;
 
     // Clear the map to all walls
     for (let y = 0; y < MAP_HEIGHT; y++) {
       for (let x = 0; x < MAP_WIDTH; x++) {
         map.setTile(0, x, y, TILE_WALL, true);
-        map.setTile(1, x, y, TILE_EMPTY, true);
+        map.setTile(1, x, y, TILE_EMPTY);
+        map.setTile(2, x, y, TILE_EMPTY);
       }
     }
 
@@ -176,10 +180,13 @@ export class MapGenerator {
             this.createVTunnel(map, prev.y, center.y, prev.x);
             this.createHTunnel(map, prev.x, center.x, center.y);
           }
+
+          // Add monsters (spiders, bats, etc)
+          this.placeMonsters(newRoom);
         }
 
-        // Add some contents to this room, such as monsters
-        this.placeObjects(newRoom);
+        // Add items (scrolls and health potions)
+        this.placeItems(newRoom);
 
         // Finally, append the new room to the list
         rooms.push(newRoom);
@@ -191,13 +198,37 @@ export class MapGenerator {
       for (let x = 0; x < MAP_WIDTH; x++) {
         const t1 = map.getTile(x, y);
         const t2 = map.getTile(x, y + 1);
+        const t3 = map.getTile(x - 1, y);
+        const t4 = map.getTile(x + 1, y);
+        const t5 = map.getTile(x, y - 1);
+
+        if (t1 === TILE_FLOOR && t3 === TILE_WALL && t5 === TILE_HALF_WALL && rng.nextRange(0, 4) === 0) {
+          map.setTile(1, x, y, TILE_COBWEB_NORTHWEST);
+        }
+
+        if (t1 === TILE_FLOOR && t4 === TILE_WALL && t5 === TILE_HALF_WALL && rng.nextRange(0, 4) === 0) {
+          map.setTile(1, x, y, TILE_COBWEB_NORTHEAST);
+        }
+
+        if (t1 === TILE_FLOOR && t3 === TILE_WALL && t2 === TILE_WALL && rng.nextRange(0, 4) === 0) {
+          map.setTile(1, x, y, TILE_COBWEB_SOUTHWEST);
+        }
+
+        if (t1 === TILE_FLOOR && t4 === TILE_WALL && t2 === TILE_WALL && rng.nextRange(0, 4) === 0) {
+          map.setTile(1, x, y, TILE_COBWEB_SOUTHEAST);
+        }
+
         if (t1 === TILE_WALL && t2 !== TILE_WALL) {
           map.setTile(0, x, y, TILE_HALF_WALL, true);
-          map.setTile(1, x, y + 1, TILE_SHADOW, map.isBlocked(x, y + 1));
+          map.setTile(2, x, y + 1, TILE_SHADOW);
         }
 
         if (t1 !== TILE_WATER && t2 === TILE_WATER) {
-          map.setTile(1, x, y + 1, TILE_SHADOW, map.isBlocked(x, y + 1));
+          map.setTile(2, x, y + 1, TILE_SHADOW);
+        }
+
+        if (t1 === TILE_WATER && rng.nextRange(0, 100) < 1) {
+          game.entities.push(new Shark(game, x, y));
         }
       }
     }
@@ -241,9 +272,9 @@ export class MapGenerator {
     }
   }
 
-  private placeObjects(room: Rect) {
+  private placeMonsters(room: Rect) {
     const game = this.game;
-    const rng = this.rng;
+    const rng = game.rng;
 
     // Choose random number of monsters
     const numMonsters = rng.nextRange(0, MAX_ROOM_MONSTERS);
@@ -252,6 +283,12 @@ export class MapGenerator {
       // Choose random spot for this monster
       const x = rng.nextRange(room.x1 + 1, room.x2 - 1);
       const y = rng.nextRange(room.y1 + 1, room.y2 - 1);
+
+      if (this.getEntityAt(x, y)) {
+        // Something already at this location
+        continue;
+      }
+
       const roll = rng.nextRange(0, 100);
       let monster = null;
 
@@ -265,6 +302,11 @@ export class MapGenerator {
 
       game.entities.push(monster);
     }
+  }
+
+  private placeItems(room: Rect) {
+    const game = this.game;
+    const rng = game.rng;
 
     // Choose random number of items
     const numItems = rng.nextRange(0, MAX_ROOM_ITEMS);
@@ -273,6 +315,11 @@ export class MapGenerator {
       // Choose random spot for this item
       const x = rng.nextRange(room.x1 + 1, room.x2 - 1);
       const y = rng.nextRange(room.y1 + 1, room.y2 - 1);
+
+      if (this.getEntityAt(x, y)) {
+        // Something already at this location
+        continue;
+      }
 
       const dice = rng.nextRange(0, 100);
       let item = null;
@@ -296,5 +343,15 @@ export class MapGenerator {
 
       game.entities.push(item);
     }
+  }
+
+  private getEntityAt(x: number, y: number) {
+    for (let i = 0; i < this.game.entities.length; i++) {
+      const entity = this.game.entities[i];
+      if (entity.x === x && entity.y === y) {
+        return entity;
+      }
+    }
+    return undefined;
   }
 }

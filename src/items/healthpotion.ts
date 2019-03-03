@@ -22,6 +22,7 @@ export class HealthPotion extends Item {
     this.game.log('Your wounds start to feel better!', Colors.LIGHT_MAGENTA);
     user.takeHeal(HEAL_AMOUNT);
     user.inventory.remove(this);
+    user.ap--;
     return true;
   }
 }

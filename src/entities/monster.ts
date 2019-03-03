@@ -1,4 +1,4 @@
-import {Actor, BasicMonster, Entity, Game, Sprite, AI} from 'wglt';
+import {Actor, BasicMonster, Game, Sprite} from 'wglt';
 
 import {Player} from './player';
 
@@ -9,11 +9,11 @@ export abstract class Monster extends Actor {
     this.ai = new BasicMonster(this);
   }
 
-  onAttack(attacker: Entity, damage: number) {
+  onAttack(target: Actor, damage: number) {
     if (damage > 0) {
-      this.game.log(attacker.name + ' attacks ' + this.name + ' for ' + damage + ' hit points.', 0x808080FF);
+      this.game.log(this.name + ' attacks ' + target.name + ' for ' + damage + ' hit points.', 0x808080FF);
     } else {
-      this.game.log(attacker.name + ' attacks ' + this.name + ' but it has no effect!', 0x808080FF);
+      this.game.log(this.name + ' attacks ' + target.name + ' but it has no effect!', 0x808080FF);
     }
   }
 

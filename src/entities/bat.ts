@@ -1,4 +1,4 @@
-import {Game, Sprite, AI, RNG} from 'wglt';
+import {AI, Game, RNG, Sprite} from 'wglt';
 
 import {Monster} from './monster';
 
@@ -12,9 +12,7 @@ class BatAI extends AI {
       return;
     }
 
-    // TODO:  Use game.rng
-    let rng = new RNG((10000 * Math.random()) | 0);
-
+    const rng = player.game.rng;
     if (monster.distanceTo(player) < 3 && rng.nextRange(0, 100) < 33) {
       monster.attack(player);
     } else {

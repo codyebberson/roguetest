@@ -14,11 +14,11 @@ export class Player extends Actor {
     this.maxXp = 100;
   }
 
-  onAttack(attacker: Actor, damage: number) {
+  onAttack(target: Actor, damage: number) {
     if (damage > 0) {
-      this.game.log(attacker.name + ' attacks ' + this.name + ' for ' + damage + ' hit points.', 0x808080FF);
+      this.game.log(this.name + ' attacks ' + target.name + ' for ' + damage + ' hit points.', 0x808080FF);
     } else {
-      this.game.log(attacker.name + ' attacks ' + this.name + ' but it has no effect!', 0x808080FF);
+      this.game.log(this.name + ' attacks ' + target.name + ' but it has no effect!', 0x808080FF);
     }
   }
 
