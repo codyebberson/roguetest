@@ -1,4 +1,4 @@
-import {Entity, Game, Rect, RNG, Sprite, TileMap} from 'wglt';
+import {Entity, Game, Rect, RNG, Sprite, TileMap, Vec2} from 'wglt';
 
 import {ConfuseAbility} from './abilities/confuse';
 import {FireballAbility} from './abilities/fireball';
@@ -10,16 +10,25 @@ import {HealthPotion} from './items/healthpotion';
 import {Scroll} from './items/scroll';
 
 // Size of the map
-const MAP_WIDTH = 60;
-const MAP_HEIGHT = 40;
+const MAP_WIDTH = 64;
+const MAP_HEIGHT = 32;
 
-const TILE_WALL = 1 + (456 / 24) * 64 + 0;
-const TILE_HALF_WALL = 1 + (480 / 24) * 64 + 0;
-const TILE_FLOOR = 1 + (408 / 24) * 64 + (208 / 16);
+const TILE_EMPTY = 0;
+const TILE_WALL = getTileId(0, 19);
+const TILE_HALF_WALL = getTileId(0, 20);
+const TILE_FLOOR = getTileId(13, 17);
+const TILE_WATER = getTileId(0, 18);
+const TILE_BRIDGE = getTileId(15, 27);
+
+function getTileId(tileX: number, tileY: number) {
+  return 1 + tileY * 64 + tileX;
+}
 
 // Parameters for dungeon generator
-const ROOM_MAX_SIZE = 10;
-const ROOM_MIN_SIZE = 6;
+const ROOM_MIN_WIDTH = 6;
+const ROOM_MAX_WIDTH = 10;
+const ROOM_MIN_HEIGHT = 4;
+const ROOM_MAX_HEIGHT = 8;
 const MAX_ROOMS = 30;
 const MAX_ROOM_MONSTERS = 3;
 const MAX_ROOM_ITEMS = 2;
@@ -27,7 +36,6 @@ const MAX_ROOM_ITEMS = 2;
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
 
-// const TARGET_SPRITE = new Sprite(16, 40, SPRITE_WIDTH, SPRITE_HEIGHT);
 const STAIRS_SPRITE = new Sprite(224, 432, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
 
 export class MapGenerator {
@@ -37,6 +45,11 @@ export class MapGenerator {
   constructor(game: Game) {
     this.game = game;
     this.rng = new RNG(1);
+
+    const map = new TileMap(game.app.gl, MAP_WIDTH, MAP_HEIGHT, 3);
+    map.tileWidth = 16;
+    map.tileHeight = 24;
+    game.tileMap = map;
   }
 
   createMap() {
@@ -52,6 +65,28 @@ export class MapGenerator {
       }
     }
 
+    // Create bodies of water
+    const water = new Vec2(MAP_WIDTH / 2, MAP_HEIGHT / 2);
+    for (let i = 0; i < 100; i++) {
+      map.setTile(0, water.x, water.y, TILE_WATER, true, false);
+      map.setTile(0, water.x - 1, water.y, TILE_WATER, true, false);
+      map.setTile(0, water.x + 1, water.y, TILE_WATER, true, false);
+      map.setTile(0, water.x, water.y - 1, TILE_WATER, true, false);
+      map.setTile(0, water.x, water.y + 1, TILE_WATER, true, false);
+      water.x += rng.nextRange(-1, 2);
+      water.y += rng.nextRange(-1, 2);
+    }
+
+    // Make sure there's a ring of wall all around
+    for (let x = 0; x < MAP_WIDTH; x++) {
+      map.setTile(0, x, 0, TILE_EMPTY, true);
+      map.setTile(0, x, MAP_HEIGHT - 1, TILE_EMPTY, true);
+    }
+    for (let y = 0; y < MAP_HEIGHT; y++) {
+      map.setTile(0, 0, y, TILE_EMPTY, true);
+      map.setTile(0, MAP_WIDTH - 1, y, TILE_EMPTY, true);
+    }
+
     // Reset field-of-view
     map.resetFov();
 
@@ -59,12 +94,12 @@ export class MapGenerator {
 
     for (let r = 0; r < MAX_ROOMS; r++) {
       // Random width and height
-      const w = rng.nextRange(ROOM_MIN_SIZE, ROOM_MAX_SIZE);
-      const h = rng.nextRange(ROOM_MIN_SIZE, ROOM_MAX_SIZE);
+      const w = rng.nextRange(ROOM_MIN_WIDTH, ROOM_MAX_WIDTH);
+      const h = rng.nextRange(ROOM_MIN_HEIGHT, ROOM_MAX_HEIGHT);
 
       // Random position without going out of the boundaries of the map
-      const x = rng.nextRange(1, MAP_WIDTH - w - 2);
-      const y = rng.nextRange(1, MAP_HEIGHT - h - 2);
+      const x = rng.nextRange(2, MAP_WIDTH - w - 3);
+      const y = rng.nextRange(2, MAP_HEIGHT - h - 3);
 
       // "Rect" class makes rectangles easier to work with
       const newRoom = new Rect(x, y, w, h);
@@ -134,7 +169,7 @@ export class MapGenerator {
     game.entities.push(stairs);
 
     // Initial FOV
-    map.computeFov(player.x, player.y, 12);
+    game.recomputeFov();
   }
 
   private createRoom(map: TileMap, room: Rect) {
@@ -147,13 +182,22 @@ export class MapGenerator {
 
   private createHTunnel(map: TileMap, x1: number, x2: number, y: number) {
     for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
-      map.setTile(0, x, y, TILE_FLOOR, false);
+      if (map.getTile(x, y) === TILE_WATER) {
+        map.setTile(0, x, y, TILE_BRIDGE, false);
+      } else {
+        map.setTile(0, x, y, TILE_FLOOR, false);
+      }
     }
   }
 
   private createVTunnel(map: TileMap, y1: number, y2: number, x: number) {
     for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
-      map.setTile(0, x, y, TILE_FLOOR, false);
+      const existing = map.getTile(x, y);
+      if (existing === TILE_WATER) {
+        map.setTile(0, x, y, TILE_BRIDGE, false);
+      } else {
+        map.setTile(0, x, y, TILE_FLOOR, false);
+      }
     }
   }
 

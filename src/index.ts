@@ -14,10 +14,9 @@ const game = new Game(app);
 
 const mainMenu = new AppState(app);
 mainMenu.gui.renderer.baseRect = new Rect(0, 16, 24, 24);
-mainMenu.gui.add(new SelectDialog(
-    new Rect(16, 64, 160, 100), 'MAIN MENU', [{name: 'NEW GAME'}, {name: 'CONTINUE'}], (choice: SelectOption) => {
+mainMenu.gui.add(
+    new SelectDialog(new Rect(16, 64, 160, 100), [{name: 'NEW GAME'}, {name: 'CONTINUE'}], (choice: SelectOption) => {
       if (choice.name === 'NEW GAME') {
-        // app.state = game;
         window.location.hash = 'game';
       }
     }));

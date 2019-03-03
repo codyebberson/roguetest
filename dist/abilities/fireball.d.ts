@@ -1,4 +1,4 @@
-import { Ability, Actor, Sprite, TargetType, TileMapCell } from 'wglt';
+import { Ability, Actor, Message, Sprite, TargetType, TileMapCell } from 'wglt';
 export declare class FireballAbility implements Ability {
     readonly sprite: Sprite;
     readonly name: string;
@@ -6,6 +6,7 @@ export declare class FireballAbility implements Ability {
     readonly minRange: number;
     readonly maxRange: number;
     readonly cooldown: number;
+    readonly tooltipMessages: Message[];
     constructor();
     cast(caster: Actor, target: TileMapCell): boolean;
 }

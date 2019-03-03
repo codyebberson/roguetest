@@ -1,16 +1,13 @@
 import * as wglt from 'wglt';
-import {Actor, App, Button, Colors, Entity, FadeInEffect, FadeOutEffect, Item, ItemContainerDialog, MessageLog, Rect, Sprite, Talent, TalentsDialog, TileMap} from 'wglt';
+import {Actor, App, Button, Colors, Entity, FadeInEffect, FadeOutEffect, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, Talent, TalentsDialog} from 'wglt';
 
 import {FireballAbility} from './abilities/fireball';
+import {LeapAbility} from './abilities/leap';
 import {LightningAbility} from './abilities/lightning';
 import {Player} from './entities/player';
 import {BottomPanel} from './gui/bottompanel';
 import {TopPanel} from './gui/toppanel';
 import {MapGenerator} from './mapgen';
-
-// Size of the map
-const MAP_WIDTH = 60;
-const MAP_HEIGHT = 40;
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -24,6 +21,8 @@ export class Game extends wglt.Game {
     super(app, {tileSize: new Rect(0, 0, 16, 24)});
 
     this.targetSprite = TARGET_SPRITE;
+    this.cooldownSprite = new Sprite(192, 16, 16, 24, 24);
+    this.blackoutRect = new Rect(0, 40, 16, 16);
     this.gui.renderer.baseRect = new Rect(0, 64, 24, 24);
 
     this.mapGen = new MapGenerator(this);
@@ -49,10 +48,6 @@ export class Game extends wglt.Game {
       return false;
     };
 
-    const map = new TileMap(app.gl, MAP_WIDTH, MAP_HEIGHT, 1);
-    map.tileWidth = 16;
-    map.tileHeight = 24;
-    this.tileMap = map;
     this.player = player;
     this.entities.push(player);
     this.gui.renderer.baseRect = new Rect(0, 16, 24, 24);
@@ -67,7 +62,7 @@ export class Game extends wglt.Game {
     const bottomPanel = new BottomPanel();
     this.gui.add(bottomPanel);
 
-    const inventoryDialog = new ItemContainerDialog(new Rect(10, 50, 94, 126), 'INVENTORY', 16, player.inventory);
+    const inventoryDialog = new ItemContainerDialog(new Rect(10, 50, 94, 126), 16, player.inventory);
     inventoryDialog.visible = false;
     this.gui.add(inventoryDialog);
 
@@ -76,9 +71,13 @@ export class Game extends wglt.Game {
           inventoryDialog.visible = !inventoryDialog.visible;
           talentsDialog.visible = false;
         });
+    inventoryButton.tooltipMessages = [
+      new Message('Traveler\'s Backpack', Colors.GREEN), new Message('Item Level 55', Colors.YELLOW),
+      new Message('16 Slot Bag', Colors.WHITE), new Message('Sell Price: 87 coins', Colors.WHITE)
+    ];
     bottomPanel.inventorySlot.add(inventoryButton);
 
-    const talentsDialog = new TalentsDialog(new Rect(10, 50, 94, 126), 'TALENTS', 16, player.talents);
+    const talentsDialog = new TalentsDialog(new Rect(10, 50, 94, 126), 16, player.talents);
     talentsDialog.visible = false;
     this.gui.add(talentsDialog);
 
@@ -88,10 +87,15 @@ export class Game extends wglt.Game {
           talentsDialog.visible = !talentsDialog.visible;
           inventoryDialog.visible = false;
         });
+    talentsButton.tooltipMessages = [
+      new Message('Talents', Colors.WHITE), new Message('A list of all of your', Colors.YELLOW),
+      new Message('character\'s talents.', Colors.YELLOW)
+    ];
     topPanel.talentsSlot.add(talentsButton);
 
     player.talents.add(new Talent(player, new FireballAbility()));
     player.talents.add(new Talent(player, new LightningAbility()));
+    player.talents.add(new Talent(player, new LeapAbility()));
 
     // Generate the map
     this.mapGen.createMap();

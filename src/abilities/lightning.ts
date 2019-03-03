@@ -1,7 +1,14 @@
-import {Ability, Actor, Colors, Entity, Game, ProjectileEffect, Sprite, TargetType, Vec2} from 'wglt';
+import {Ability, Actor, Colors, Entity, Game, Message, ProjectileEffect, Sprite, TargetType, Vec2} from 'wglt';
 
-const LIGHTNING_DAMAGE = 20;
+const LIGHTNING_DAMAGE = 10;
 const LIGHTNING_RANGE = 5;
+const TOOLTIP_MESSAGES = [
+  new Message('Lightning', Colors.WHITE),
+  new Message('2% of base mana', Colors.WHITE),
+  new Message('2 turn cast', Colors.WHITE),
+  new Message('Hurls a bolt of lightning at the target', Colors.YELLOW),
+  new Message('dealing 20 damage.', Colors.YELLOW),
+];
 
 export class LightningAbility implements Ability {
   readonly sprite: Sprite;
@@ -10,6 +17,7 @@ export class LightningAbility implements Ability {
   readonly minRange: number;
   readonly maxRange: number;
   readonly cooldown: number;
+  readonly tooltipMessages: Message[];
 
   constructor() {
     this.sprite = new Sprite(158, 10, 16, 24, undefined, undefined, undefined, 0xFFFF00FF);
@@ -17,7 +25,8 @@ export class LightningAbility implements Ability {
     this.targetType = TargetType.SELF;
     this.minRange = 1;
     this.maxRange = LIGHTNING_RANGE;
-    this.cooldown = 1;
+    this.cooldown = 10;
+    this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 
   cast(caster: Actor) {

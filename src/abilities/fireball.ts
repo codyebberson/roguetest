@@ -1,4 +1,5 @@
-import {Ability, Actor, Colors, ProjectileEffect, Sprite, TargetType, TileMapCell, Vec2} from 'wglt';
+import {Ability, Actor, Colors, Message, ProjectileEffect, Sprite, TargetType, TileMapCell, Vec2} from 'wglt';
+
 import {ExplosionEffect} from '../effects/explosioneffect';
 
 const FIREBALL_RANGE = 10;
@@ -9,6 +10,13 @@ const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
 const FIRE_COLOR = Colors.ORANGE;
 const FIREBALL_SPRITE = new Sprite(512, 336, SPRITE_WIDTH, SPRITE_HEIGHT, undefined, undefined, undefined, FIRE_COLOR);
+const TOOLTIP_MESSAGES = [
+  new Message('Fireball', Colors.WHITE),
+  new Message('2% of base mana', Colors.WHITE),
+  new Message('2 turn cast', Colors.WHITE),
+  new Message('Throws a fiery ball causing 10 damage', Colors.YELLOW),
+  new Message('to all enemies within 3 tiles.', Colors.YELLOW),
+];
 
 export class FireballAbility implements Ability {
   readonly sprite: Sprite;
@@ -17,6 +25,7 @@ export class FireballAbility implements Ability {
   readonly minRange: number;
   readonly maxRange: number;
   readonly cooldown: number;
+  readonly tooltipMessages: Message[];
 
   constructor() {
     this.sprite = FIREBALL_SPRITE;
@@ -24,7 +33,8 @@ export class FireballAbility implements Ability {
     this.targetType = TargetType.TILE;
     this.minRange = 1;
     this.maxRange = FIREBALL_RANGE;
-    this.cooldown = 1;
+    this.cooldown = 50;
+    this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 
   cast(caster: Actor, target: TileMapCell) {

@@ -1,7 +1,14 @@
-import {Ability, Actor, Colors, ConfusedMonster, Sprite, TargetType} from 'wglt';
+import {Ability, Actor, Colors, ConfusedMonster, Message, Sprite, TargetType} from 'wglt';
 
 const CONFUSE_RANGE = 8;
 const CONFUSE_SPRITE = new Sprite(128, 32, 16, 24, 3, false);
+const TOOLTIP_MESSAGES = [
+  new Message('Fireball', Colors.WHITE),
+  new Message('2% of base mana', Colors.WHITE),
+  new Message('2 turn cast', Colors.WHITE),
+  new Message('Throws a fiery ball causing 10 damage', Colors.YELLOW),
+  new Message('to all enemies within 3 tiles.', Colors.YELLOW),
+];
 
 export class ConfuseAbility implements Ability {
   readonly sprite: Sprite;
@@ -10,6 +17,7 @@ export class ConfuseAbility implements Ability {
   readonly minRange: number;
   readonly maxRange: number;
   readonly cooldown: number;
+  readonly tooltipMessages: Message[];
 
   constructor() {
     this.sprite = CONFUSE_SPRITE;
@@ -18,6 +26,7 @@ export class ConfuseAbility implements Ability {
     this.minRange = 1;
     this.maxRange = CONFUSE_RANGE;
     this.cooldown = 1;
+    this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 
   cast(caster: Actor, target: Actor) {
