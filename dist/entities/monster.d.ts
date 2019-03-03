@@ -1,6 +1,7 @@
-import { Actor, Entity, Game, Sprite } from 'wglt';
+import { Actor, Game, Sprite } from 'wglt';
 export declare abstract class Monster extends Actor {
     constructor(game: Game, x: number, y: number, name: string, sprite: Sprite);
-    onAttack(attacker: Entity, damage: number): void;
+    onAttack(target: Actor, damage: number): void;
     onDeath(): void;
+    private calculateDamage;
 }

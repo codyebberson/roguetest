@@ -41,7 +41,7 @@ export class LeapAbility implements Ability {
       return false;
     }
 
-    const existing = game.getEnemyAt(target.x, target.y);
+    const existing = game.getActorAt(target.x, target.y);
     if (existing) {
       game.log('Target is occupied.', Colors.LIGHT_GRAY);
       return false;

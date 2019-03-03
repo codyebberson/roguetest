@@ -38,7 +38,8 @@ export class Game extends wglt.Game {
         return true;
       }
       if (other instanceof Actor) {
-        player.attack(other);
+        // TODO: Calculate damage
+        player.attack(other, 10);
         return true;
       }
       if (other.name === 'stairs') {
@@ -115,10 +116,7 @@ export class Game extends wglt.Game {
       this.entities.push(this.player as Player);
 
       // Reset the players targets
-      this.targetEntity = undefined;
-      this.targetTile = undefined;
-      this.path = undefined;
-
+      this.stopAutoWalk();
       this.mapGen.createMap();
     };
 

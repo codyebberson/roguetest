@@ -284,7 +284,7 @@ export class MapGenerator {
       const x = rng.nextRange(room.x1 + 1, room.x2 - 1);
       const y = rng.nextRange(room.y1 + 1, room.y2 - 1);
 
-      if (this.getEntityAt(x, y)) {
+      if (game.getEntityAt(x, y)) {
         // Something already at this location
         continue;
       }
@@ -316,7 +316,7 @@ export class MapGenerator {
       const x = rng.nextRange(room.x1 + 1, room.x2 - 1);
       const y = rng.nextRange(room.y1 + 1, room.y2 - 1);
 
-      if (this.getEntityAt(x, y)) {
+      if (game.getEntityAt(x, y)) {
         // Something already at this location
         continue;
       }
@@ -343,15 +343,5 @@ export class MapGenerator {
 
       game.entities.push(item);
     }
-  }
-
-  private getEntityAt(x: number, y: number) {
-    for (let i = 0; i < this.game.entities.length; i++) {
-      const entity = this.game.entities[i];
-      if (entity.x === x && entity.y === y) {
-        return entity;
-      }
-    }
-    return undefined;
   }
 }

@@ -3,6 +3,7 @@ import {AI, Game, Sprite} from 'wglt';
 import {Monster} from './monster';
 
 const SPRITE = new Sprite(0, 168, 16, 24, 2, true, undefined, 0x5790b7FF);
+const DAMAGE = 30;
 
 class SharkAI extends AI {
   doAi() {
@@ -13,7 +14,7 @@ class SharkAI extends AI {
     }
 
     if (monster.distanceTo(player) < 2) {
-      monster.attack(player);
+      monster.attack(player, DAMAGE);
     }
   }
 }

@@ -4,6 +4,6 @@ export declare class Player extends Actor {
     xp: number;
     maxXp: number;
     constructor(game: Game, x: number, y: number);
-    onAttack(attacker: Actor, damage: number): void;
+    onAttack(target: Actor, damage: number): void;
     onDeath(): void;
 }

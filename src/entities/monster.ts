@@ -6,7 +6,7 @@ export abstract class Monster extends Actor {
   constructor(game: Game, x: number, y: number, name: string, sprite: Sprite) {
     super(game, x, y, name, sprite, true);
     this.hp = 20;
-    this.ai = new BasicMonster(this);
+    this.ai = new BasicMonster(this, this.calculateDamage);
   }
 
   onAttack(target: Actor, damage: number) {
@@ -34,5 +34,9 @@ export abstract class Monster extends Actor {
       player.maxXp *= 2;
       this.game.log('You reached level ' + player.level, 0xFF8000FF);
     }
+  }
+
+  private calculateDamage(attacker: Actor, target: Actor) {
+    return 10;
   }
 }
