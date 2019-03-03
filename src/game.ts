@@ -18,7 +18,7 @@ export class Game extends wglt.Game {
   private readonly mapGen: MapGenerator;
 
   constructor(app: App) {
-    super(app, {tileSize: new Rect(0, 0, 16, 24)});
+    super(app, {tileSize: new Rect(0, 0, 16, 24), viewDistance: 8});
 
     this.targetSprite = TARGET_SPRITE;
     this.cooldownSprite = new Sprite(192, 16, 16, 24, 24);

@@ -8,12 +8,14 @@ import {Spider} from './entities/spider';
 import {Troll} from './entities/troll';
 import {HealthPotion} from './items/healthpotion';
 import {Scroll} from './items/scroll';
+import { Bat } from './entities/bat';
 
 // Size of the map
 const MAP_WIDTH = 64;
 const MAP_HEIGHT = 32;
 
 const TILE_EMPTY = 0;
+const TILE_SHADOW = getTileId(0, 3);
 const TILE_WALL = getTileId(0, 19);
 const TILE_HALF_WALL = getTileId(0, 20);
 const TILE_FLOOR = getTileId(13, 17);
@@ -37,6 +39,35 @@ const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
 
 const STAIRS_SPRITE = new Sprite(224, 432, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
+
+// const SECTOR_DEFINITIONS = [
+//   {
+//       // 0: Sector 1
+//       roomCount: 10,
+//       roomMinWidth: 5,
+//       roomMaxWidth: 12,
+//       roomMinHeight: 5,
+//       roomMaxHeight: 8,
+//       minEntities: 1,
+//       maxEntities: 1,
+//       // floorTiles: [
+//       //     [TILE_STEEL_FLOOR_1, 0.7],
+//       //     [TILE_GRAY_CHECKER_FLOOR_1, 0.1],
+//       //     [TILE_GRAY_CHECKER_FLOOR_2, 0.1],
+//       //     [TILE_GRAY_CHECKER_FLOOR_3, 0.1],
+//       // ],
+//       // wallTiles: [
+//       //     [TILE_GRAY_WALL_1, 0.6],
+//       //     [TILE_GRAY_WALL_2, 0.1],
+//       //     [TILE_GRAY_WALL_3, 0.1],
+//       //     [TILE_GRAY_WALL_4, 0.1],
+//       //     [TILE_GRAY_WALL_6, 0.1],
+//       // ],
+//       entitityTypes: [
+//           [Spider, 1.0]
+//       ]
+//   },
+// ];
 
 export class MapGenerator {
   readonly game: Game;
@@ -62,6 +93,7 @@ export class MapGenerator {
     for (let y = 0; y < MAP_HEIGHT; y++) {
       for (let x = 0; x < MAP_WIDTH; x++) {
         map.setTile(0, x, y, TILE_WALL, true);
+        map.setTile(1, x, y, TILE_EMPTY, true);
       }
     }
 
@@ -157,8 +189,15 @@ export class MapGenerator {
     // Touch up walls / half walls
     for (let y = 0; y < MAP_HEIGHT; y++) {
       for (let x = 0; x < MAP_WIDTH; x++) {
-        if (map.getTile(x, y) === TILE_WALL && map.getTile(x, y + 1) !== TILE_WALL) {
+        const t1 = map.getTile(x, y);
+        const t2 = map.getTile(x, y + 1);
+        if (t1 === TILE_WALL && t2 !== TILE_WALL) {
           map.setTile(0, x, y, TILE_HALF_WALL, true);
+          map.setTile(1, x, y + 1, TILE_SHADOW, map.isBlocked(x, y + 1));
+        }
+
+        if (t1 !== TILE_WATER && t2 === TILE_WATER) {
+          map.setTile(1, x, y + 1, TILE_SHADOW, map.isBlocked(x, y + 1));
         }
       }
     }
@@ -169,6 +208,7 @@ export class MapGenerator {
     game.entities.push(stairs);
 
     // Initial FOV
+    game.resetViewport();
     game.recomputeFov();
   }
 
@@ -212,15 +252,14 @@ export class MapGenerator {
       // Choose random spot for this monster
       const x = rng.nextRange(room.x1 + 1, room.x2 - 1);
       const y = rng.nextRange(room.y1 + 1, room.y2 - 1);
+      const roll = rng.nextRange(0, 100);
       let monster = null;
 
-      // Only place it if the tile is not blocked
-      // 80% chance of getting an orc
-      if (rng.nextRange(0, 100) < 80) {
-        // Create an orc
+      if (roll < 40) {
         monster = new Spider(game, x, y);
+      } else if (roll < 80) {
+        monster = new Bat(game, x, y);
       } else {
-        // Create a troll
         monster = new Troll(game, x, y);
       }
 

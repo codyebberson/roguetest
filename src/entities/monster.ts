@@ -1,4 +1,4 @@
-import {Actor, BasicMonster, Entity, Game, Sprite} from 'wglt';
+import {Actor, BasicMonster, Entity, Game, Sprite, AI} from 'wglt';
 
 import {Player} from './player';
 
