@@ -63,7 +63,14 @@ export class Game extends wglt.Game {
     const bottomPanel = new BottomPanel();
     this.gui.add(bottomPanel);
 
-    const inventoryDialog = new ItemContainerDialog(new Rect(10, 50, 94, 126), 16, player.inventory);
+    const inventoryDialog = new ItemContainerDialog(
+        new Rect(10, 50, 94, 126),
+        [
+          new wglt.Message('Traveler\'s Backpack', wglt.Colors.GREEN),
+          new wglt.Message('Click an item to use', wglt.Colors.LIGHT_GRAY),
+          new wglt.Message('Drag for shortcut', wglt.Colors.LIGHT_GRAY)
+        ],
+        16, player.inventory);
     inventoryDialog.visible = false;
     this.gui.add(inventoryDialog);
 
@@ -78,7 +85,14 @@ export class Game extends wglt.Game {
     ];
     bottomPanel.inventorySlot.add(inventoryButton);
 
-    const talentsDialog = new TalentsDialog(new Rect(10, 50, 94, 126), 16, player.talents);
+    const talentsDialog = new TalentsDialog(
+        new Rect(10, 50, 94, 126),
+        [
+          new wglt.Message('Talents', wglt.Colors.GREEN),
+          new wglt.Message('Click an ability to use', wglt.Colors.LIGHT_GRAY),
+          new wglt.Message('Drag for shortcut', wglt.Colors.LIGHT_GRAY)
+        ],
+        16, player.talents);
     talentsDialog.visible = false;
     this.gui.add(talentsDialog);
 

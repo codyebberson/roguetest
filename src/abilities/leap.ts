@@ -1,8 +1,8 @@
-import {Ability, Actor, Colors, ConfusedMonster, fromRgb, Message, SlideEffect, Sprite, TargetType, TileMapCell} from 'wglt';
+import {Ability, Actor, Colors, fromRgb, Message, SlideEffect, Sprite, TargetType, TileMapCell} from 'wglt';
+import {Stunned} from '../ai/stunned';
 
 const LEAP_RANGE = 3;
 const LEAP_RADIUS = 2;
-const LEAP_DAMAGE = 4;
 const LEAP_COLOR = fromRgb(0xFF, 0x80, 0x80);
 const LEAP_SPRITE = new Sprite(722, 336, 16, 24, undefined, undefined, undefined, LEAP_COLOR);
 const TOOLTIP_MESSAGES = [
@@ -58,15 +58,14 @@ export class LeapAbility implements Ability {
         if (entity === caster) {
           continue;
         }
-        if (entity instanceof Actor && entity.distanceTo(target) <= LEAP_RADIUS) {
-          entity.takeDamage(LEAP_DAMAGE);
-          entity.ai = new ConfusedMonster(entity);
+        if (entity instanceof Actor && entity.distanceTo(target) < LEAP_RADIUS) {
+          entity.ai = new Stunned(entity, 3);
           count++;
         }
       }
 
       if (count > 0) {
-        game.log('Stunned and confused ' + count + ' enemies!', LEAP_COLOR);
+        game.log('Stunned ' + count + ' foes!', LEAP_COLOR);
       }
       caster.ap--;
     };

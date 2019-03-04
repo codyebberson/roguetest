@@ -1,4 +1,4 @@
-import {AI, Game, RNG, Sprite} from 'wglt';
+import {AI, Game, Sprite} from 'wglt';
 
 import {Monster} from './monster';
 

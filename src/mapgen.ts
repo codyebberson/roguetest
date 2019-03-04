@@ -4,6 +4,7 @@ import {ConfuseAbility} from './abilities/confuse';
 import {FireballAbility} from './abilities/fireball';
 import {LightningAbility} from './abilities/lightning';
 import {Bat} from './entities/bat';
+import {Griffon} from './entities/griffon';
 import {Player} from './entities/player';
 import {Shark} from './entities/shark';
 import {Spider} from './entities/spider';
@@ -36,7 +37,7 @@ const ROOM_MIN_WIDTH = 6;
 const ROOM_MAX_WIDTH = 10;
 const ROOM_MIN_HEIGHT = 4;
 const ROOM_MAX_HEIGHT = 8;
-const MAX_ROOMS = 30;
+const MAX_ROOMS = 10;
 const MAX_ROOM_MONSTERS = 3;
 const MAX_ROOM_ITEMS = 2;
 
@@ -128,7 +129,7 @@ export class MapGenerator {
 
     const rooms = [];
 
-    for (let r = 0; r < MAX_ROOMS; r++) {
+    while (rooms.length < MAX_ROOMS) {
       // Random width and height
       const w = rng.nextRange(ROOM_MIN_WIDTH, ROOM_MAX_WIDTH);
       const h = rng.nextRange(ROOM_MIN_HEIGHT, ROOM_MAX_HEIGHT);
@@ -149,48 +150,65 @@ export class MapGenerator {
         }
       }
 
-      if (!failed) {
-        // This means there are no intersections, so this room is valid
+      if (failed) {
+        continue;
+      }
 
-        // "paint" it to the map's tiles
-        this.createRoom(map, newRoom);
+      // This means there are no intersections, so this room is valid
 
-        // Center coordinates of new room, will be useful later
-        const center = newRoom.getCenter();
+      // "paint" it to the map's tiles
+      this.createRoom(map, newRoom);
 
-        if (rooms.length === 0) {
-          // This is the first room, where the player starts at
-          player.x = center.x;
-          player.y = center.y;
+      // Center coordinates of new room, will be useful later
+      const center = newRoom.getCenter();
 
+      if (rooms.length === 0) {
+        // This is the first room, where the player starts at
+        player.x = center.x;
+        player.y = center.y;
+
+      } else {
+        // All rooms after the first:
+        // Connect it to the previous room with a tunnel
+
+        // Center coordinates of previous room
+        const prev = rooms[rooms.length - 1].getCenter();
+
+        // Draw a coin (random number that is either 0 or 1)
+        if (rng.nextRange(0, 1) === 1) {
+          // First move horizontally, then vertically
+          this.createHTunnel(map, prev.x, center.x, prev.y);
+          this.createVTunnel(map, prev.y, center.y, center.x);
         } else {
-          // All rooms after the first:
-          // Connect it to the previous room with a tunnel
+          // First move vertically, then horizontally
+          this.createVTunnel(map, prev.y, center.y, prev.x);
+          this.createHTunnel(map, prev.x, center.x, center.y);
+        }
 
-          // Center coordinates of previous room
-          const prev = rooms[rooms.length - 1].getCenter();
+        if (rooms.length === MAX_ROOMS - 2) {
+          // Next to last
+          // Add a Griffon to the next to last room
+          const griffonLoc = newRoom.getCenter();
+          const griffon = new Griffon(game, griffonLoc.x, griffonLoc.y);
+          game.entities.push(griffon);
 
-          // Draw a coin (random number that is either 0 or 1)
-          if (rng.nextRange(0, 1) === 1) {
-            // First move horizontally, then vertically
-            this.createHTunnel(map, prev.x, center.x, prev.y);
-            this.createVTunnel(map, prev.y, center.y, center.x);
-          } else {
-            // First move vertically, then horizontally
-            this.createVTunnel(map, prev.y, center.y, prev.x);
-            this.createHTunnel(map, prev.x, center.x, center.y);
-          }
-
+        } else if (rooms.length === MAX_ROOMS - 1) {
+          // Last room
+          // Create stairs at the center of the last room
+          const stairsLoc = newRoom.getCenter();
+          const stairs = new Entity(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE, true);
+          game.entities.push(stairs);
+        } else {
           // Add monsters (spiders, bats, etc)
           this.placeMonsters(newRoom);
         }
-
-        // Add items (scrolls and health potions)
-        this.placeItems(newRoom);
-
-        // Finally, append the new room to the list
-        rooms.push(newRoom);
       }
+
+      // Add items (scrolls and health potions)
+      this.placeItems(newRoom);
+
+      // Finally, append the new room to the list
+      rooms.push(newRoom);
     }
 
     // Touch up walls / half walls
@@ -232,11 +250,6 @@ export class MapGenerator {
         }
       }
     }
-
-    // Create stairs at the center of the last room
-    const stairsLoc = rooms[rooms.length - 1].getCenter();
-    const stairs = new Entity(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE, true);
-    game.entities.push(stairs);
 
     // Initial FOV
     game.resetViewport();
