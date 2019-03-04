@@ -245,7 +245,8 @@ export class MapGenerator {
           map.setTile(2, x, y + 1, TILE_SHADOW);
         }
 
-        if (t1 === TILE_WATER && rng.nextRange(0, 100) < 1) {
+        const nearBridge = t2 === TILE_BRIDGE || t3 === TILE_BRIDGE || t4 === TILE_BRIDGE || t5 === TILE_BRIDGE;
+        if (t1 === TILE_WATER && nearBridge && rng.nextRange(0, 20) === 1) {
           game.entities.push(new Shark(game, x, y));
         }
       }

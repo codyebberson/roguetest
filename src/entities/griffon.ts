@@ -28,10 +28,8 @@ class GriffonAI extends AI {
     }
 
     const dist = griffon.distanceTo(player);
-    if (dist === 2) {
+    if (dist <= 2) {
       griffon.attack(player, DAMAGE);
-    } else if (dist < 2) {
-      griffon.move(griffon.x - player.x, griffon.y - player.y);
     } else {
       const rng = player.game.rng;
       griffon.move(rng.nextRange(-1, 2), rng.nextRange(-1, 2));
