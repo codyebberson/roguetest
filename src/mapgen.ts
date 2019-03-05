@@ -9,9 +9,9 @@ import {Player} from './entities/player';
 import {Shark} from './entities/shark';
 import {Spider} from './entities/spider';
 import {Troll} from './entities/troll';
+import {Game} from './game';
 import {HealthPotion} from './items/healthpotion';
 import {Scroll} from './items/scroll';
-import { Game } from './game';
 
 // Size of the map
 const MAP_WIDTH = 64;

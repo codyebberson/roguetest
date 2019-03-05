@@ -1,9 +1,9 @@
-import { Actor, Game } from 'wglt';
-export declare class Player extends Actor {
-    level: number;
+import { Game } from '../game';
+import { StatsActor } from './statsactor';
+export declare class Player extends StatsActor {
     xp: number;
     maxXp: number;
     constructor(game: Game, x: number, y: number);
-    onAttack(target: Actor, damage: number): void;
     onDeath(): void;
+    addXp(xpGain: number): void;
 }

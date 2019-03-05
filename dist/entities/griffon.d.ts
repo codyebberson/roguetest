@@ -1,4 +1,5 @@
-import { Game, Talent } from 'wglt';
+import { Talent } from 'wglt';
+import { Game } from '../game';
 import { Monster } from './monster';
 export declare class Griffon extends Monster {
     readonly leapTalent: Talent;

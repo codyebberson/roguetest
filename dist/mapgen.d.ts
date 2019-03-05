@@ -1,4 +1,4 @@
-import { Game } from 'wglt';
+import { Game } from './game';
 export declare class MapGenerator {
     readonly game: Game;
     constructor(game: Game);

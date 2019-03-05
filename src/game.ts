@@ -108,6 +108,20 @@ export class Game extends wglt.Game {
     ];
     topPanel.talentsSlot.add(talentsButton);
 
+    player.inventory.addListener({
+      onAdd: (_, item) => {
+        bottomPanel.shortcutBar.addItem(player.inventory, item, true);
+      },
+      onRemove: () => {}
+    });
+
+    player.talents.addListener({
+      onAdd: (_, talent) => {
+        bottomPanel.shortcutBar.addTalent(talent);
+      },
+      onRemove: () => {}
+    });
+
     player.talents.add(new Talent(player, new FireballAbility()));
     player.talents.add(new Talent(player, new LightningAbility()));
     player.talents.add(new Talent(player, new LeapAbility()));
