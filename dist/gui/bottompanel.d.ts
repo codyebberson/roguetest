@@ -1,7 +1,7 @@
-import { ButtonSlot, Panel, ShortcutButtonBar } from 'wglt';
+import { ButtonSlot, Panel, ShortcutBar } from 'wglt';
 export declare class BottomPanel extends Panel {
     constructor();
-    readonly shortcutBar: ShortcutButtonBar;
+    readonly shortcutBar: ShortcutBar;
     readonly inventorySlot: ButtonSlot;
     drawContents(): void;
 }

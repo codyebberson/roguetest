@@ -1,18 +1,18 @@
-import {ButtonSlot, Keys, Panel, Rect, ShortcutButtonBar} from 'wglt';
+import {ButtonSlot, Keys, Panel, Rect, ShortcutBar} from 'wglt';
 
 export class BottomPanel extends Panel {
   constructor() {
     super(new Rect(0, -43, 400, 43));
 
     // Create 6 slots for the action bar
-    this.add(new ShortcutButtonBar(new Rect(0, 0, 6 * 24, 28), 6));
+    this.add(new ShortcutBar(new Rect(0, 0, 6 * 24, 28), 6));
 
     // Create a slot for the inventory button
     this.add(new ButtonSlot(new Rect(100, 0, 20, 28), Keys.VK_I));
   }
 
-  get shortcutBar(): ShortcutButtonBar {
-    return this.children.get(0) as ShortcutButtonBar;
+  get shortcutBar(): ShortcutBar {
+    return this.children.get(0) as ShortcutBar;
   }
 
   get inventorySlot(): ButtonSlot {
