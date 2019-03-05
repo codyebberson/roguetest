@@ -1,4 +1,4 @@
-import {Entity, Game, Rect, RNG, Sprite, TileMap, Vec2} from 'wglt';
+import {Entity, Rect, Sprite, TileMap, Vec2} from 'wglt';
 
 import {ConfuseAbility} from './abilities/confuse';
 import {FireballAbility} from './abilities/fireball';
@@ -11,6 +11,7 @@ import {Spider} from './entities/spider';
 import {Troll} from './entities/troll';
 import {HealthPotion} from './items/healthpotion';
 import {Scroll} from './items/scroll';
+import { Game } from './game';
 
 // Size of the map
 const MAP_WIDTH = 64;

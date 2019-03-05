@@ -6,11 +6,8 @@ const LEAP_RADIUS = 2;
 const LEAP_COLOR = fromRgb(0xFF, 0x80, 0x80);
 const LEAP_SPRITE = new Sprite(722, 336, 16, 24, undefined, undefined, undefined, LEAP_COLOR);
 const TOOLTIP_MESSAGES = [
-  new Message('Fireball', Colors.WHITE),
-  new Message('2% of base mana', Colors.WHITE),
-  new Message('2 turn cast', Colors.WHITE),
-  new Message('Throws a fiery ball causing 10 damage', Colors.YELLOW),
-  new Message('to all enemies within 3 tiles.', Colors.YELLOW),
+  new Message('Heroic Leap', Colors.WHITE), new Message('Instant cast', Colors.WHITE),
+  new Message('Stun all enemies within 1 tile.', Colors.YELLOW)
 ];
 
 export class LeapAbility implements Ability {
@@ -34,16 +31,19 @@ export class LeapAbility implements Ability {
 
   cast(caster: Actor, target: TileMapCell) {
     const game = caster.game;
-    const player = caster;
-    const distance = player.distanceTo(target);
+    const distance = caster.distanceTo(target);
     if (distance > LEAP_RANGE) {
-      game.log('Target out of range.', Colors.LIGHT_GRAY);
+      if (caster === game.player) {
+        game.log('Target out of range.', Colors.LIGHT_GRAY);
+      }
       return false;
     }
 
     const existing = game.getActorAt(target.x, target.y);
     if (existing) {
-      game.log('Target is occupied.', Colors.LIGHT_GRAY);
+      if (caster === game.player) {
+        game.log('Target is occupied.', Colors.LIGHT_GRAY);
+      }
       return false;
     }
 

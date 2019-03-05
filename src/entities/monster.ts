@@ -1,20 +1,15 @@
-import {Actor, BasicMonster, Game, Sprite} from 'wglt';
+import {Actor, BasicMonster, Sprite} from 'wglt';
+
+import {Game} from '../game';
 
 import {Player} from './player';
+import {StatsActor} from './statsactor';
 
-export abstract class Monster extends Actor {
+export abstract class Monster extends StatsActor {
   constructor(game: Game, x: number, y: number, name: string, sprite: Sprite) {
-    super(game, x, y, name, sprite, true);
+    super(game, x, y, name, sprite);
     this.hp = 20;
     this.ai = new BasicMonster(this, this.calculateDamage);
-  }
-
-  onAttack(target: Actor, damage: number) {
-    if (damage > 0) {
-      this.game.log(this.name + ' attacks ' + target.name + ' for ' + damage + ' hit points.', 0x808080FF);
-    } else {
-      this.game.log(this.name + ' attacks ' + target.name + ' but it has no effect!', 0x808080FF);
-    }
   }
 
   onDeath() {
@@ -24,16 +19,11 @@ export abstract class Monster extends Actor {
     this.name = 'remains of ' + this.name;
     this.sendToBack();
 
-    const player = this.game.player as Player;
+    // TODO: Calculate XP gain
     const xpGain = 10;
-    player.xp += xpGain;
 
-    while (player.xp >= player.maxXp) {
-      player.level++;
-      player.xp = 0;
-      player.maxXp *= 2;
-      this.game.log('You reached level ' + player.level, 0xFF8000FF);
-    }
+    // TODO: Add XP to the attacker, not the player
+    (this.game.player as Player).addXp(xpGain);
   }
 
   private calculateDamage(attacker: Actor, target: Actor) {

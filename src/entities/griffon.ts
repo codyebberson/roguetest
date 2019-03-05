@@ -1,6 +1,7 @@
-import {AI, Game, Sprite, Talent} from 'wglt';
+import {AI, Sprite, Talent} from 'wglt';
 
 import {LeapAbility} from '../abilities/leap';
+import {Game} from '../game';
 
 import {Monster} from './monster';
 import {Player} from './player';
@@ -11,7 +12,7 @@ const DAMAGE = 20;
 class GriffonAI extends AI {
   doAi() {
     const griffon = this.actor as Griffon;
-    const game = griffon.game;
+    const game = griffon.game as Game;
     const player = game.player as Player;
     if (!player || player.hp <= 0) {
       return;

@@ -1,4 +1,6 @@
-import {Game, Sprite} from 'wglt';
+import {Sprite} from 'wglt';
+
+import {Game} from '../game';
 
 import {Monster} from './monster';
 

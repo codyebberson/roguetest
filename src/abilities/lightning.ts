@@ -2,12 +2,13 @@ import {Ability, Actor, Colors, Entity, Game, Message, ProjectileEffect, Sprite,
 
 const LIGHTNING_DAMAGE = 10;
 const LIGHTNING_RANGE = 5;
+const MANA_COST = 10;
 const TOOLTIP_MESSAGES = [
   new Message('Lightning', Colors.WHITE),
-  new Message('2% of base mana', Colors.WHITE),
-  new Message('2 turn cast', Colors.WHITE),
-  new Message('Hurls a bolt of lightning at the target', Colors.YELLOW),
-  new Message('dealing 20 damage.', Colors.YELLOW),
+  new Message(MANA_COST + ' mana', Colors.WHITE),
+  new Message('Instant cast', Colors.WHITE),
+  new Message('Hurls a bolt of lightning at the nearest enemy', Colors.YELLOW),
+  new Message('dealing ' + LIGHTNING_DAMAGE + ' damage.', Colors.YELLOW),
 ];
 
 export class LightningAbility implements Ability {
