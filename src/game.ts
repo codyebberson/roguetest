@@ -63,6 +63,49 @@ export class Game extends wglt.Game {
     const bottomPanel = new BottomPanel();
     this.gui.add(bottomPanel);
 
+    const inventoryButton = new Button(
+        new Rect(0, 0, 20, 28),
+        new Sprite(834, 168, 16, 24, 1, true, 30, 0xe08020ff),
+        undefined,
+        () => {
+          inventoryDialog.visible = !inventoryDialog.visible;
+          talentsDialog.visible = false;
+        });
+    inventoryButton.tooltipMessages = [
+      new Message('Traveler\'s Backpack', Colors.GREEN),
+      new Message('Item Level 55', Colors.YELLOW),
+      new Message('16 Slot Bag', Colors.WHITE),
+      new Message('Sell Price: 87 coins', Colors.WHITE)
+    ];
+    bottomPanel.inventorySlot.add(inventoryButton);
+
+    const talentsButton = new Button(
+        new Rect(0, 0, 20, 28),
+        new Sprite(658, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE),
+        undefined,
+        () => {
+          talentsDialog.visible = !talentsDialog.visible;
+          inventoryDialog.visible = false;
+        });
+    talentsButton.tooltipMessages = [
+      new Message('Talents', Colors.WHITE),
+      new Message('A list of all of your', Colors.YELLOW),
+      new Message('character\'s talents.', Colors.YELLOW)
+    ];
+    topPanel.talentsSlot.add(talentsButton);
+
+    const menuButton = new Button(
+      new Rect(0, 0, 20, 28),
+      new Sprite(352, 672, 16, 24, undefined, undefined, undefined, Colors.LIGHT_GRAY),
+      undefined,
+      () => {
+        window.location.hash = 'menu';
+      });
+    menuButton.tooltipMessages = [
+      new Message('Main Menu', Colors.WHITE)
+    ];
+    topPanel.menuSlot.add(menuButton);
+
     const inventoryDialog = new ItemContainerDialog(
         new Rect(10, 50, 94, 126),
         [
@@ -74,17 +117,6 @@ export class Game extends wglt.Game {
     inventoryDialog.visible = false;
     this.gui.add(inventoryDialog);
 
-    const inventoryButton = new Button(
-        new Rect(400 - 24, 224 - 24, 20, 28), new Sprite(834, 168, 16, 24, 1, true, 30, 0xe08020ff), undefined, () => {
-          inventoryDialog.visible = !inventoryDialog.visible;
-          talentsDialog.visible = false;
-        });
-    inventoryButton.tooltipMessages = [
-      new Message('Traveler\'s Backpack', Colors.GREEN), new Message('Item Level 55', Colors.YELLOW),
-      new Message('16 Slot Bag', Colors.WHITE), new Message('Sell Price: 87 coins', Colors.WHITE)
-    ];
-    bottomPanel.inventorySlot.add(inventoryButton);
-
     const talentsDialog = new TalentsDialog(
         new Rect(10, 50, 94, 126),
         [
@@ -95,18 +127,6 @@ export class Game extends wglt.Game {
         16, player.talents);
     talentsDialog.visible = false;
     this.gui.add(talentsDialog);
-
-    const talentsButton = new Button(
-        new Rect(400 - 24, 224 - 24, 20, 28),
-        new Sprite(658, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE), undefined, () => {
-          talentsDialog.visible = !talentsDialog.visible;
-          inventoryDialog.visible = false;
-        });
-    talentsButton.tooltipMessages = [
-      new Message('Talents', Colors.WHITE), new Message('A list of all of your', Colors.YELLOW),
-      new Message('character\'s talents.', Colors.YELLOW)
-    ];
-    topPanel.talentsSlot.add(talentsButton);
 
     player.inventory.addListener({
       onAdd: (_, item) => {
