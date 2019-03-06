@@ -1,7 +1,7 @@
-import {App, AppState, Rect, SelectDialog} from 'wglt';
-import {SelectOption} from 'wglt/dist/gui/selectoption';
+import {App, AppState, Rect} from 'wglt';
 
 import {Game} from './game';
+import {MainMenu} from './mainmenu';
 
 const app = new App({
   canvas: document.querySelector('canvas') as HTMLCanvasElement,
@@ -12,14 +12,7 @@ const app = new App({
 
 const game = new Game(app);
 
-const mainMenu = new AppState(app);
-mainMenu.gui.renderer.baseRect = new Rect(0, 16, 24, 24);
-mainMenu.gui.add(
-    new SelectDialog(new Rect(16, 64, 160, 100), [{name: 'NEW GAME'}, {name: 'CONTINUE'}], (choice: SelectOption) => {
-      if (choice.name === 'NEW GAME') {
-        window.location.hash = 'game';
-      }
-    }));
+const mainMenu = new MainMenu(app);
 
 const highScores = new AppState(app);
 
