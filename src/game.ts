@@ -8,6 +8,7 @@ import {Player} from './entities/player';
 import {BottomPanel} from './gui/bottompanel';
 import {TopPanel} from './gui/toppanel';
 import {MapGenerator} from './mapgen';
+import { CharacterDialog } from './gui/characterdialog';
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -70,6 +71,7 @@ export class Game extends wglt.Game {
         () => {
           inventoryDialog.visible = !inventoryDialog.visible;
           talentsDialog.visible = false;
+          characterDialog.visible = false;
         });
     inventoryButton.tooltipMessages = [
       new Message('Traveler\'s Backpack', Colors.GREEN),
@@ -79,6 +81,22 @@ export class Game extends wglt.Game {
     ];
     bottomPanel.inventorySlot.add(inventoryButton);
 
+    const characterButton = new Button(
+        new Rect(0, 0, 20, 28),
+        new Sprite(642, 240, 16, 24, undefined, undefined, undefined, 0xffcf5cff),
+        undefined,
+        () => {
+          characterDialog.visible = !characterDialog.visible;
+          inventoryDialog.visible = false;
+          talentsDialog.visible = false;
+        });
+      characterButton.tooltipMessages = [
+      new Message('Character', Colors.WHITE),
+      new Message('Currently equipped items,', Colors.YELLOW),
+      new Message('stats and abilities.', Colors.YELLOW)
+    ];
+    topPanel.characterSlot.add(characterButton);
+
     const talentsButton = new Button(
         new Rect(0, 0, 20, 28),
         new Sprite(658, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE),
@@ -86,6 +104,7 @@ export class Game extends wglt.Game {
         () => {
           talentsDialog.visible = !talentsDialog.visible;
           inventoryDialog.visible = false;
+          characterDialog.visible = false;
         });
     talentsButton.tooltipMessages = [
       new Message('Talents', Colors.WHITE),
@@ -116,6 +135,10 @@ export class Game extends wglt.Game {
         16, player.inventory);
     inventoryDialog.visible = false;
     this.gui.add(inventoryDialog);
+
+    const characterDialog = new CharacterDialog(new Rect(10, 50, 94, 126), player);
+    characterDialog.visible = false;
+    this.gui.add(characterDialog);
 
     const talentsDialog = new TalentsDialog(
         new Rect(10, 50, 94, 126),
