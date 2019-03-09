@@ -4,6 +4,7 @@ import {ConfuseAbility} from './abilities/confuse';
 import {FireballAbility} from './abilities/fireball';
 import {LightningAbility} from './abilities/lightning';
 import {Bat} from './entities/bat';
+import {Cat} from './entities/cat';
 import {Griffon} from './entities/griffon';
 import {Player} from './entities/player';
 import {Shark} from './entities/shark';
@@ -168,6 +169,10 @@ export class MapGenerator {
         player.x = center.x;
         player.y = center.y;
 
+        // Add the cat near the player
+        this.game.cat = new Cat(game, player.x + 2, player.y);
+        game.entities.push(this.game.cat);
+
       } else {
         // All rooms after the first:
         // Connect it to the previous room with a tunnel
@@ -199,6 +204,11 @@ export class MapGenerator {
           const stairsLoc = newRoom.getCenter();
           const stairs = new Entity(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE, true);
           game.entities.push(stairs);
+
+          if (this.game.cat) {
+            this.game.cat.destination = stairsLoc;
+          }
+
         } else {
           // Add monsters (spiders, bats, etc)
           this.placeMonsters(newRoom);

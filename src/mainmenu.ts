@@ -44,8 +44,8 @@ export class MainMenu extends AppState {
     this.app.drawImage(this.app.center.x - 128, 0, 0, 800, 256, 128);
 
     // Draw the title text
-    this.app.drawCenteredString('LOPI KUWAK DUNGEON', this.app.center.x + 1, 33, Colors.BLACK);
-    this.app.drawCenteredString('LOPI KUWAK DUNGEON', this.app.center.x, 32);
+    this.app.drawCenteredString('KOPI LUWAK DUNGEON', this.app.center.x + 1, 33, Colors.BLACK);
+    this.app.drawCenteredString('KOPI LUWAK DUNGEON', this.app.center.x, 32);
 
     // Draw the sprites
     for (let i = 0; i < 4; i++) {

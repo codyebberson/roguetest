@@ -33,6 +33,7 @@ function handleHashChange() {
   const hash = window.location.hash;
   if (hash === '#game') {
     app.state = game;
+    game.nextLevel();
   } else if (hash === '#highscores') {
     app.state = highScores;
   } else if (hash === '#credits') {

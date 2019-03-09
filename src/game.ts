@@ -4,11 +4,13 @@ import {Actor, App, Button, Colors, Entity, FadeInEffect, FadeOutEffect, Item, I
 import {FireballAbility} from './abilities/fireball';
 import {LeapAbility} from './abilities/leap';
 import {LightningAbility} from './abilities/lightning';
+import {CatEscapeEffect} from './effects/catescapeeffect';
+import {Cat} from './entities/cat';
 import {Player} from './entities/player';
 import {BottomPanel} from './gui/bottompanel';
+import {CharacterDialog} from './gui/characterdialog';
 import {TopPanel} from './gui/toppanel';
 import {MapGenerator} from './mapgen';
-import { CharacterDialog } from './gui/characterdialog';
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -17,6 +19,7 @@ const TARGET_SPRITE = new Sprite(16, 40, SPRITE_WIDTH, SPRITE_HEIGHT);
 
 export class Game extends wglt.Game {
   private readonly mapGen: MapGenerator;
+  cat?: Cat;
 
   constructor(app: App) {
     super(app, {tileSize: new Rect(0, 0, 16, 24), viewDistance: 7});
@@ -44,7 +47,7 @@ export class Game extends wglt.Game {
         return true;
       }
       if (other.name === 'stairs') {
-        this.nextLevel();
+        this.endLevel();
         return true;
       }
       return false;
@@ -90,7 +93,7 @@ export class Game extends wglt.Game {
           inventoryDialog.visible = false;
           talentsDialog.visible = false;
         });
-      characterButton.tooltipMessages = [
+    characterButton.tooltipMessages = [
       new Message('Character', Colors.WHITE),
       new Message('Currently equipped items,', Colors.YELLOW),
       new Message('stats and abilities.', Colors.YELLOW)
@@ -100,8 +103,7 @@ export class Game extends wglt.Game {
     const talentsButton = new Button(
         new Rect(0, 0, 20, 28),
         new Sprite(658, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE),
-        undefined,
-        () => {
+        undefined, () => {
           talentsDialog.visible = !talentsDialog.visible;
           inventoryDialog.visible = false;
           characterDialog.visible = false;
@@ -114,15 +116,13 @@ export class Game extends wglt.Game {
     topPanel.talentsSlot.add(talentsButton);
 
     const menuButton = new Button(
-      new Rect(0, 0, 20, 28),
-      new Sprite(352, 672, 16, 24, undefined, undefined, undefined, Colors.LIGHT_GRAY),
-      undefined,
-      () => {
-        window.location.hash = 'menu';
-      });
-    menuButton.tooltipMessages = [
-      new Message('Main Menu', Colors.WHITE)
-    ];
+        new Rect(0, 0, 20, 28),
+        new Sprite(352, 672, 16, 24, undefined, undefined, undefined, Colors.LIGHT_GRAY),
+        undefined,
+        () => {
+          window.location.hash = 'menu';
+        });
+    menuButton.tooltipMessages = [new Message('Main Menu', Colors.WHITE)];
     topPanel.menuSlot.add(menuButton);
 
     const inventoryDialog = new ItemContainerDialog(
@@ -132,7 +132,8 @@ export class Game extends wglt.Game {
           new wglt.Message('Click an item to use', wglt.Colors.LIGHT_GRAY),
           new wglt.Message('Drag for shortcut', wglt.Colors.LIGHT_GRAY)
         ],
-        16, player.inventory);
+        16,
+        player.inventory);
     inventoryDialog.visible = false;
     this.gui.add(inventoryDialog);
 
@@ -147,7 +148,8 @@ export class Game extends wglt.Game {
           new wglt.Message('Click an ability to use', wglt.Colors.LIGHT_GRAY),
           new wglt.Message('Drag for shortcut', wglt.Colors.LIGHT_GRAY)
         ],
-        16, player.talents);
+        16,
+        player.talents);
     talentsDialog.visible = false;
     this.gui.add(talentsDialog);
 
@@ -173,25 +175,31 @@ export class Game extends wglt.Game {
     this.mapGen.createMap();
   }
 
-  private nextLevel() {
+  endLevel() {
     const fadeOut = new FadeOutEffect(30);
-    const fadeIn = new FadeInEffect(30);
 
     fadeOut.onDone = () => {
       // Advance to the next level
       this.log('You take a moment to rest, and recover your strength.', Colors.LIGHT_MAGENTA);
       this.log('After a rare moment of peace, you descend deeper...', Colors.LIGHT_RED);
-
-      // Clear all entities other than the player
-      this.entities.splice(0, this.entities.length);
-      this.entities.push(this.player as Player);
-
-      // Reset the players targets
-      this.stopAutoWalk();
-      this.mapGen.createMap();
+      this.nextLevel();
     };
-
     this.effects.push(fadeOut);
+  }
+
+  nextLevel() {
+    // Clear all entities other than the player
+    this.entities.splice(0, this.entities.length);
+    this.entities.push(this.player as Player);
+
+    // Reset the players targets
+    this.stopAutoWalk();
+    this.mapGen.createMap();
+
+    const fadeIn = new FadeInEffect(30);
+    fadeIn.onDone = () => {
+      this.effects.push(new CatEscapeEffect(this));
+    };
     this.effects.push(fadeIn);
   }
 }

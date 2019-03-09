@@ -1,5 +1,6 @@
-import { Dialog, Rect, ButtonSlot, Keys, Colors } from "wglt";
-import { Player } from "../entities/player";
+import {ButtonSlot, Colors, Dialog, Keys, Rect} from 'wglt';
+
+import {Player} from '../entities/player';
 
 const MARGIN = 4;
 const BUTTON_SPACING = 2;
@@ -70,7 +71,7 @@ export class CharacterDialog extends Dialog {
     const containerRect = this.rect;
     const buttonRect = this.gui.renderer.buttonSlotRect;
     const centerX = ((containerRect.x1 + containerRect.x2) / 2) | 0;
-    let x = containerRect.x + MARGIN;
+    const x = containerRect.x + MARGIN;
     let y = containerRect.y + MARGIN;
 
     this.gui.app.drawCenteredString('ORYX THE BRAVE', centerX, y, Colors.WHITE);

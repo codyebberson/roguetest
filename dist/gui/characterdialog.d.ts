@@ -1,5 +1,5 @@
-import { Dialog, Rect, ButtonSlot } from "wglt";
-import { Player } from "../entities/player";
+import { ButtonSlot, Dialog, Rect } from 'wglt';
+import { Player } from '../entities/player';
 export declare class CharacterDialog extends Dialog {
     readonly player: Player;
     constructor(rect: Rect, player: Player);
