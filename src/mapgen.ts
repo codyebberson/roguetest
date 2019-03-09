@@ -16,7 +16,7 @@ import {Scroll} from './items/scroll';
 
 // Size of the map
 const MAP_WIDTH = 64;
-const MAP_HEIGHT = 32;
+const MAP_HEIGHT = 48;
 
 const TILE_EMPTY = 0;
 const TILE_SHADOW = getTileId(0, 3);
@@ -29,6 +29,8 @@ const TILE_COBWEB_NORTHWEST = getTileId(28, 22);
 const TILE_COBWEB_NORTHEAST = getTileId(29, 22);
 const TILE_COBWEB_SOUTHWEST = getTileId(30, 22);
 const TILE_COBWEB_SOUTHEAST = getTileId(31, 22);
+const TILE_DOOR = getTileId(7, 19);
+const TILE_STAIRS = getTileId(14, 18);
 
 function getTileId(tileX: number, tileY: number) {
   return 1 + tileY * 64 + tileX;
@@ -46,7 +48,7 @@ const MAX_ROOM_ITEMS = 2;
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
 
-const STAIRS_SPRITE = new Sprite(224, 432, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
+const STAIRS_SPRITE = new Sprite(700, 500, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
 
 // const SECTOR_DEFINITIONS = [
 //   {
@@ -77,6 +79,34 @@ const STAIRS_SPRITE = new Sprite(224, 432, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
 //   },
 // ];
 
+const BOSS_ZONE_HEIGHT = 8;
+const BOSS_LAYOUTS = [
+  {
+    // Top left
+    bossZone: new Rect(0, 0, MAP_WIDTH, BOSS_ZONE_HEIGHT),
+    bossRoom: new Rect(8, 2, 10, 6),
+    stairsRoom: new Rect(2, 3, 4, 4)
+  },
+  {
+    // Top right
+    bossZone: new Rect(0, 0, MAP_WIDTH, BOSS_ZONE_HEIGHT),
+    bossRoom: new Rect(MAP_WIDTH - 18, 2, 10, 6),
+    stairsRoom: new Rect(MAP_WIDTH - 6, 3, 4, 4)
+  },
+  {
+    // Bottom left
+    bossZone: new Rect(0, MAP_HEIGHT - BOSS_ZONE_HEIGHT, MAP_WIDTH, BOSS_ZONE_HEIGHT),
+    bossRoom: new Rect(8, MAP_HEIGHT - BOSS_ZONE_HEIGHT, 10, 6),
+    stairsRoom: new Rect(2, MAP_HEIGHT - BOSS_ZONE_HEIGHT + 1, 4, 4)
+  },
+  {
+    // Bottom right
+    bossZone: new Rect(0, MAP_HEIGHT - BOSS_ZONE_HEIGHT, MAP_WIDTH, BOSS_ZONE_HEIGHT),
+    bossRoom: new Rect(MAP_WIDTH - 18, MAP_HEIGHT - BOSS_ZONE_HEIGHT, 10, 6),
+    stairsRoom: new Rect(MAP_WIDTH - 6, MAP_HEIGHT - BOSS_ZONE_HEIGHT + 1, 4, 4)
+  },
+];
+
 export class MapGenerator {
   readonly game: Game;
 
@@ -106,7 +136,7 @@ export class MapGenerator {
 
     // Create bodies of water
     const water = new Vec2(MAP_WIDTH / 2, MAP_HEIGHT / 2);
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 200; i++) {
       map.setTile(0, water.x, water.y, TILE_WATER, true, false);
       map.setTile(0, water.x - 1, water.y, TILE_WATER, true, false);
       map.setTile(0, water.x + 1, water.y, TILE_WATER, true, false);
@@ -116,7 +146,7 @@ export class MapGenerator {
       water.y += rng.nextRange(-1, 2);
     }
 
-    // Make sure there's a ring of wall all around
+    // Make sure there's a ring of "empty" all around
     for (let x = 0; x < MAP_WIDTH; x++) {
       map.setTile(0, x, 0, TILE_EMPTY, true);
       map.setTile(0, x, MAP_HEIGHT - 1, TILE_EMPTY, true);
@@ -128,6 +158,8 @@ export class MapGenerator {
 
     // Reset field-of-view
     map.resetFov();
+
+    const bossLayout = BOSS_LAYOUTS[rng.nextRange(0, BOSS_LAYOUTS.length)];
 
     const rooms = [];
 
@@ -144,7 +176,7 @@ export class MapGenerator {
       const newRoom = new Rect(x, y, w, h);
 
       // Run through the other rooms and see if they intersect with this one
-      let failed = false;
+      let failed = newRoom.intersects(bossLayout.bossZone);
       for (let j = 0; j < rooms.length; j++) {
         if (newRoom.intersects(rooms[j])) {
           failed = true;
@@ -191,28 +223,7 @@ export class MapGenerator {
           this.createHTunnel(map, prev.x, center.x, center.y);
         }
 
-        if (rooms.length === MAX_ROOMS - 2) {
-          // Next to last
-          // Add a Griffon to the next to last room
-          const griffonLoc = newRoom.getCenter();
-          const griffon = new Griffon(game, griffonLoc.x, griffonLoc.y);
-          game.entities.push(griffon);
-
-        } else if (rooms.length === MAX_ROOMS - 1) {
-          // Last room
-          // Create stairs at the center of the last room
-          const stairsLoc = newRoom.getCenter();
-          const stairs = new Entity(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE, true);
-          game.entities.push(stairs);
-
-          if (this.game.cat) {
-            this.game.cat.destination = stairsLoc;
-          }
-
-        } else {
-          // Add monsters (spiders, bats, etc)
-          this.placeMonsters(newRoom);
-        }
+        this.placeMonsters(newRoom);
       }
 
       // Add items (scrolls and health potions)
@@ -220,6 +231,43 @@ export class MapGenerator {
 
       // Finally, append the new room to the list
       rooms.push(newRoom);
+    }
+
+    {
+      // Create boss room
+      const bossRoom = bossLayout.bossRoom;
+      this.createRoom(map, bossRoom);
+
+      // Connect boss room to previous room
+      const prev = rooms[rooms.length - 1].getCenter();
+      const center = bossRoom.getCenter();
+      this.createHTunnel(map, prev.x, center.x, prev.y);
+      this.createVTunnel(map, prev.y, center.y, center.x);
+
+      // Create a door to boss room
+      if (center.y > prev.y) {
+        map.setTile(0, center.x, bossRoom.y1, TILE_DOOR, false, true);
+      } else {
+        map.setTile(0, center.x, bossRoom.y2, TILE_DOOR, false, true);
+      }
+
+      // Create boss
+      const griffon = new Griffon(game, center.x, center.y);
+      game.entities.push(griffon);
+
+      // Create stairs room
+      const stairsRoom = bossLayout.stairsRoom;
+      this.createRoom(map, stairsRoom);
+
+      // Create stairs
+      const stairsLoc = stairsRoom.getCenter();
+      this.createHTunnel(map, center.x, stairsLoc.x, stairsLoc.y);
+      map.setTile(0, stairsLoc.x, stairsLoc.y, TILE_STAIRS);
+      const stairs = new Entity(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE, true);
+      game.entities.push(stairs);
+
+      // Tell the cat where the stairs are
+      (this.game.cat as Cat).destination = stairsLoc;
     }
 
     // Touch up walls / half walls
@@ -245,6 +293,10 @@ export class MapGenerator {
 
         if (t1 === TILE_FLOOR && t4 === TILE_WALL && t2 === TILE_WALL && rng.nextRange(0, 4) === 0) {
           map.setTile(1, x, y, TILE_COBWEB_SOUTHEAST);
+        }
+
+        if (t1 === TILE_DOOR) {
+          map.setTile(2, x, y + 1, TILE_SHADOW);
         }
 
         if (t1 === TILE_WALL && t2 !== TILE_WALL) {
