@@ -77,11 +77,13 @@ export class CharacterDialog extends Dialog {
     this.gui.app.drawCenteredString('ORYX THE BRAVE', centerX, y, Colors.WHITE);
     y += 10;
 
-    this.gui.app.drawCenteredString('LEVEL ' + this.player.level, centerX, y, Colors.WHITE);
+    const desc = 'Level ' + this.player.level + ' ' + this.player.race.name + ' ' + this.player.class.name;
+
+    this.gui.app.drawCenteredString(desc, centerX, y, Colors.WHITE);
     y += 10;
 
     // Draw the player sprite at 2x
-    this.player.sprite.draw(this.gui.app, x + 34, y + 32);
+    this.player.sprite.draw(this.gui.app, centerX - 8, y + 32);
 
     // Left column:  head, neck, back, chest
     for (let i = 0; i < 4; i++) {
@@ -101,12 +103,12 @@ export class CharacterDialog extends Dialog {
       child.rect.height = buttonRect.height;
     }
 
-    this.mainHandSlot.rect.x = x + 22;
+    this.mainHandSlot.rect.x = centerX - buttonRect.width - 1;
     this.mainHandSlot.rect.y = y + 90;
     this.mainHandSlot.rect.width = buttonRect.width;
     this.mainHandSlot.rect.height = buttonRect.height;
 
-    this.offHandSlot.rect.x = x + 44;
+    this.offHandSlot.rect.x = centerX + 1;
     this.offHandSlot.rect.y = y + 90;
     this.offHandSlot.rect.width = buttonRect.width;
     this.offHandSlot.rect.height = buttonRect.height;

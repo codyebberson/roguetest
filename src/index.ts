@@ -1,24 +1,6 @@
-import {App, AppState, Rect} from 'wglt';
+import {App} from './app';
 
-import {Game} from './game';
-import {MainMenu} from './mainmenu';
-
-const app = new App({
-  canvas: document.querySelector('canvas') as HTMLCanvasElement,
-  imageUrl: 'graphics.png',
-  size: new Rect(0, 0, 224, 400),
-  fillWindow: true
-});
-
-const game = new Game(app);
-
-const mainMenu = new MainMenu(app);
-
-const highScores = new AppState(app);
-
-const credits = new AppState(app);
-
-app.state = mainMenu;
+const app = new App();
 
 // Clear the window hash on load
 // Always start at the root
@@ -31,14 +13,23 @@ window.addEventListener('hashchange', handleHashChange);
 
 function handleHashChange() {
   const hash = window.location.hash;
+
   if (hash === '#game') {
-    app.state = game;
-    game.nextLevel();
+    app.startGame();
+
+  } else if (hash === '#chooserace') {
+    app.chooseRace();
+
+  } else if (hash === '#chooseclass') {
+    app.chooseClass();
+
   } else if (hash === '#highscores') {
-    app.state = highScores;
+    app.showHighScores();
+
   } else if (hash === '#credits') {
-    app.state = credits;
+    app.showCredits();
+
   } else {
-    app.state = mainMenu;
+    app.showMainMenu();
   }
 }

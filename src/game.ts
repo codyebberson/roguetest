@@ -137,7 +137,7 @@ export class Game extends wglt.Game {
     inventoryDialog.visible = false;
     this.gui.add(inventoryDialog);
 
-    const characterDialog = new CharacterDialog(new Rect(10, 50, 94, 126), player);
+    const characterDialog = new CharacterDialog(new Rect(10, 50, 120, 126), player);
     characterDialog.visible = false;
     this.gui.add(characterDialog);
 

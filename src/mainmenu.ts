@@ -1,7 +1,7 @@
 import {App, AppState, Colors, fromHsv, Keys, Sprite} from 'wglt';
 
 const OPTIONS = [
-  {display: 'NEW GAME', hash: 'game', enabled: true},
+  {display: 'NEW GAME', hash: 'chooserace', enabled: true},
   {display: 'CONTINUE', hash: 'game', enabled: false},
   {display: 'ENTER SEED', hash: 'seed', enabled: true},
   {display: 'TUTORIAL', hash: 'tutorial', enabled: true},
