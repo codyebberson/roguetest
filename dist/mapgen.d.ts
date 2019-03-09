@@ -8,4 +8,5 @@ export declare class MapGenerator {
     private createVTunnel;
     private placeMonsters;
     private placeItems;
+    private placeObstacles;
 }

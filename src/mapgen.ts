@@ -22,6 +22,8 @@ const TILE_EMPTY = 0;
 const TILE_SHADOW = getTileId(0, 3);
 const TILE_WALL = getTileId(0, 19);
 const TILE_HALF_WALL = getTileId(0, 20);
+const TILE_HALF_WALL2 = getTileId(1, 20);
+const TILE_HALF_WALL3 = getTileId(2, 20);
 const TILE_FLOOR = getTileId(13, 17);
 const TILE_WATER = getTileId(0, 18);
 const TILE_BRIDGE = getTileId(15, 27);
@@ -31,6 +33,8 @@ const TILE_COBWEB_SOUTHWEST = getTileId(30, 22);
 const TILE_COBWEB_SOUTHEAST = getTileId(31, 22);
 const TILE_DOOR = getTileId(7, 19);
 const TILE_STAIRS = getTileId(14, 18);
+const TILE_BARREL = getTileId(24, 19);
+const TILE_STATUE = getTileId(16, 20);
 
 function getTileId(tileX: number, tileY: number) {
   return 1 + tileY * 64 + tileX;
@@ -44,6 +48,7 @@ const ROOM_MAX_HEIGHT = 8;
 const MAX_ROOMS = 10;
 const MAX_ROOM_MONSTERS = 3;
 const MAX_ROOM_ITEMS = 2;
+const MAX_ROOM_OBSTACLES = 4;
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -300,7 +305,14 @@ export class MapGenerator {
         }
 
         if (t1 === TILE_WALL && t2 !== TILE_WALL) {
-          map.setTile(0, x, y, TILE_HALF_WALL, true);
+          const r = rng.nextRange(0, 20);
+          if (r === 0) {
+            map.setTile(0, x, y, TILE_HALF_WALL2, true);
+          } else if (r === 1) {
+            map.setTile(0, x, y, TILE_HALF_WALL3, true);
+          } else {
+            map.setTile(0, x, y, TILE_HALF_WALL, true);
+          }
           map.setTile(2, x, y + 1, TILE_SHADOW);
         }
 
@@ -313,6 +325,11 @@ export class MapGenerator {
           game.entities.push(new Shark(game, x, y));
         }
       }
+    }
+
+    // Place obstacles after all rooms have been connected
+    for (let i = 0; i < rooms.length; i++) {
+      this.placeObstacles(rooms[i]);
     }
 
     // Initial FOV
@@ -419,6 +436,38 @@ export class MapGenerator {
       }
 
       game.entities.push(item);
+    }
+  }
+
+  private placeObstacles(room: Rect) {
+    const game = this.game;
+    const rng = game.rng;
+    const map = game.tileMap as TileMap;
+
+    // Choose random number of obstacles
+    const numItems = rng.nextRange(0, MAX_ROOM_OBSTACLES + 1);
+
+    for (let i = 0; i < numItems; i++) {
+      // Choose random spot for this item
+      const x = rng.nextRange(room.x1 + 2, room.x2 - 3);
+      const y = rng.nextRange(room.y1 + 2, room.y2 - 3);
+
+      if (game.getEntityAt(x, y)) {
+        // Something already at this location
+        continue;
+      }
+
+      const dice = rng.nextRange(0, 100);
+
+      if (dice < 80) {
+        // Create a barrel
+        map.setTile(0, x, y, TILE_FLOOR, true, false);
+        map.setTile(1, x, y, TILE_BARREL);
+      } else {
+        // Create a statue
+        map.setTile(0, x, y, TILE_FLOOR, true, false);
+        map.setTile(1, x, y, TILE_STATUE);
+      }
     }
   }
 }

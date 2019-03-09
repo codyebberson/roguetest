@@ -13,7 +13,7 @@ export class CatEscapeEffect extends Effect {
     super(100, false);
     this.game = game;
     this.cat = this.game.cat as Cat;
-    this.path = computePath(game.tileMap as TileMap, this.cat, this.cat.destination as Vec2, 100);
+    this.path = computePath(game.tileMap as TileMap, this.cat, this.cat.destination as Vec2, 500);
     this.pathIndex = 0;
   }
 
