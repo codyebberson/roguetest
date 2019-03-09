@@ -60,12 +60,19 @@ export class LightningAbility implements Ability {
     let result = null;
     for (let i = 0; i < game.entities.length; i++) {
       const entity = game.entities[i];
-      if (entity instanceof Actor && entity !== player) {
-        const dist = entity.distance(x, y);
-        if (dist < minDist) {
-          minDist = dist;
-          result = entity;
-        }
+      if (entity === player) {
+        continue;
+      }
+      if (!(entity instanceof Actor)) {
+        continue;
+      }
+      if (game.tileMap && !game.tileMap.isVisible(entity.x, entity.y)) {
+        continue;
+      }
+      const dist = entity.distance(x, y);
+      if (dist < minDist) {
+        minDist = dist;
+        result = entity;
       }
     }
     return result;

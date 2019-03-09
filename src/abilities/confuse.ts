@@ -33,7 +33,16 @@ export class ConfuseAbility implements Ability {
     const game = caster.game;
 
     if (caster.distanceTo(target) > CONFUSE_RANGE) {
-      game.log('Target out of range.', Colors.LIGHT_GRAY);
+      if (caster === game.player) {
+        game.log('Target out of range.', Colors.LIGHT_GRAY);
+      }
+      return false;
+    }
+
+    if (game.tileMap && !game.tileMap.isVisible(target.x, target.y)) {
+      if (caster === game.player) {
+        game.log('Target not visible.', Colors.LIGHT_GRAY);
+      }
       return false;
     }
 

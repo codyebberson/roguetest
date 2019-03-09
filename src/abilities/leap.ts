@@ -39,6 +39,13 @@ export class LeapAbility implements Ability {
       return false;
     }
 
+    if (game.tileMap && !game.tileMap.isVisible(target.x, target.y)) {
+      if (caster === game.player) {
+        game.log('Target not visible.', Colors.LIGHT_GRAY);
+      }
+      return false;
+    }
+
     const existing = game.getActorAt(target.x, target.y);
     if (existing) {
       if (caster === game.player) {

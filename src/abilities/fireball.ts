@@ -39,20 +39,28 @@ export class FireballAbility implements Ability {
 
   cast(caster: Actor, target: TileMapCell) {
     const game = caster.game;
-    const player = caster;
-    const distance = player.distanceTo(target);
+    const distance = caster.distanceTo(target);
     if (distance > FIREBALL_RANGE) {
-      game.log('Target out of range.', Colors.LIGHT_GRAY);
+      if (caster === game.player) {
+        game.log('Target out of range.', Colors.LIGHT_GRAY);
+      }
+      return false;
+    }
+
+    if (game.tileMap && !game.tileMap.isVisible(target.x, target.y)) {
+      if (caster === game.player) {
+        game.log('Target not visible.', Colors.LIGHT_GRAY);
+      }
       return false;
     }
 
     const speed = 8;
     const count = distance * (game.tileSize.width / speed);
-    const dx = (target.x * game.tileSize.width - player.pixelX) / count;
-    const dy = (target.y * game.tileSize.height - player.pixelY) / count;
+    const dx = (target.x * game.tileSize.width - caster.pixelX) / count;
+    const dy = (target.y * game.tileSize.height - caster.pixelY) / count;
 
     game.effects.push(
-        new ProjectileEffect(FIREBALL_SPRITE, new Vec2(player.pixelX, player.pixelY), new Vec2(dx, dy), count));
+        new ProjectileEffect(FIREBALL_SPRITE, new Vec2(caster.pixelX, caster.pixelY), new Vec2(dx, dy), count));
 
     const explosionEffect = new ExplosionEffect(game, target, FIREBALL_RADIUS, 30);
     explosionEffect.onDone = () => {
