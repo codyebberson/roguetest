@@ -33,7 +33,7 @@ export class FireballAbility implements Ability {
     this.targetType = TargetType.TILE;
     this.minRange = 1;
     this.maxRange = FIREBALL_RANGE;
-    this.cooldown = 50;
+    this.cooldown = 30;
     this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 

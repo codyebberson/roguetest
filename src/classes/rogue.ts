@@ -1,5 +1,6 @@
-import {Message, Sprite} from 'wglt';
+import {Message, Sprite, Talent} from 'wglt';
 
+import {LeapAbility} from '../abilities/leap';
 import {Player} from '../entities/player';
 
 import {CharacterClass} from './characterclass';
@@ -21,5 +22,6 @@ export class Rogue extends CharacterClass {
   initPlayer(player: Player) {
     player.class = this;
     player.sprite = SPRITE;
+    player.talents.add(new Talent(player, new LeapAbility()));
   }
 }

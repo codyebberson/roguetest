@@ -1,9 +1,6 @@
 import * as wglt from 'wglt';
-import {Actor, App, Button, Colors, Entity, FadeInEffect, FadeOutEffect, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, Talent, TalentsDialog} from 'wglt';
+import {Actor, App, Button, Colors, Entity, FadeInEffect, FadeOutEffect, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog} from 'wglt';
 
-import {FireballAbility} from './abilities/fireball';
-import {LeapAbility} from './abilities/leap';
-import {LightningAbility} from './abilities/lightning';
 import {CatEscapeEffect} from './effects/catescapeeffect';
 import {Cat} from './entities/cat';
 import {Player} from './entities/player';
@@ -11,6 +8,7 @@ import {BottomPanel} from './gui/bottompanel';
 import {CharacterDialog} from './gui/characterdialog';
 import {TopPanel} from './gui/toppanel';
 import {MapGenerator} from './mapgen';
+import {Gateway} from './items/gateway';
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -36,6 +34,13 @@ export class Game extends wglt.Game {
     player.xp = 0;
     player.maxXp = 10;
     player.onBump = (other: Entity) => {
+      if (other instanceof Gateway) {
+        if (other.other) {
+          const exit = other.other;
+          player.move(exit.x - player.x, exit.y - player.y, 16);
+        }
+        return;
+      }
       if (other instanceof Item) {
         player.moveToward(other.x, other.y);
         player.pickup(other);
@@ -166,10 +171,6 @@ export class Game extends wglt.Game {
       },
       onRemove: () => {}
     });
-
-    player.talents.add(new Talent(player, new FireballAbility()));
-    player.talents.add(new Talent(player, new LightningAbility()));
-    player.talents.add(new Talent(player, new LeapAbility()));
 
     // Generate the map
     this.mapGen.createMap();

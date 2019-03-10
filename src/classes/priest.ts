@@ -1,5 +1,7 @@
-import {Message, Sprite} from 'wglt';
+import {Message, Sprite, Talent} from 'wglt';
 
+import {FireballAbility} from '../abilities/fireball';
+import {LightningAbility} from '../abilities/lightning';
 import {Player} from '../entities/player';
 
 import {CharacterClass} from './characterclass';
@@ -21,5 +23,7 @@ export class Priest extends CharacterClass {
   initPlayer(player: Player) {
     player.class = this;
     player.sprite = SPRITE;
+    player.talents.add(new Talent(player, new FireballAbility()));
+    player.talents.add(new Talent(player, new LightningAbility()));
   }
 }
