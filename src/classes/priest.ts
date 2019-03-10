@@ -25,5 +25,6 @@ export class Priest extends CharacterClass {
     player.sprite = SPRITE;
     player.talents.add(new Talent(player, new FireballAbility()));
     player.talents.add(new Talent(player, new LightningAbility()));
+    player.baseIntelligence += 5;
   }
 }

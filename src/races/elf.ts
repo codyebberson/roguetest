@@ -19,5 +19,7 @@ export class Elf extends CharacterRace {
 
   initPlayer(player: Player) {
     player.race = this;
+    player.baseDexterity += 3;
+    player.baseIntelligence += 3;
   }
 }

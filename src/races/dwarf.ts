@@ -20,5 +20,7 @@ export class Dwarf extends CharacterRace {
 
   initPlayer(player: Player) {
     player.race = this;
+    player.baseConstitution += 4;
+    player.baseStrength += 2;
   }
 }

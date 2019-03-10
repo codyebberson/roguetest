@@ -1,4 +1,4 @@
-import {Sprite} from 'wglt';
+import {Sprite, Colors} from 'wglt';
 
 import {CharacterClass} from '../classes/characterclass';
 import {Paladin} from '../classes/paladin';
@@ -31,12 +31,13 @@ export class Player extends StatsActor {
 
   addXp(xpGain: number) {
     this.xp += xpGain;
+    this.addFloatingText('+' + xpGain, Colors.LIGHT_MAGENTA);
 
     while (this.xp >= this.maxXp) {
       this.level++;
       this.xp = 0;
       this.maxXp *= 2;
-      this.game.log('You reached level ' + this.level, 0xFF8000FF);
+      this.game.log('You reached level ' + this.level, Colors.LIGHT_MAGENTA);
     }
   }
 }

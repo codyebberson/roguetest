@@ -19,5 +19,7 @@ export class Orc extends CharacterRace {
 
   initPlayer(player: Player) {
     player.race = this;
+    player.baseConstitution += 2;
+    player.baseStrength += 4;
   }
 }

@@ -25,5 +25,7 @@ export class Paladin extends CharacterClass {
     player.sprite = SPRITE;
     player.talents.add(new Talent(player, new LeapAbility()));
     player.talents.add(new Talent(player, new LightningAbility()));
+    player.baseStrength += 2;
+    player.baseIntelligence += 2;
   }
 }

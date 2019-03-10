@@ -20,5 +20,9 @@ export class Human extends CharacterRace {
 
   initPlayer(player: Player) {
     player.race = this;
+    player.baseConstitution++;
+    player.baseStrength++;
+    player.baseDexterity++;
+    player.baseIntelligence++;
   }
 }

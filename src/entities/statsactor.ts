@@ -6,10 +6,10 @@ export class StatsActor extends Actor {
   level: number;
   mp: number;
   maxMp: number;
-  strength: number;
-  dexterity: number;
-  constitution: number;
-  intelligence: number;
+  baseStrength: number;
+  baseDexterity: number;
+  baseConstitution: number;
+  baseIntelligence: number;
   readonly buffs: Buff[];
 
   constructor(game: Game, x: number, y: number, name: string, sprite: Sprite) {
@@ -17,11 +17,47 @@ export class StatsActor extends Actor {
     this.level = 1;
     this.mp = 1;
     this.maxMp = 1;
-    this.strength = 10;
-    this.dexterity = 10;
-    this.constitution = 10;
-    this.intelligence = 10;
+    this.baseStrength = 10;
+    this.baseDexterity = 10;
+    this.baseConstitution = 10;
+    this.baseIntelligence = 10;
     this.buffs = [];
+  }
+
+  get strength() {
+    return this.baseStrength;
+  }
+
+  get dexterity() {
+    return this.baseDexterity;
+  }
+
+  get constitution() {
+    return this.baseConstitution;
+  }
+
+  get intelligence() {
+    return this.baseIntelligence;
+  }
+
+  get strengthModifier() {
+    return this.calculateModifier(this.strength);
+  }
+
+  get dexterityModifier() {
+    return this.calculateModifier(this.dexterity);
+  }
+
+  get constitutionModifier() {
+    return this.calculateModifier(this.constitution);
+  }
+
+  get intelligenceModifier() {
+    return this.calculateModifier(this.intelligence);
+  }
+
+  private calculateModifier(abilityScore: number) {
+    return Math.floor((abilityScore - 10) / 2);
   }
 
   onAttack(target: Actor, damage: number) {

@@ -3,11 +3,10 @@ import {Ability, Actor, Colors, ConfusedMonster, Message, Sprite, TargetType} fr
 const CONFUSE_RANGE = 8;
 const CONFUSE_SPRITE = new Sprite(128, 32, 16, 24, 3, false);
 const TOOLTIP_MESSAGES = [
-  new Message('Fireball', Colors.WHITE),
-  new Message('2% of base mana', Colors.WHITE),
-  new Message('2 turn cast', Colors.WHITE),
-  new Message('Throws a fiery ball causing 10 damage', Colors.YELLOW),
-  new Message('to all enemies within 3 tiles.', Colors.YELLOW),
+  new Message('Confuse', Colors.WHITE),
+  new Message('20 mana', Colors.WHITE),
+  new Message('Befuddles an enemy into a random', Colors.YELLOW),
+  new Message('stupor for 10 turns.', Colors.YELLOW),
 ];
 
 export class ConfuseAbility implements Ability {

@@ -23,5 +23,7 @@ export class Ranger extends CharacterClass {
     player.class = this;
     player.sprite = SPRITE;
     player.talents.add(new Talent(player, new LeapAbility()));
+    player.baseStrength += 2;
+    player.baseDexterity += 2;
   }
 }

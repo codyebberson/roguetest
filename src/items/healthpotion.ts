@@ -1,12 +1,19 @@
-import {Actor, Colors, Game, Item, Sprite} from 'wglt';
+import {Actor, Colors, Game, Item, Sprite, Message} from 'wglt';
 
 const HEAL_AMOUNT = 4;
 
-const SPRITE = new Sprite(658, 168, 16, 24, 1, true, undefined, 0xFF0000FF);
+const SPRITE = new Sprite(656, 168, 16, 24, 1, true, undefined, 0xFF0000FF);
+
+const TOOLTIPS = [
+  new Message('Ancient Healing Potion', Colors.LIGHT_BLUE),
+  new Message('Item Level 5', Colors.YELLOW),
+  new Message('Use: Restore 10 health', Colors.LIGHT_GREEN),
+];
 
 export class HealthPotion extends Item {
   constructor(game: Game, x: number, y: number) {
     super(game, x, y, 'health potion', SPRITE, false);
+    (this as any).tooltipMessages = TOOLTIPS;
   }
 
   onPickup(entity: Actor) {

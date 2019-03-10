@@ -14,5 +14,4 @@ export declare class CharacterDialog extends Dialog {
     readonly mainHandSlot: ButtonSlot;
     readonly offHandSlot: ButtonSlot;
     drawContents(): void;
-    handleInput(): boolean;
 }

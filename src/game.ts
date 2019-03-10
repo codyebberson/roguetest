@@ -48,6 +48,7 @@ export class Game extends wglt.Game {
       }
       if (other instanceof Actor) {
         // TODO: Calculate damage
+        // Unarmed combat: 1 + Str modifier
         player.attack(other, 10);
         return true;
       }
@@ -131,7 +132,7 @@ export class Game extends wglt.Game {
     topPanel.menuSlot.add(menuButton);
 
     const inventoryDialog = new ItemContainerDialog(
-        new Rect(10, 50, 94, 126),
+        new Rect(4, 38, 94, 126),
         [
           new wglt.Message('Traveler\'s Backpack', wglt.Colors.GREEN),
           new wglt.Message('Click an item to use', wglt.Colors.LIGHT_GRAY),
@@ -142,12 +143,12 @@ export class Game extends wglt.Game {
     inventoryDialog.visible = false;
     this.gui.add(inventoryDialog);
 
-    const characterDialog = new CharacterDialog(new Rect(10, 50, 120, 126), player);
+    const characterDialog = new CharacterDialog(new Rect(4, 38, 120, 126), player);
     characterDialog.visible = false;
     this.gui.add(characterDialog);
 
     const talentsDialog = new TalentsDialog(
-        new Rect(10, 50, 94, 126),
+        new Rect(4, 38, 94, 126),
         [
           new wglt.Message('Talents', wglt.Colors.GREEN),
           new wglt.Message('Click an ability to use', wglt.Colors.LIGHT_GRAY),

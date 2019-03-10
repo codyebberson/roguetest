@@ -1,6 +1,6 @@
 import {Ability, Actor, Colors, Game, Item, Sprite, TargetType} from 'wglt';
 
-const SPRITE = new Sprite(738, 168, 16, 24, 1, true, undefined, 0xF0F0E0FF);
+const SPRITE = new Sprite(736, 168, 16, 24, 1, true, undefined, 0xF0F0E0FF);
 
 export class Scroll extends Item {
   readonly ability: Ability;
@@ -8,6 +8,7 @@ export class Scroll extends Item {
   constructor(game: Game, x: number, y: number, ability: Ability) {
     super(game, x, y, 'scroll of ' + ability.name, SPRITE, false);
     this.ability = ability;
+    (this as any).tooltipMessages = ability.tooltipMessages;
   }
 
   onPickup(entity: Actor) {

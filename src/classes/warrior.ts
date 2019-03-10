@@ -23,5 +23,7 @@ export class Warrior extends CharacterClass {
     player.class = this;
     player.sprite = SPRITE;
     player.talents.add(new Talent(player, new LeapAbility()));
+    player.baseConstitution += 2;
+    player.baseStrength += 5;
   }
 }

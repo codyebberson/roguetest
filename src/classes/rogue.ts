@@ -26,5 +26,6 @@ export class Rogue extends CharacterClass {
     player.sprite = SPRITE;
     player.talents.add(new Talent(player, new LeapAbility()));
     player.talents.add(new Talent(player, new ShadowStrikeAbility()));
+    player.baseDexterity += 5;
   }
 }
