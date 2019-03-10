@@ -357,6 +357,52 @@ exports.FireballAbility = FireballAbility;
 
 /***/ }),
 
+/***/ "./src/abilities/flashheal.ts":
+/*!************************************!*\
+  !*** ./src/abilities/flashheal.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
+const SPRITE = new wglt_1.Sprite(672, 144, 16, 24, 1, false, undefined, 0xFFD0D0FF);
+const TOOLTIP_MESSAGES = [
+    new wglt_1.Message('Flash Heal', wglt_1.Colors.WHITE),
+    new wglt_1.Message('20 mana', wglt_1.Colors.WHITE),
+    new wglt_1.Message('A fast spell that heals an ally', wglt_1.Colors.YELLOW),
+    new wglt_1.Message('for 1d8 + INT points.', wglt_1.Colors.YELLOW),
+];
+class FlashHealAbility {
+    constructor() {
+        this.sprite = SPRITE;
+        this.name = 'Flash Heal';
+        this.targetType = wglt_1.TargetType.SELF;
+        this.minRange = 0;
+        this.maxRange = 0;
+        this.cooldown = 5;
+        this.tooltipMessages = TOOLTIP_MESSAGES;
+    }
+    cast(caster) {
+        if (caster.hp === caster.maxHp) {
+            if (caster === caster.game.player) {
+                caster.game.log('You are already at full health.', wglt_1.Colors.DARK_RED);
+            }
+            return false;
+        }
+        const healAmount = caster.game.rng.nextRange(1, 8) + caster.intelligenceModifier;
+        caster.takeHeal(healAmount);
+        caster.ap--;
+        return true;
+    }
+}
+exports.FlashHealAbility = FlashHealAbility;
+
+
+/***/ }),
+
 /***/ "./src/abilities/leap.ts":
 /*!*******************************!*\
   !*** ./src/abilities/leap.ts ***!
@@ -794,6 +840,7 @@ const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.j
 const leap_1 = __webpack_require__(/*! ../abilities/leap */ "./src/abilities/leap.ts");
 const lightning_1 = __webpack_require__(/*! ../abilities/lightning */ "./src/abilities/lightning.ts");
 const characterclass_1 = __webpack_require__(/*! ./characterclass */ "./src/classes/characterclass.ts");
+const flashheal_1 = __webpack_require__(/*! ../abilities/flashheal */ "./src/abilities/flashheal.ts");
 const NAME = 'Paladin';
 const ICON = new wglt_1.Sprite(504, 700, 24, 26, undefined, undefined, undefined, 0xFF8080FF);
 const SPRITE = new wglt_1.Sprite(320, 96, 16, 24, 2, true, undefined, 0xFF8080FF);
@@ -811,6 +858,7 @@ class Paladin extends characterclass_1.CharacterClass {
         player.sprite = SPRITE;
         player.talents.add(new wglt_1.Talent(player, new leap_1.LeapAbility()));
         player.talents.add(new wglt_1.Talent(player, new lightning_1.LightningAbility()));
+        player.talents.add(new wglt_1.Talent(player, new flashheal_1.FlashHealAbility()));
         player.baseStrength += 2;
         player.baseIntelligence += 2;
     }
@@ -834,6 +882,7 @@ const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.j
 const fireball_1 = __webpack_require__(/*! ../abilities/fireball */ "./src/abilities/fireball.ts");
 const lightning_1 = __webpack_require__(/*! ../abilities/lightning */ "./src/abilities/lightning.ts");
 const characterclass_1 = __webpack_require__(/*! ./characterclass */ "./src/classes/characterclass.ts");
+const flashheal_1 = __webpack_require__(/*! ../abilities/flashheal */ "./src/abilities/flashheal.ts");
 const NAME = 'Priest';
 const ICON = new wglt_1.Sprite(0, 700, 24, 26, undefined, undefined, undefined, 0xFFFFFFFF);
 const SPRITE = new wglt_1.Sprite(384, 96, 16, 24, 2, true, undefined, 0xf8f8f8ff);
@@ -851,6 +900,7 @@ class Priest extends characterclass_1.CharacterClass {
         player.sprite = SPRITE;
         player.talents.add(new wglt_1.Talent(player, new fireball_1.FireballAbility()));
         player.talents.add(new wglt_1.Talent(player, new lightning_1.LightningAbility()));
+        player.talents.add(new wglt_1.Talent(player, new flashheal_1.FlashHealAbility()));
         player.baseIntelligence += 5;
     }
 }

@@ -5,6 +5,7 @@ import {LightningAbility} from '../abilities/lightning';
 import {Player} from '../entities/player';
 
 import {CharacterClass} from './characterclass';
+import {FlashHealAbility} from '../abilities/flashheal';
 
 const NAME = 'Priest';
 const ICON = new Sprite(0, 700, 24, 26, undefined, undefined, undefined, 0xFFFFFFFF);
@@ -25,6 +26,7 @@ export class Priest extends CharacterClass {
     player.sprite = SPRITE;
     player.talents.add(new Talent(player, new FireballAbility()));
     player.talents.add(new Talent(player, new LightningAbility()));
+    player.talents.add(new Talent(player, new FlashHealAbility()));
     player.baseIntelligence += 5;
   }
 }

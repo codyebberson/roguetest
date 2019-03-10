@@ -5,6 +5,7 @@ import {LightningAbility} from '../abilities/lightning';
 import {Player} from '../entities/player';
 
 import {CharacterClass} from './characterclass';
+import {FlashHealAbility} from '../abilities/flashheal';
 
 const NAME = 'Paladin';
 const ICON = new Sprite(504, 700, 24, 26, undefined, undefined, undefined, 0xFF8080FF);
@@ -25,6 +26,7 @@ export class Paladin extends CharacterClass {
     player.sprite = SPRITE;
     player.talents.add(new Talent(player, new LeapAbility()));
     player.talents.add(new Talent(player, new LightningAbility()));
+    player.talents.add(new Talent(player, new FlashHealAbility()));
     player.baseStrength += 2;
     player.baseIntelligence += 2;
   }
