@@ -91,7 +91,7 @@ export class Game extends wglt.Game {
 
     const characterButton = new Button(
         new Rect(0, 0, 20, 28),
-        new Sprite(642, 240, 16, 24, undefined, undefined, undefined, 0xffcf5cff),
+        new Sprite(640, 240, 16, 24, undefined, undefined, undefined, 0xffcf5cff),
         undefined,
         () => {
           characterDialog.visible = !characterDialog.visible;
@@ -107,7 +107,7 @@ export class Game extends wglt.Game {
 
     const talentsButton = new Button(
         new Rect(0, 0, 20, 28),
-        new Sprite(658, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE),
+        new Sprite(656, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE),
         undefined, () => {
           talentsDialog.visible = !talentsDialog.visible;
           inventoryDialog.visible = false;

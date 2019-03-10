@@ -1,4 +1,4 @@
-import {Message, Sprite, Talent} from 'wglt';
+import {Message, Sprite, Talent, Colors} from 'wglt';
 
 import {FireballAbility} from '../abilities/fireball';
 import {LightningAbility} from '../abilities/lightning';
@@ -11,8 +11,8 @@ const ICON = new Sprite(0, 700, 24, 26, undefined, undefined, undefined, 0xFFFFF
 const SPRITE = new Sprite(384, 96, 16, 24, 2, true, undefined, 0xf8f8f8ff);
 const DESC = 'Devoted to the spiritual, powerful healing magic';
 const DETAILS = [
-  new Message('+5 Intelligence', 0x00FF00FF),
-  new Message('Heroic Leap - jump up to 3 tiles and stun enemies', 0x00FF00FF)
+  new Message('+5 Intelligence', Colors.LIGHT_GREEN),
+  new Message('Heroic Leap - jump up to 3 tiles and stun enemies', Colors.YELLOW)
 ];
 
 export class Priest extends CharacterClass {

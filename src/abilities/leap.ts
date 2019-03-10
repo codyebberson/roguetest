@@ -4,7 +4,7 @@ import {Stunned} from '../ai/stunned';
 const LEAP_RANGE = 3;
 const LEAP_RADIUS = 2;
 const LEAP_COLOR = fromRgb(0xFF, 0x80, 0x80);
-const LEAP_SPRITE = new Sprite(722, 336, 16, 24, undefined, undefined, undefined, LEAP_COLOR);
+const LEAP_SPRITE = new Sprite(720, 336, 16, 24, undefined, undefined, undefined, LEAP_COLOR);
 const TOOLTIP_MESSAGES = [
   new Message('Heroic Leap', Colors.WHITE), new Message('Instant cast', Colors.WHITE),
   new Message('Stun all enemies within 1 tile.', Colors.YELLOW)

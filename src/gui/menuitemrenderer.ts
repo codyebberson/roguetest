@@ -1,13 +1,13 @@
-import {Color, Colors, GUI, Vec2} from 'wglt';
-import {SelectOption} from 'wglt/dist/gui/selectoption';
-import {SelectOptionRenderer} from 'wglt/dist/gui/selectoptionrenderer';
+import {Color, Colors, GUI, Vec2, SelectOptionRenderer, SelectOption} from 'wglt';
 
 
 export class MenuItemRenderer implements SelectOptionRenderer {
-  readonly lineHeight: number;
+  readonly expandedHeight: number;
+  readonly collapsedHeight: number;
 
-  constructor(lineHeight: number) {
-    this.lineHeight = lineHeight;
+  constructor(expandedHeight: number, collapsedHeight: number) {
+    this.expandedHeight = expandedHeight;
+    this.collapsedHeight = collapsedHeight;
   }
 
   drawOption(gui: GUI, point: Vec2, option: SelectOption, selected?: boolean) {
@@ -35,7 +35,7 @@ export class MenuItemRenderer implements SelectOptionRenderer {
       app.drawString(option.description, x + 3, y + 10, descColor);
     }
 
-    if (option.details) {
+    if (selected && option.details) {
       for (let j = 0; j < option.details.length; j++) {
         const msg = option.details[j];
         const color = selected ? msg.color : Colors.LIGHT_GRAY;
@@ -44,7 +44,7 @@ export class MenuItemRenderer implements SelectOptionRenderer {
     }
   }
 
-  getHeight() {
-    return this.lineHeight;
+  getHeight(_: SelectOption, selected: boolean) {
+    return selected ? this.expandedHeight : this.collapsedHeight;
   }
 }

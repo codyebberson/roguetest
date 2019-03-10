@@ -1,4 +1,4 @@
-import {AppState, ComplexSelectDialog, Rect} from 'wglt';
+import {AppState, ComplexSelectDialog, Rect, Colors, MessagePanel, Message} from 'wglt';
 
 import {App} from './app';
 import {CharacterClass} from './classes/characterclass';
@@ -12,16 +12,16 @@ import {MenuItemRenderer} from './gui/menuitemrenderer';
 
 const CLASSES = [new Paladin(), new Priest(), new Ranger(), new Rogue(), new Warlock(), new Warrior()];
 
-const LINE_HEIGHT = 50;
-
 export class ClassMenu extends AppState {
   constructor(app: App) {
     super(app);
 
     this.gui.renderer.baseRect = new Rect(0, 64, 24, 24);
 
+    this.gui.add(new MessagePanel(new Rect(2, 2, 256, 10), new Message('Choose your class', Colors.WHITE)));
+
     const selectDialog = new ComplexSelectDialog(new Rect(2, 15, 246, 204), CLASSES);
-    selectDialog.renderer = new MenuItemRenderer(LINE_HEIGHT);
+    selectDialog.renderer = new MenuItemRenderer(60, 30);
 
     selectDialog.onSelect = (choice: CharacterClass) => {
       (this.app as App).playerClass = choice;

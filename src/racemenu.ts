@@ -1,4 +1,4 @@
-import {AppState, ComplexSelectDialog, Rect, Sprite} from 'wglt';
+import {AppState, ComplexSelectDialog, Rect, MessagePanel, Message, Colors} from 'wglt';
 
 import {App} from './app';
 import {MenuItemRenderer} from './gui/menuitemrenderer';
@@ -11,16 +11,16 @@ import {Undead} from './races/undead';
 
 const RACES = [new Human(), new Dwarf(), new Elf(), new Orc(), new Undead()];
 
-const LINE_HEIGHT = 50;
-
 export class RaceMenu extends AppState {
   constructor(app: App) {
     super(app);
 
     this.gui.renderer.baseRect = new Rect(0, 64, 24, 24);
 
+    this.gui.add(new MessagePanel(new Rect(2, 2, 256, 10), new Message('Choose your race', Colors.WHITE)));
+
     const selectDialog = new ComplexSelectDialog(new Rect(2, 15, 246, 204), RACES);
-    selectDialog.renderer = new MenuItemRenderer(LINE_HEIGHT);
+    selectDialog.renderer = new MenuItemRenderer(60, 40);
 
     selectDialog.onSelect = (choice: CharacterRace) => {
       (this.app as App).playerRace = choice;
