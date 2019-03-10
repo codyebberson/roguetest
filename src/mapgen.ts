@@ -118,7 +118,7 @@ export class MapGenerator {
   constructor(game: Game) {
     this.game = game;
 
-    const map = new TileMap(game.app.gl, MAP_WIDTH, MAP_HEIGHT, 3);
+    const map = new TileMap(game.app.gl, MAP_WIDTH, MAP_HEIGHT, 4);
     map.tileWidth = 16;
     map.tileHeight = 24;
     game.tileMap = map;
@@ -136,6 +136,7 @@ export class MapGenerator {
         map.setTile(0, x, y, TILE_WALL, true);
         map.setTile(1, x, y, TILE_EMPTY);
         map.setTile(2, x, y, TILE_EMPTY);
+        map.setTile(3, x, y, TILE_EMPTY);
       }
     }
 
