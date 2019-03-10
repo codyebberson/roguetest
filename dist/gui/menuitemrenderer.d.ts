@@ -1,4 +1,4 @@
-import { GUI, Vec2, SelectOptionRenderer, SelectOption } from 'wglt';
+import { GUI, SelectOption, SelectOptionRenderer, Vec2 } from 'wglt';
 export declare class MenuItemRenderer implements SelectOptionRenderer {
     readonly expandedHeight: number;
     readonly collapsedHeight: number;

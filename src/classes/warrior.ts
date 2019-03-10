@@ -4,6 +4,10 @@ import {LeapAbility} from '../abilities/leap';
 import {Player} from '../entities/player';
 
 import {CharacterClass} from './characterclass';
+import { SquiresVest } from '../equipment/squiresvest';
+import { SquiresPants } from '../equipment/squirespants';
+import { SquiresBoots } from '../equipment/squiresboots';
+import { BattlewornHammer } from '../equipment/battlewornhammer';
 
 const NAME = 'Warrior';
 const ICON = new Sprite(216, 700, 24, 26, undefined, undefined, undefined, 0x804000FF);
@@ -20,9 +24,15 @@ export class Warrior extends CharacterClass {
   }
 
   initPlayer(player: Player) {
+    const game = player.game;
+
     player.class = this;
     player.sprite = SPRITE;
     player.talents.add(new Talent(player, new LeapAbility()));
+    player.equipment.add(new SquiresVest(game));
+    player.equipment.add(new SquiresPants(game));
+    player.equipment.add(new SquiresBoots(game));
+    player.equipment.add(new BattlewornHammer(game));
     player.constitution += 2;
     player.strength += 5;
   }

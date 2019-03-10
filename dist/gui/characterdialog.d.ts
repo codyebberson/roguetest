@@ -9,9 +9,12 @@ export declare class CharacterDialog extends Dialog {
     readonly chestSlot: ButtonSlot;
     readonly handsSlot: ButtonSlot;
     readonly legsSlot: ButtonSlot;
-    readonly ring1Slot: ButtonSlot;
-    readonly ring2Slot: ButtonSlot;
+    readonly feetSlot: ButtonSlot;
+    readonly ringSlot: ButtonSlot;
     readonly mainHandSlot: ButtonSlot;
     readonly offHandSlot: ButtonSlot;
+    private addItem;
+    private removeItem;
+    private getSlot;
     drawContents(): void;
 }

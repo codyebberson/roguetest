@@ -1,20 +1,19 @@
-import { Actor, Sprite } from 'wglt';
-import { Game } from '../game';
+import { Actor, ArrayList, Sprite } from 'wglt';
 import { Buff } from '../buffs/buff';
+import { Equipment } from '../equipment/equipment';
+import { Game } from '../game';
 export declare class StatsActor extends Actor {
     level: number;
     mp: number;
     maxMp: number;
-    baseStrength: number;
-    baseDexterity: number;
-    baseConstitution: number;
-    baseIntelligence: number;
+    armor: number;
+    strength: number;
+    dexterity: number;
+    constitution: number;
+    intelligence: number;
+    readonly equipment: ArrayList<Equipment>;
     readonly buffs: Buff[];
     constructor(game: Game, x: number, y: number, name: string, sprite: Sprite);
-    readonly strength: number;
-    readonly dexterity: number;
-    readonly constitution: number;
-    readonly intelligence: number;
     readonly strengthModifier: number;
     readonly dexterityModifier: number;
     readonly constitutionModifier: number;
@@ -22,4 +21,6 @@ export declare class StatsActor extends Actor {
     private calculateModifier;
     onAttack(target: Actor, damage: number): void;
     startTurn(): void;
+    private addItem;
+    private removeItem;
 }
