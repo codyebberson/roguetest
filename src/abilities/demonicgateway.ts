@@ -1,4 +1,4 @@
-import {Ability, Colors, Message, ProjectileEffect, Sprite, TargetType, TileMapCell, Vec2} from 'wglt';
+import {Ability, Colors, Message, Sprite, TargetType, TileMapCell} from 'wglt';
 
 import {StatsActor} from '../entities/statsactor';
 import {Gateway} from '../items/gateway';
@@ -49,12 +49,6 @@ export class DemonicGatewayAbility implements Ability {
       return false;
     }
 
-    // const speed = 8;
-    // const count = distance * (game.tileSize.width / speed);
-    // const dx = (target.x * game.tileSize.width - caster.pixelX) / count;
-    // const dy = (target.y * game.tileSize.height - caster.pixelY) / count;
-    // const projectile = new ProjectileEffect(SPRITE, new Vec2(caster.pixelX, caster.pixelY), new Vec2(dx, dy), count);
-    // projectile.onDone = () => {
     const gateway1 = new Gateway(game, caster.x, caster.y, caster);
     const gateway2 = new Gateway(game, target.x, target.y, caster);
     gateway1.other = gateway2;
@@ -64,8 +58,5 @@ export class DemonicGatewayAbility implements Ability {
     caster.move(target.x - caster.x, target.y - caster.y, 16);
     caster.ap--;
     return true;
-    // };
-    // game.effects.push(projectile);
-    // return true;
   }
 }

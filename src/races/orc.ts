@@ -1,4 +1,4 @@
-import {Message, Sprite, Colors} from 'wglt';
+import {Colors, Message, Sprite} from 'wglt';
 
 import {Player} from '../entities/player';
 
@@ -19,7 +19,7 @@ export class Orc extends CharacterRace {
 
   initPlayer(player: Player) {
     player.race = this;
-    player.baseConstitution += 2;
-    player.baseStrength += 4;
+    player.constitution += 2;
+    player.strength += 4;
   }
 }

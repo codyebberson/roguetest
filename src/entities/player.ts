@@ -1,4 +1,4 @@
-import {Sprite, Colors} from 'wglt';
+import {Colors, Sprite} from 'wglt';
 
 import {CharacterClass} from '../classes/characterclass';
 import {Paladin} from '../classes/paladin';

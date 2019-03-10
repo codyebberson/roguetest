@@ -1,6 +1,7 @@
-import {ButtonSlot, Colors, Dialog, Keys, Rect} from 'wglt';
+import {ButtonSlot, Colors, Dialog, ItemButton, Rect} from 'wglt';
 
 import {Player} from '../entities/player';
+import {Equipment, EquipmentSlot} from '../equipment/equipment';
 
 const MARGIN = 4;
 const BUTTON_SPACING = 2;
@@ -18,6 +19,9 @@ export class CharacterDialog extends Dialog {
       // Slots are repositioned at render time
       this.add(new ButtonSlot(new Rect(0, 0, 24, 24)));
     }
+
+    player.equipment.addListener(
+        {onAdd: (_, item) => this.addItem(item), onRemove: (_, item) => this.removeItem(item)});
   }
 
   get headSlot(): ButtonSlot {
@@ -44,11 +48,11 @@ export class CharacterDialog extends Dialog {
     return this.children.get(5) as ButtonSlot;
   }
 
-  get ring1Slot(): ButtonSlot {
+  get feetSlot(): ButtonSlot {
     return this.children.get(6) as ButtonSlot;
   }
 
-  get ring2Slot(): ButtonSlot {
+  get ringSlot(): ButtonSlot {
     return this.children.get(7) as ButtonSlot;
   }
 
@@ -58,6 +62,50 @@ export class CharacterDialog extends Dialog {
 
   get offHandSlot(): ButtonSlot {
     return this.children.get(9) as ButtonSlot;
+  }
+
+  private addItem(item: Equipment) {
+    const slot = this.getSlot(item);
+    if (slot) {
+      slot.add(new ItemButton(slot.rect.clone(), this.player.inventory, item));
+    }
+  }
+
+  private removeItem(item: Equipment) {
+    const slot = this.getSlot(item);
+    if (slot) {
+      const button = slot.button;
+      if (button) {
+        slot.remove(button);
+      }
+    }
+  }
+
+  private getSlot(item: Equipment) {
+    switch (item.slot) {
+      case EquipmentSlot.HEAD:
+        return this.headSlot;
+      case EquipmentSlot.NECK:
+        return this.neckSlot;
+      case EquipmentSlot.BACK:
+        return this.backSlot;
+      case EquipmentSlot.CHEST:
+        return this.chestSlot;
+      case EquipmentSlot.HANDS:
+        return this.handsSlot;
+      case EquipmentSlot.LEGS:
+        return this.legsSlot;
+      case EquipmentSlot.FEET:
+        return this.feetSlot;
+      case EquipmentSlot.RING:
+        return this.ringSlot;
+      case EquipmentSlot.MAINHAND:
+        return this.mainHandSlot;
+      case EquipmentSlot.OFFHAND:
+        return this.offHandSlot;
+      default:
+        return undefined;
+    }
   }
 
   drawContents() {
@@ -114,6 +162,10 @@ export class CharacterDialog extends Dialog {
     this.offHandSlot.rect.height = buttonRect.height;
 
     y += 4 * (buttonRect.height + BUTTON_SPACING) + MARGIN;
+
+    this.gui.app.drawString('Armor', x, y, Colors.YELLOW);
+    this.gui.app.drawRightString(this.player.armor.toString(), x + 90, y, Colors.WHITE);
+    y += 10;
 
     this.gui.app.drawString('Constitution', x, y, Colors.YELLOW);
     this.gui.app.drawRightString(this.player.constitution.toString(), x + 90, y, Colors.WHITE);

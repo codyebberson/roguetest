@@ -1,4 +1,4 @@
-import {AppState, ComplexSelectDialog, Rect, MessagePanel, Message, Colors} from 'wglt';
+import {AppState, Colors, ComplexSelectDialog, Message, MessagePanel, Rect} from 'wglt';
 
 import {App} from './app';
 import {MenuItemRenderer} from './gui/menuitemrenderer';

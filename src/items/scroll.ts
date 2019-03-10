@@ -8,7 +8,7 @@ export class Scroll extends Item {
   constructor(game: Game, x: number, y: number, ability: Ability) {
     super(game, x, y, 'scroll of ' + ability.name, SPRITE, false);
     this.ability = ability;
-    (this as any).tooltipMessages = ability.tooltipMessages;
+    this.tooltipMessages = ability.tooltipMessages;
   }
 
   onPickup(entity: Actor) {

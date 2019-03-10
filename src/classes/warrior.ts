@@ -1,4 +1,4 @@
-import {Message, Sprite, Talent, Colors} from 'wglt';
+import {Colors, Message, Sprite, Talent} from 'wglt';
 
 import {LeapAbility} from '../abilities/leap';
 import {Player} from '../entities/player';
@@ -23,7 +23,7 @@ export class Warrior extends CharacterClass {
     player.class = this;
     player.sprite = SPRITE;
     player.talents.add(new Talent(player, new LeapAbility()));
-    player.baseConstitution += 2;
-    player.baseStrength += 5;
+    player.constitution += 2;
+    player.strength += 5;
   }
 }

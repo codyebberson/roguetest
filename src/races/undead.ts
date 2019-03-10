@@ -1,4 +1,4 @@
-import {Message, Sprite, Colors} from 'wglt';
+import {Colors, Message, Sprite} from 'wglt';
 
 import {Player} from '../entities/player';
 
@@ -19,7 +19,7 @@ export class Undead extends CharacterRace {
 
   initPlayer(player: Player) {
     player.race = this;
-    player.baseDexterity += 2;
-    player.baseIntelligence += 4;
+    player.dexterity += 2;
+    player.intelligence += 4;
   }
 }

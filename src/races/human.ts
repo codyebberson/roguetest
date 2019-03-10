@@ -1,4 +1,4 @@
-import {Message, Sprite, Colors} from 'wglt';
+import {Colors, Message, Sprite} from 'wglt';
 
 import {Player} from '../entities/player';
 
@@ -20,9 +20,9 @@ export class Human extends CharacterRace {
 
   initPlayer(player: Player) {
     player.race = this;
-    player.baseConstitution++;
-    player.baseStrength++;
-    player.baseDexterity++;
-    player.baseIntelligence++;
+    player.constitution++;
+    player.strength++;
+    player.dexterity++;
+    player.intelligence++;
   }
 }

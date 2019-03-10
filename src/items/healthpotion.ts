@@ -1,4 +1,4 @@
-import {Actor, Colors, Game, Item, Sprite, Message} from 'wglt';
+import {Actor, Colors, Game, Item, Message, Sprite} from 'wglt';
 
 const HEAL_AMOUNT = 4;
 
@@ -13,7 +13,7 @@ const TOOLTIPS = [
 export class HealthPotion extends Item {
   constructor(game: Game, x: number, y: number) {
     super(game, x, y, 'health potion', SPRITE, false);
-    (this as any).tooltipMessages = TOOLTIPS;
+    this.tooltipMessages = TOOLTIPS;
   }
 
   onPickup(entity: Actor) {

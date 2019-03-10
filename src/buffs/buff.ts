@@ -1,4 +1,4 @@
-import { StatsActor } from "../entities/statsactor";
+import {StatsActor} from '../entities/statsactor';
 
 export abstract class Buff {
   readonly actor: StatsActor;
@@ -7,7 +7,7 @@ export abstract class Buff {
     this.actor = actor;
   }
 
-  update() { }
+  update() {}
 
   isDone() {
     return false;

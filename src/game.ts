@@ -134,9 +134,9 @@ export class Game extends wglt.Game {
     const inventoryDialog = new ItemContainerDialog(
         new Rect(4, 38, 94, 126),
         [
-          new wglt.Message('Traveler\'s Backpack', wglt.Colors.GREEN),
-          new wglt.Message('Click an item to use', wglt.Colors.LIGHT_GRAY),
-          new wglt.Message('Drag for shortcut', wglt.Colors.LIGHT_GRAY)
+          new Message('Traveler\'s Backpack', Colors.GREEN),
+          new Message('Click an item to use', Colors.LIGHT_GRAY),
+          new Message('Drag for shortcut', Colors.LIGHT_GRAY)
         ],
         16,
         player.inventory);
@@ -150,9 +150,9 @@ export class Game extends wglt.Game {
     const talentsDialog = new TalentsDialog(
         new Rect(4, 38, 94, 126),
         [
-          new wglt.Message('Talents', wglt.Colors.GREEN),
-          new wglt.Message('Click an ability to use', wglt.Colors.LIGHT_GRAY),
-          new wglt.Message('Drag for shortcut', wglt.Colors.LIGHT_GRAY)
+          new Message('Talents', Colors.GREEN),
+          new Message('Click an ability to use', Colors.LIGHT_GRAY),
+          new Message('Drag for shortcut', Colors.LIGHT_GRAY)
         ],
         16,
         player.talents);

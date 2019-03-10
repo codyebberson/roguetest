@@ -1,4 +1,4 @@
-import {AppState, ComplexSelectDialog, Rect, Colors, MessagePanel, Message} from 'wglt';
+import {AppState, Colors, ComplexSelectDialog, Message, MessagePanel, Rect} from 'wglt';
 
 import {App} from './app';
 import {CharacterClass} from './classes/characterclass';

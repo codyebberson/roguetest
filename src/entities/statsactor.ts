@@ -1,15 +1,19 @@
-import {Actor, Sprite} from 'wglt';
+import {Actor, ArrayList, Sprite} from 'wglt';
+
+import {Buff} from '../buffs/buff';
+import {Equipment} from '../equipment/equipment';
 import {Game} from '../game';
-import { Buff } from '../buffs/buff';
 
 export class StatsActor extends Actor {
   level: number;
   mp: number;
   maxMp: number;
-  baseStrength: number;
-  baseDexterity: number;
-  baseConstitution: number;
-  baseIntelligence: number;
+  armor: number;
+  strength: number;
+  dexterity: number;
+  constitution: number;
+  intelligence: number;
+  readonly equipment: ArrayList<Equipment>;
   readonly buffs: Buff[];
 
   constructor(game: Game, x: number, y: number, name: string, sprite: Sprite) {
@@ -17,27 +21,15 @@ export class StatsActor extends Actor {
     this.level = 1;
     this.mp = 1;
     this.maxMp = 1;
-    this.baseStrength = 10;
-    this.baseDexterity = 10;
-    this.baseConstitution = 10;
-    this.baseIntelligence = 10;
+    this.armor = 0;
+    this.strength = 10;
+    this.dexterity = 10;
+    this.constitution = 10;
+    this.intelligence = 10;
+    this.equipment = new ArrayList<Equipment>();
     this.buffs = [];
-  }
 
-  get strength() {
-    return this.baseStrength;
-  }
-
-  get dexterity() {
-    return this.baseDexterity;
-  }
-
-  get constitution() {
-    return this.baseConstitution;
-  }
-
-  get intelligence() {
-    return this.baseIntelligence;
+    this.equipment.addListener({onAdd: (_, item) => this.addItem(item), onRemove: (_, item) => this.removeItem(item)});
   }
 
   get strengthModifier() {
@@ -77,5 +69,21 @@ export class StatsActor extends Actor {
         this.buffs.splice(i, 1);
       }
     }
+  }
+
+  private addItem(item: Equipment) {
+    this.armor += item.bonusArmor;
+    this.constitution += item.bonusConstitution;
+    this.dexterity += item.bonusDexterity;
+    this.strength += item.bonusStrength;
+    this.intelligence += item.bonusIntelligence;
+  }
+
+  private removeItem(item: Equipment) {
+    this.armor -= item.bonusArmor;
+    this.constitution -= item.bonusConstitution;
+    this.dexterity -= item.bonusDexterity;
+    this.strength -= item.bonusStrength;
+    this.intelligence -= item.bonusIntelligence;
   }
 }

@@ -1,4 +1,4 @@
-import {Message, Sprite, Colors} from 'wglt';
+import {Colors, Message, Sprite} from 'wglt';
 
 import {Player} from '../entities/player';
 
@@ -19,7 +19,7 @@ export class Elf extends CharacterRace {
 
   initPlayer(player: Player) {
     player.race = this;
-    player.baseDexterity += 3;
-    player.baseIntelligence += 3;
+    player.dexterity += 3;
+    player.intelligence += 3;
   }
 }

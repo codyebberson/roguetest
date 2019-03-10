@@ -1,4 +1,4 @@
-import {Color, Colors, GUI, Vec2, SelectOptionRenderer, SelectOption} from 'wglt';
+import {Color, Colors, GUI, SelectOption, SelectOptionRenderer, Vec2} from 'wglt';
 
 
 export class MenuItemRenderer implements SelectOptionRenderer {
