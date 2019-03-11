@@ -2,6 +2,7 @@ import { Actor, ArrayList, Sprite } from 'wglt';
 import { Buff } from '../buffs/buff';
 import { Equipment } from '../equipment/equipment';
 import { Game } from '../game';
+import { Weapon } from '../equipment/weapon';
 export declare class StatsActor extends Actor {
     level: number;
     mp: number;
@@ -19,6 +20,7 @@ export declare class StatsActor extends Actor {
     readonly constitutionModifier: number;
     readonly intelligenceModifier: number;
     private calculateModifier;
+    readonly mainHandWeapon: Weapon | undefined;
     onAttack(target: Actor, damage: number): void;
     startTurn(): void;
     private addItem;

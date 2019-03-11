@@ -9,6 +9,7 @@ import {CharacterDialog} from './gui/characterdialog';
 import {TopPanel} from './gui/toppanel';
 import {MapGenerator} from './mapgen';
 import {Gateway} from './items/gateway';
+import { LevelUpDialog } from './gui/levelupdialog';
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -18,6 +19,7 @@ const TARGET_SPRITE = new Sprite(16, 40, SPRITE_WIDTH, SPRITE_HEIGHT);
 export class Game extends wglt.Game {
   private readonly mapGen: MapGenerator;
   cat?: Cat;
+  levelUpDialog: LevelUpDialog;
 
   constructor(app: App) {
     super(app, {tileSize: new Rect(0, 0, 16, 24), viewDistance: 7});
@@ -30,9 +32,6 @@ export class Game extends wglt.Game {
     this.mapGen = new MapGenerator(this);
 
     const player = new Player(this, 30, 20);
-    player.level = 1;
-    player.xp = 0;
-    player.maxXp = 10;
     player.onBump = (other: Entity) => {
       if (other instanceof Gateway) {
         if (other.other) {
@@ -49,7 +48,11 @@ export class Game extends wglt.Game {
       if (other instanceof Actor) {
         // TODO: Calculate damage
         // Unarmed combat: 1 + Str modifier
-        player.attack(other, 10);
+        const weapon = player.mainHandWeapon;
+        const damage = weapon ? this.rng.nextRange(weapon.minDamage, weapon.maxDamage + 1) : 1;
+        const damageModifier = weapon && weapon.finesse ? player.dexterityModifier : player.strengthModifier;
+        const damageTotal = damage + damageModifier;
+        player.attack(other, damageTotal);
         return true;
       }
       if (other.name === 'stairs') {
@@ -158,6 +161,11 @@ export class Game extends wglt.Game {
         player.talents);
     talentsDialog.visible = false;
     this.gui.add(talentsDialog);
+
+    const levelUpDialog = new LevelUpDialog(new Rect(4, 38, 140, 126), player);
+    levelUpDialog.visible = false;
+    this.gui.add(levelUpDialog);
+    this.levelUpDialog = levelUpDialog;
 
     player.inventory.addListener({
       onAdd: (_, item) => {

@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, Message, Sprite, TargetType} from 'wglt';
+import {Ability, Colors, Message, Sprite, TargetType} from 'wglt';
 
 import {Curse} from '../buffs/curse';
 import {StatsActor} from '../entities/statsactor';
@@ -9,8 +9,8 @@ const TOOLTIP_MESSAGES = [
   new Message('Curse', Colors.WHITE),
   new Message('20 mana', Colors.WHITE),
   new Message('Instant cast', Colors.WHITE),
-  new Message('Corrupts the target, causing 3 damage', Colors.YELLOW),
-  new Message('per turn for 10 turns.', Colors.YELLOW),
+  new Message('Corrupts the target, causing (1 + INT) / 4', Colors.YELLOW),
+  new Message('damage per turn for 8 turns.', Colors.YELLOW),
 ];
 
 export class CurseAbility implements Ability {
@@ -32,7 +32,7 @@ export class CurseAbility implements Ability {
     this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 
-  cast(caster: Actor, target: StatsActor) {
+  cast(caster: StatsActor, target: StatsActor) {
     const game = caster.game;
 
     if (caster.distanceTo(target) > RANGE) {
@@ -49,9 +49,8 @@ export class CurseAbility implements Ability {
       return false;
     }
 
-    // target.ai = new ConfusedMonster(target);
-    // game.log('The eyes of the ' + target.name + ' look vacant, as he stumbles around!', Colors.LIGHT_GREEN);
-    target.buffs.push(new Curse(target, 3, 10));
+    const damage = Math.round((1 + caster.intelligenceModifier) / 4);
+    target.buffs.push(new Curse(target, damage, 8));
     caster.ap--;
     return true;
   }

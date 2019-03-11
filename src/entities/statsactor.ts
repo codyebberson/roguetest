@@ -1,8 +1,9 @@
 import {Actor, ArrayList, Sprite} from 'wglt';
 
 import {Buff} from '../buffs/buff';
-import {Equipment} from '../equipment/equipment';
+import {Equipment, EquipmentSlot} from '../equipment/equipment';
 import {Game} from '../game';
+import { Weapon } from '../equipment/weapon';
 
 export class StatsActor extends Actor {
   level: number;
@@ -50,6 +51,16 @@ export class StatsActor extends Actor {
 
   private calculateModifier(abilityScore: number) {
     return Math.floor((abilityScore - 10) / 2);
+  }
+
+  get mainHandWeapon() {
+    for (let i = 0; i < this.equipment.length; i++) {
+      const item = this.equipment.get(i);
+      if (item.slot === EquipmentSlot.MAINHAND && item instanceof Weapon) {
+        return item;
+      }
+    }
+    return undefined;
   }
 
   onAttack(target: Actor, damage: number) {

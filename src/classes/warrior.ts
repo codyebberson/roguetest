@@ -7,7 +7,7 @@ import {CharacterClass} from './characterclass';
 import { SquiresVest } from '../equipment/squiresvest';
 import { SquiresPants } from '../equipment/squirespants';
 import { SquiresBoots } from '../equipment/squiresboots';
-import { BattlewornHammer } from '../equipment/battlewornhammer';
+import { WornGreatsword } from '../equipment/worngreatsword';
 
 const NAME = 'Warrior';
 const ICON = new Sprite(216, 700, 24, 26, undefined, undefined, undefined, 0x804000FF);
@@ -32,7 +32,7 @@ export class Warrior extends CharacterClass {
     player.equipment.add(new SquiresVest(game));
     player.equipment.add(new SquiresPants(game));
     player.equipment.add(new SquiresBoots(game));
-    player.equipment.add(new BattlewornHammer(game));
+    player.equipment.add(new WornGreatsword(game));
     player.constitution += 2;
     player.strength += 5;
   }

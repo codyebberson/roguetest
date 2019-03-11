@@ -1,4 +1,5 @@
-import { Ability, Actor, Message, Sprite, TargetType } from 'wglt';
+import { Ability, Message, Sprite, TargetType } from 'wglt';
+import { StatsActor } from '../entities/statsactor';
 export declare class LightningAbility implements Ability {
     readonly sprite: Sprite;
     readonly name: string;
@@ -8,6 +9,6 @@ export declare class LightningAbility implements Ability {
     readonly cooldown: number;
     readonly tooltipMessages: Message[];
     constructor();
-    cast(caster: Actor): boolean;
+    cast(caster: StatsActor): boolean;
     private getClosestMonster;
 }

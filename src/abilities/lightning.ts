@@ -1,6 +1,6 @@
 import {Ability, Actor, Colors, Entity, Game, Message, ProjectileEffect, Sprite, TargetType, Vec2} from 'wglt';
+import { StatsActor } from '../entities/statsactor';
 
-const LIGHTNING_DAMAGE = 10;
 const LIGHTNING_RANGE = 5;
 const MANA_COST = 10;
 const TOOLTIP_MESSAGES = [
@@ -8,7 +8,7 @@ const TOOLTIP_MESSAGES = [
   new Message(MANA_COST + ' mana', Colors.WHITE),
   new Message('Instant cast', Colors.WHITE),
   new Message('Hurls a bolt of lightning at the nearest enemy', Colors.YELLOW),
-  new Message('dealing ' + LIGHTNING_DAMAGE + ' damage.', Colors.YELLOW),
+  new Message('dealing 4 + INT damage.', Colors.YELLOW),
 ];
 
 export class LightningAbility implements Ability {
@@ -30,7 +30,7 @@ export class LightningAbility implements Ability {
     this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 
-  cast(caster: Actor) {
+  cast(caster: StatsActor) {
     const game = caster.game;
     // Find closest enemy (inside a maximum range) and damage it
     const monster = this.getClosestMonster(game, caster, caster.x, caster.y, LIGHTNING_RANGE);
@@ -42,12 +42,15 @@ export class LightningAbility implements Ability {
     // Zap it!
     game.log('A lightning bolt strikes the ' + monster.name + ' with a loud thunder!', Colors.LIGHT_BLUE);
 
+    // Calculate damage
+    const damage = 4 + caster.intelligenceModifier;
+
     // Create lightning animation
     const explosion = new Sprite(256, 408, 16, 24, 2, true, 8, Colors.YELLOW);
     const effect = new ProjectileEffect(explosion, new Vec2(monster.pixelX, monster.pixelY), new Vec2(0, 0), 32);
     effect.onDone = () => {
-      game.log('The damage is ' + LIGHTNING_DAMAGE + ' hit points', Colors.LIGHT_BLUE);
-      monster.takeDamage(LIGHTNING_DAMAGE);
+      game.log('The damage is ' + damage + ' hit points', Colors.LIGHT_BLUE);
+      monster.takeDamage(damage);
       caster.ap--;
     };
     game.effects.push(effect);

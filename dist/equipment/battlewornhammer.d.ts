@@ -1,5 +1,5 @@
 import { Game } from 'wglt';
-import { Equipment } from './equipment';
-export declare class BattlewornHammer extends Equipment {
+import { Weapon } from './weapon';
+export declare class BattlewornHammer extends Weapon {
     constructor(game: Game, x?: number, y?: number);
 }

@@ -7,6 +7,7 @@ export declare class Player extends StatsActor {
     maxXp: number;
     race: CharacterRace;
     class: CharacterClass;
+    remainingAbilityPoints: number;
     constructor(game: Game, x: number, y: number);
     onDeath(): void;
     addXp(xpGain: number): void;
