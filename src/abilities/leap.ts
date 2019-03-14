@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, fromRgb, Message, SlideEffect, Sprite, TargetType, TileMapCell} from 'wglt';
+import {Ability, Actor, Colors, fromRgb, Message, SlideAnimation, Sprite, TargetType, TileMapCell} from 'wglt';
 import {Stunned} from '../ai/stunned';
 
 const LEAP_RANGE = 3;
@@ -58,8 +58,10 @@ export class LeapAbility implements Ability {
     const count = 4;
     const xSpeed = (target.x - caster.x) * game.tileSize.width / count;
     const ySpeed = (target.y - caster.y) * game.tileSize.height / count;
-    const slideEffect = new SlideEffect(caster, xSpeed, ySpeed, count);
-    slideEffect.onDone = () => {
+    game.addAnimation(new SlideAnimation(caster, xSpeed, ySpeed, count)).then(() => {
+      caster.x = target.x;
+      caster.y = target.y;
+
       let count = 0;
       for (let i = game.entities.length - 1; i >= 0; i--) {
         const entity = game.entities[i];
@@ -76,9 +78,8 @@ export class LeapAbility implements Ability {
         game.log('Stunned ' + count + ' foes!', LEAP_COLOR);
       }
       caster.ap--;
-    };
+    });
 
-    game.effects.push(slideEffect);
     return true;
   }
 }

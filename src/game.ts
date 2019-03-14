@@ -1,7 +1,7 @@
 import * as wglt from 'wglt';
-import {Actor, App, Button, Colors, Entity, FadeInEffect, FadeOutEffect, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog} from 'wglt';
+import {Actor, App, Button, Colors, Entity, FadeInAnimation, FadeOutAnimation, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog} from 'wglt';
 
-import {CatEscapeEffect} from './effects/catescapeeffect';
+import {CatEscapeAnimation} from './animations/catescapeanimation';
 import {Cat} from './entities/cat';
 import {Player} from './entities/player';
 import {BottomPanel} from './gui/bottompanel';
@@ -22,7 +22,11 @@ export class Game extends wglt.Game {
   levelUpDialog: LevelUpDialog;
 
   constructor(app: App) {
-    super(app, {tileSize: new Rect(0, 0, 16, 24), viewDistance: 7});
+    super(app, {
+      tileSize: new Rect(0, 0, 16, 24),
+      horizontalViewDistance: 8,
+      verticalViewDistance: 6
+    });
 
     this.targetSprite = TARGET_SPRITE;
     this.cooldownSprite = new Sprite(192, 16, 16, 24, 24);
@@ -186,15 +190,12 @@ export class Game extends wglt.Game {
   }
 
   endLevel() {
-    const fadeOut = new FadeOutEffect(30);
-
-    fadeOut.onDone = () => {
+    this.addAnimation(new FadeOutAnimation(30)).then(() => {
       // Advance to the next level
       this.log('You take a moment to rest, and recover your strength.', Colors.LIGHT_MAGENTA);
       this.log('After a rare moment of peace, you descend deeper...', Colors.LIGHT_RED);
       this.nextLevel();
-    };
-    this.effects.push(fadeOut);
+    });
   }
 
   nextLevel() {
@@ -206,10 +207,8 @@ export class Game extends wglt.Game {
     this.stopAutoWalk();
     this.mapGen.createMap();
 
-    const fadeIn = new FadeInEffect(30);
-    fadeIn.onDone = () => {
-      this.effects.push(new CatEscapeEffect(this));
-    };
-    this.effects.push(fadeIn);
+    this.addAnimation(new FadeInAnimation(30)).then(() => {
+      this.addAnimation(new CatEscapeAnimation(this));
+    });
   }
 }

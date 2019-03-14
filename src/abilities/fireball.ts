@@ -1,6 +1,6 @@
-import {Ability, Actor, Colors, Message, ProjectileEffect, Sprite, TargetType, TileMapCell, Vec2} from 'wglt';
+import {Ability, Actor, Colors, Message, ProjectileAnimation, Sprite, TargetType, TileMapCell, Vec2} from 'wglt';
 
-import {ExplosionEffect} from '../effects/explosioneffect';
+import {ExplosionAnimation} from '../animations/explosionanimation';
 
 const FIREBALL_RANGE = 10;
 const FIREBALL_RADIUS = 3;
@@ -59,25 +59,22 @@ export class FireballAbility implements Ability {
     const dx = (target.x * game.tileSize.width - caster.pixelX) / count;
     const dy = (target.y * game.tileSize.height - caster.pixelY) / count;
 
-    game.effects.push(
-        new ProjectileEffect(FIREBALL_SPRITE, new Vec2(caster.pixelX, caster.pixelY), new Vec2(dx, dy), count));
+    caster.ap--;
 
-    const explosionEffect = new ExplosionEffect(game, target, FIREBALL_RADIUS, 30);
-    explosionEffect.onDone = () => {
-      game.log('The fireball explodes, burning everything within ' + FIREBALL_RADIUS + ' tiles!', Colors.ORANGE);
+    game.addAnimation(new ProjectileAnimation(FIREBALL_SPRITE, new Vec2(caster.pixelX, caster.pixelY), new Vec2(dx, dy), count)).then(() => {
+      game.addAnimation(new ExplosionAnimation(game, target, FIREBALL_RADIUS, 30)).then(() => {
+        game.log('The fireball explodes, burning everything within ' + FIREBALL_RADIUS + ' tiles!', Colors.ORANGE);
 
-      for (let i = game.entities.length - 1; i >= 0; i--) {
-        const entity = game.entities[i];
-        if (entity instanceof Actor && entity.distanceTo(target) <= FIREBALL_RADIUS) {
-          game.log('The ' + entity.name + ' gets burned for ' + FIREBALL_DAMAGE + ' hit points.', Colors.ORANGE);
-          entity.takeDamage(FIREBALL_DAMAGE);
+        for (let i = game.entities.length - 1; i >= 0; i--) {
+          const entity = game.entities[i];
+          if (entity instanceof Actor && entity.distanceTo(target) <= FIREBALL_RADIUS) {
+            game.log('The ' + entity.name + ' gets burned for ' + FIREBALL_DAMAGE + ' hit points.', Colors.ORANGE);
+            entity.takeDamage(FIREBALL_DAMAGE);
+          }
         }
-      }
+      });
+    });
 
-      caster.ap--;
-    };
-
-    game.effects.push(explosionEffect);
     return true;
   }
 }

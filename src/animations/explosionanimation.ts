@@ -1,6 +1,6 @@
-import {Colors, Effect, Game, ProjectileEffect, Sprite, Vec2} from 'wglt';
+import {Colors, Animation, Game, ProjectileAnimation, Sprite, Vec2} from 'wglt';
 
-export class ExplosionEffect extends Effect {
+export class ExplosionAnimation extends Animation {
   readonly game: Game;
   readonly center: Vec2;
   readonly radius: number;
@@ -30,9 +30,9 @@ export class ExplosionEffect extends Effect {
       const x = centerX + game.tileSize.width * radius * Math.cos(angle);
       const y = centerY + game.tileSize.height * radius * Math.sin(angle);
       const explosion = new Sprite(512, 336, 16, 24, 4, false, 4, Colors.ORANGE);
-      const effect = new ProjectileEffect(explosion, new Vec2(x, y), new Vec2(0, 0), 16);
-      effect.blocking = false;
-      game.effects.push(effect);
+      const animation = new ProjectileAnimation(explosion, new Vec2(x, y), new Vec2(0, 0), 16);
+      animation.blocking = false;
+      game.animations.push(animation);
     }
   }
 }

@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, Entity, Game, Message, ProjectileEffect, Sprite, TargetType, Vec2} from 'wglt';
+import {Ability, Actor, Colors, Entity, Game, Message, ProjectileAnimation, Sprite, TargetType, Vec2} from 'wglt';
 import { StatsActor } from '../entities/statsactor';
 
 const LIGHTNING_RANGE = 5;
@@ -47,13 +47,11 @@ export class LightningAbility implements Ability {
 
     // Create lightning animation
     const explosion = new Sprite(256, 408, 16, 24, 2, true, 8, Colors.YELLOW);
-    const effect = new ProjectileEffect(explosion, new Vec2(monster.pixelX, monster.pixelY), new Vec2(0, 0), 32);
-    effect.onDone = () => {
+    game.addAnimation(new ProjectileAnimation(explosion, new Vec2(monster.pixelX, monster.pixelY), new Vec2(0, 0), 32)).then(() => {
       game.log('The damage is ' + damage + ' hit points', Colors.LIGHT_BLUE);
       monster.takeDamage(damage);
       caster.ap--;
-    };
-    game.effects.push(effect);
+    });
 
     return true;
   }

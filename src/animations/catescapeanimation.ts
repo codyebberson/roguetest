@@ -1,9 +1,9 @@
-import {computePath, Effect, SlideEffect, TileMap, TileMapCell, Vec2} from 'wglt';
+import {computePath, Animation, SlideAnimation, TileMap, TileMapCell, Vec2} from 'wglt';
 
 import {Cat} from '../entities/cat';
 import {Game} from '../game';
 
-export class CatEscapeEffect extends Effect {
+export class CatEscapeAnimation extends Animation {
   game: Game;
   cat: Cat;
   path?: TileMapCell[];
@@ -25,13 +25,13 @@ export class CatEscapeEffect extends Effect {
 
     if (!this.path) {
       // Path not found (hopfeully this does not happen)
-      this.endEffect();
+      this.endAnimation();
       return;
     }
 
     if (this.game.tileMap && !this.game.tileMap.isVisible(this.cat.x, this.cat.y)) {
       // Cat is now out of sight
-      this.endEffect();
+      this.endAnimation();
       return;
     }
 
@@ -44,7 +44,7 @@ export class CatEscapeEffect extends Effect {
 
     if (!nextStep) {
       // Reached the destination
-      this.endEffect();
+      this.endAnimation();
       return;
     }
 
@@ -53,11 +53,17 @@ export class CatEscapeEffect extends Effect {
     const count = 4;
     const xSpeed = this.game.tileSize.width / count;
     const ySpeed = this.game.tileSize.height / count;
-    this.game.effects.unshift(new SlideEffect(this.cat, dx * xSpeed, dy * ySpeed, count));
+
+    this.cat.x = nextStep.x;
+    this.cat.y = nextStep.y;
+    this.cat.offset.x = -dx * this.game.tileSize.width;
+    this.cat.offset.y = -dy * this.game.tileSize.height;
+
+    this.game.animations.unshift(new SlideAnimation(this.cat, dx * xSpeed, dy * ySpeed, count));
     this.game.blocked = true;
   }
 
-  endEffect() {
+  endAnimation() {
     // Force countdown to zero
     this.countdown = 0;
 

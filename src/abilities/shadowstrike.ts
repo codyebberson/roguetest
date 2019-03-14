@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, Message, SlideEffect, Sprite, TargetType, Vec2} from 'wglt';
+import {Ability, Actor, Colors, Message, SlideAnimation, Sprite, TargetType, Vec2} from 'wglt';
 
 const RANGE = 10;
 const SPRITE = new Sprite(656, 192, 16, 24, undefined, undefined, undefined, 0xc4c4c4ff);
@@ -45,7 +45,7 @@ export class ShadowStrikeAbility implements Ability {
       return false;
     }
 
-    let farthestTile = null;
+    let farthestTile: Vec2 | null = null;
     let farthestDistance = 0.0;
 
     for (let y = target.y - 1; y <= target.y + 1; y++) {
@@ -76,13 +76,12 @@ export class ShadowStrikeAbility implements Ability {
     const count = 4;
     const xSpeed = (farthestTile.x - caster.x) * game.tileSize.width / count;
     const ySpeed = (farthestTile.y - caster.y) * game.tileSize.height / count;
-    const slideEffect = new SlideEffect(caster, xSpeed, ySpeed, count);
-    slideEffect.onDone = () => {
+    game.addAnimation(new SlideAnimation(caster, xSpeed, ySpeed, count)).then(() => {
+      caster.x = (farthestTile as Vec2).x;
+      caster.y = (farthestTile as Vec2).y;
       caster.attack(target, 20);
       caster.ap--;
-    };
-
-    game.effects.push(slideEffect);
+    });
     return true;
   }
 }

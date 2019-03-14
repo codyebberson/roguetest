@@ -13,6 +13,7 @@ import {Troll} from './entities/troll';
 import {Game} from './game';
 import {HealthPotion} from './items/healthpotion';
 import {Scroll} from './items/scroll';
+import { RedDragon } from './entities/reddragon';
 
 // Size of the map
 const MAP_WIDTH = 64;
@@ -84,31 +85,31 @@ const STAIRS_SPRITE = new Sprite(700, 500, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
 //   },
 // ];
 
-const BOSS_ZONE_HEIGHT = 8;
+const BOSS_ZONE_HEIGHT = 10;
 const BOSS_LAYOUTS = [
   {
     // Top left
     bossZone: new Rect(0, 0, MAP_WIDTH, BOSS_ZONE_HEIGHT),
-    bossRoom: new Rect(8, 2, 10, 6),
-    stairsRoom: new Rect(2, 3, 4, 4)
+    bossRoom: new Rect(8, 2, 14, 8),
+    stairsRoom: new Rect(2, 4, 4, 4)
   },
   {
     // Top right
     bossZone: new Rect(0, 0, MAP_WIDTH, BOSS_ZONE_HEIGHT),
-    bossRoom: new Rect(MAP_WIDTH - 18, 2, 10, 6),
-    stairsRoom: new Rect(MAP_WIDTH - 6, 3, 4, 4)
+    bossRoom: new Rect(MAP_WIDTH - 22, 2, 14, 8),
+    stairsRoom: new Rect(MAP_WIDTH - 6, 4, 4, 4)
   },
   {
     // Bottom left
     bossZone: new Rect(0, MAP_HEIGHT - BOSS_ZONE_HEIGHT, MAP_WIDTH, BOSS_ZONE_HEIGHT),
-    bossRoom: new Rect(8, MAP_HEIGHT - BOSS_ZONE_HEIGHT, 10, 6),
-    stairsRoom: new Rect(2, MAP_HEIGHT - BOSS_ZONE_HEIGHT + 1, 4, 4)
+    bossRoom: new Rect(8, MAP_HEIGHT - BOSS_ZONE_HEIGHT, 14, 8),
+    stairsRoom: new Rect(2, MAP_HEIGHT - BOSS_ZONE_HEIGHT + 2, 4, 4)
   },
   {
     // Bottom right
     bossZone: new Rect(0, MAP_HEIGHT - BOSS_ZONE_HEIGHT, MAP_WIDTH, BOSS_ZONE_HEIGHT),
-    bossRoom: new Rect(MAP_WIDTH - 18, MAP_HEIGHT - BOSS_ZONE_HEIGHT, 10, 6),
-    stairsRoom: new Rect(MAP_WIDTH - 6, MAP_HEIGHT - BOSS_ZONE_HEIGHT + 1, 4, 4)
+    bossRoom: new Rect(MAP_WIDTH - 22, MAP_HEIGHT - BOSS_ZONE_HEIGHT, 14, 8),
+    stairsRoom: new Rect(MAP_WIDTH - 6, MAP_HEIGHT - BOSS_ZONE_HEIGHT + 2, 4, 4)
   },
 ];
 
@@ -258,8 +259,15 @@ export class MapGenerator {
       }
 
       // Create boss
-      const griffon = new Griffon(game, center.x, center.y);
-      game.entities.push(griffon);
+      const dice = rng.nextRange(0, 1000);
+      if (dice !== 0) {
+        const redDragon = new RedDragon(game, center.x, center.y, bossRoom);
+        game.entities.push(redDragon);
+
+      } else {
+        const griffon = new Griffon(game, center.x, center.y);
+        game.entities.push(griffon);
+      }
 
       // Create stairs room
       const stairsRoom = bossLayout.stairsRoom;
