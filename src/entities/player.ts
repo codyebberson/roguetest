@@ -39,7 +39,7 @@ export class Player extends StatsActor {
     while (this.xp >= this.maxXp) {
       this.level++;
       this.xp = 0;
-      this.maxXp *= 2;
+      this.maxXp = this.nextMaxXp(this.maxXp);
       this.remainingAbilityPoints += 2;
       this.game.log('You reached level ' + this.level, Colors.LIGHT_MAGENTA);
       levelUp = true;
@@ -48,5 +48,9 @@ export class Player extends StatsActor {
     if (levelUp) {
       (this.game as Game).levelUpDialog.visible = true;
     }
+  }
+
+  private nextMaxXp(oldMaxXp: number) {
+    return Math.round(oldMaxXp * 1.5 / 10.0) * 10.0;
   }
 }

@@ -11,4 +11,5 @@ export declare class Player extends StatsActor {
     constructor(game: Game, x: number, y: number);
     onDeath(): void;
     addXp(xpGain: number): void;
+    private nextMaxXp;
 }
