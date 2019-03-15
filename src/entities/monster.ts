@@ -9,6 +9,7 @@ const START_BLOOD = 1367;
 const END_BLOOD = 1371;
 
 export abstract class Monster extends StatsActor {
+
   constructor(game: Game, x: number, y: number, name: string, sprite: Sprite) {
     super(game, x, y, name, sprite);
     this.maxHp = 10;
@@ -35,6 +36,10 @@ export abstract class Monster extends StatsActor {
   }
 
   private calculateDamage(attacker: Actor, target: Actor) {
-    return 10;
+    const minDamage = 2 * this.level;
+    const maxDamage = 3 * this.level;
+    const damage = this.game.rng.nextRange(minDamage, maxDamage + 1);
+    const damageModifier = this.strengthModifier;
+    return damage + damageModifier;
   }
 }

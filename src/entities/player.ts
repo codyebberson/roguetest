@@ -38,6 +38,8 @@ export class Player extends StatsActor {
     let levelUp = false;
     while (this.xp >= this.maxXp) {
       this.level++;
+      this.maxHp += 2;
+      this.hp = this.maxHp;
       this.xp = 0;
       this.maxXp = this.nextMaxXp(this.maxXp);
       this.remainingAbilityPoints += 2;

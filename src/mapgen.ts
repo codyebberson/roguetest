@@ -393,14 +393,15 @@ export class MapGenerator {
       }
 
       const roll = rng.nextRange(0, 100);
+      const level = rng.nextRange(1, 3);
       let monster = null;
 
       if (roll < 40) {
-        monster = new Spider(game, x, y);
+        monster = new Spider(game, x, y, level);
       } else if (roll < 80) {
-        monster = new Bat(game, x, y);
+        monster = new Bat(game, x, y, level);
       } else {
-        monster = new Troll(game, x, y);
+        monster = new Troll(game, x, y, level);
       }
 
       game.entities.push(monster);
