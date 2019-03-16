@@ -10,6 +10,7 @@ import {TopPanel} from './gui/toppanel';
 import {MapGenerator} from './mapgen';
 import {Gateway} from './items/gateway';
 import { LevelUpDialog } from './gui/levelupdialog';
+import { EntityFrames } from './gui/entityframes';
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -79,6 +80,8 @@ export class Game extends wglt.Game {
 
     const bottomPanel = new BottomPanel();
     this.gui.add(bottomPanel);
+
+    this.gui.add(new EntityFrames(this));
 
     const inventoryButton = new Button(
         new Rect(0, 0, 20, 28),
@@ -194,6 +197,7 @@ export class Game extends wglt.Game {
       // Advance to the next level
       this.log('You take a moment to rest, and recover your strength.', Colors.LIGHT_MAGENTA);
       this.log('After a rare moment of peace, you descend deeper...', Colors.LIGHT_RED);
+      this.mapGen.dungeonLevel++;
       this.nextLevel();
     });
   }

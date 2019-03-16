@@ -13,7 +13,6 @@ export class Stunned extends AI {
   doAi() {
     if (this.numTurns > 0) {
       // Stunned.  Sit still.
-      this.actor.addFloatingText('?', Colors.LIGHT_GRAY);
       this.numTurns--;
     } else {
       this.actor.ai = this.oldAi;

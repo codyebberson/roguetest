@@ -12,6 +12,7 @@ export declare class StatsActor extends Actor {
     dexterity: number;
     constitution: number;
     intelligence: number;
+    showFrame: boolean;
     readonly equipment: ArrayList<Equipment>;
     readonly buffs: Buff[];
     constructor(game: Game, x: number, y: number, name: string, sprite: Sprite);

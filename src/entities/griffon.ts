@@ -63,13 +63,13 @@ class GriffonAI extends AI {
 export class Griffon extends Monster {
   aggro = false;
 
-  constructor(game: Game, x: number, y: number) {
+  constructor(game: Game, x: number, y: number, level: number) {
     super(game, x, y, 'Griffon', SPRITE);
-    this.hp = 50;
-    this.maxHp = 50;
+    this.level = level;
+    this.maxHp = 10 * this.level;
+    this.hp = this.maxHp;
     this.ai = new GriffonAI(this);
     this.talents.add(new Talent(this, new LeapAbility()));
-    this.level = 5;
   }
 
   get leapTalent() {

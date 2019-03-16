@@ -20,6 +20,8 @@ export class Player extends StatsActor {
   constructor(game: Game, x: number, y: number) {
     super(game, x, y, 'Player', PLAYER_SPRITE);
     this.level = 1;
+    this.hp = 10;
+    this.maxHp = 10;
     this.xp = 0;
     this.maxXp = 20;
     this.race = new Human();

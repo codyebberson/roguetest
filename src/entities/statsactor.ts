@@ -14,6 +14,7 @@ export class StatsActor extends Actor {
   dexterity: number;
   constitution: number;
   intelligence: number;
+  showFrame: boolean;
   readonly equipment: ArrayList<Equipment>;
   readonly buffs: Buff[];
 
@@ -27,6 +28,7 @@ export class StatsActor extends Actor {
     this.dexterity = 10;
     this.constitution = 10;
     this.intelligence = 10;
+    this.showFrame = true;
     this.equipment = new ArrayList<Equipment>();
     this.buffs = [];
 

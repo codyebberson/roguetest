@@ -115,9 +115,11 @@ const BOSS_LAYOUTS = [
 
 export class MapGenerator {
   readonly game: Game;
+  dungeonLevel: number;
 
   constructor(game: Game) {
     this.game = game;
+    this.dungeonLevel = 0;
 
     const map = new TileMap(game.app.gl, MAP_WIDTH, MAP_HEIGHT, 4);
     map.tileWidth = 16;
@@ -259,13 +261,14 @@ export class MapGenerator {
       }
 
       // Create boss
+      const bossLevel = this.dungeonLevel * 3 + 5;
       const dice = rng.nextRange(0, 1000);
       if (dice !== 0) {
-        const redDragon = new RedDragon(game, center.x, center.y, bossRoom);
+        const redDragon = new RedDragon(game, center.x, center.y, bossLevel, bossRoom);
         game.entities.push(redDragon);
 
       } else {
-        const griffon = new Griffon(game, center.x, center.y);
+        const griffon = new Griffon(game, center.x, center.y, bossLevel);
         game.entities.push(griffon);
       }
 
@@ -393,7 +396,7 @@ export class MapGenerator {
       }
 
       const roll = rng.nextRange(0, 100);
-      const level = rng.nextRange(1, 3);
+      const level = this.dungeonLevel * 3 + rng.nextRange(1, 3);
       let monster = null;
 
       if (roll < 40) {

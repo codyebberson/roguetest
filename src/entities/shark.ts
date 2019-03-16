@@ -5,7 +5,7 @@ import {Game} from '../game';
 import {Monster} from './monster';
 
 const SPRITE = new Sprite(0, 168, 16, 24, 2, true, undefined, 0x5790b7FF);
-const DAMAGE = 30;
+const DAMAGE = 10;
 
 class SharkAI extends AI {
   doAi() {

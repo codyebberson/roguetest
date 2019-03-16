@@ -36,10 +36,11 @@ export abstract class Monster extends StatsActor {
   }
 
   private calculateDamage(attacker: Actor, target: Actor) {
-    const minDamage = 2 * this.level;
-    const maxDamage = 3 * this.level;
-    const damage = this.game.rng.nextRange(minDamage, maxDamage + 1);
-    const damageModifier = this.strengthModifier;
+    const statsActor = attacker as StatsActor;
+    const minDamage = 2 * statsActor.level;
+    const maxDamage = 3 * statsActor.level;
+    const damage = statsActor.game.rng.nextRange(minDamage, maxDamage + 1);
+    const damageModifier = statsActor.strengthModifier;
     return damage + damageModifier;
   }
 }
