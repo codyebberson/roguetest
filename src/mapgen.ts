@@ -137,9 +137,11 @@ export class MapGenerator {
     for (let y = 0; y < MAP_HEIGHT; y++) {
       for (let x = 0; x < MAP_WIDTH; x++) {
         map.setTile(0, x, y, TILE_WALL, true);
-        map.setTile(1, x, y, TILE_EMPTY);
-        map.setTile(2, x, y, TILE_EMPTY);
-        map.setTile(3, x, y, TILE_EMPTY);
+        map.setAnimated(x, y, 0, false);
+        for (let z = 1; z < 4; z++) {
+          map.setTile(z, x, y, TILE_EMPTY, true);
+          map.setAnimated(x, y, z, false);
+        }
       }
     }
 
@@ -151,6 +153,11 @@ export class MapGenerator {
       map.setTile(0, water.x + 1, water.y, TILE_WATER, true, false);
       map.setTile(0, water.x, water.y - 1, TILE_WATER, true, false);
       map.setTile(0, water.x, water.y + 1, TILE_WATER, true, false);
+      map.setAnimated(water.x, water.y, 0, true);
+      map.setAnimated(water.x - 1, water.y, 0, true);
+      map.setAnimated(water.x + 1, water.y, 0, true);
+      map.setAnimated(water.x, water.y - 1, 0, true);
+      map.setAnimated(water.x, water.y + 1, 0, true);
       water.x += rng.nextRange(-1, 2);
       water.y += rng.nextRange(-1, 2);
     }
@@ -159,10 +166,14 @@ export class MapGenerator {
     for (let x = 0; x < MAP_WIDTH; x++) {
       map.setTile(0, x, 0, TILE_EMPTY, true);
       map.setTile(0, x, MAP_HEIGHT - 1, TILE_EMPTY, true);
+      map.setAnimated(x, 0, 0, false);
+      map.setAnimated(x, MAP_HEIGHT - 1, 0, false);
     }
     for (let y = 0; y < MAP_HEIGHT; y++) {
       map.setTile(0, 0, y, TILE_EMPTY, true);
       map.setTile(0, MAP_WIDTH - 1, y, TILE_EMPTY, true);
+      map.setAnimated(0, y, 0, false);
+      map.setAnimated(MAP_WIDTH - 1, y, 0, false);
     }
 
     // Reset field-of-view
@@ -353,6 +364,7 @@ export class MapGenerator {
     for (let y = room.y1 + 1; y < room.y2; y++) {
       for (let x = room.x1 + 1; x < room.x2; x++) {
         map.setTile(0, x, y, TILE_FLOOR, false);
+        map.setAnimated(x, y, 0, false);
       }
     }
   }
@@ -364,6 +376,7 @@ export class MapGenerator {
       } else {
         map.setTile(0, x, y, TILE_FLOOR, false);
       }
+      map.setAnimated(x, y, 0, false);
     }
   }
 
@@ -375,6 +388,7 @@ export class MapGenerator {
       } else {
         map.setTile(0, x, y, TILE_FLOOR, false);
       }
+      map.setAnimated(x, y, 0, false);
     }
   }
 
