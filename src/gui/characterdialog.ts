@@ -163,28 +163,28 @@ export class CharacterDialog extends Dialog {
 
     y += 4 * (buttonRect.height + BUTTON_SPACING) + MARGIN;
 
-    this.gui.app.drawString('Armor', x, y, Colors.YELLOW);
-    this.gui.app.drawRightString(this.player.armor.toString(), x + 90, y, Colors.WHITE);
+    this.gui.app.drawString('Armor', x + 2, y, Colors.YELLOW);
+    this.gui.app.drawRightString(this.player.armor.toString(), x + 85, y, Colors.WHITE);
     y += 10;
 
-    this.gui.app.drawString('Constitution', x, y, Colors.YELLOW);
-    this.gui.app.drawRightString(this.player.constitution.toString(), x + 90, y, Colors.WHITE);
-    this.gui.app.drawRightString('+' + this.player.constitutionModifier, x + 110, y, Colors.LIGHT_GREEN);
+    this.gui.app.drawString('Constitution', x + 2, y, Colors.YELLOW);
+    this.gui.app.drawRightString(this.player.constitution.toString(), x + 85, y, Colors.WHITE);
+    this.gui.app.drawString('+' + this.player.constitutionModifier, x + 95, y, Colors.LIGHT_GREEN);
     y += 10;
 
-    this.gui.app.drawString('Strength', x, y, Colors.YELLOW);
-    this.gui.app.drawRightString(this.player.strength.toString(), x + 90, y, Colors.WHITE);
-    this.gui.app.drawRightString('+' + this.player.strengthModifier, x + 110, y, Colors.LIGHT_GREEN);
+    this.gui.app.drawString('Strength', x + 2, y, Colors.YELLOW);
+    this.gui.app.drawRightString(this.player.strength.toString(), x + 85, y, Colors.WHITE);
+    this.gui.app.drawString('+' + this.player.strengthModifier, x + 95, y, Colors.LIGHT_GREEN);
     y += 10;
 
-    this.gui.app.drawString('Dexterity', x, y, Colors.YELLOW);
-    this.gui.app.drawRightString(this.player.dexterity.toString(), x + 90, y, Colors.WHITE);
-    this.gui.app.drawRightString('+' + this.player.dexterityModifier, x + 110, y, Colors.LIGHT_GREEN);
+    this.gui.app.drawString('Dexterity', x + 2, y, Colors.YELLOW);
+    this.gui.app.drawRightString(this.player.dexterity.toString(), x + 85, y, Colors.WHITE);
+    this.gui.app.drawString('+' + this.player.dexterityModifier, x + 95, y, Colors.LIGHT_GREEN);
     y += 10;
 
-    this.gui.app.drawString('Intelligence', x, y, Colors.YELLOW);
-    this.gui.app.drawRightString(this.player.intelligence.toString(), x + 90, y, Colors.WHITE);
-    this.gui.app.drawRightString('+' + this.player.intelligenceModifier, x + 110, y, Colors.LIGHT_GREEN);
+    this.gui.app.drawString('Intelligence', x + 2, y, Colors.YELLOW);
+    this.gui.app.drawRightString(this.player.intelligence.toString(), x + 85, y, Colors.WHITE);
+    this.gui.app.drawString('+' + this.player.intelligenceModifier, x + 95, y, Colors.LIGHT_GREEN);
     y += 10;
 
     this.rect.height = (y + MARGIN) - containerRect.y;

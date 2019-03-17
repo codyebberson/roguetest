@@ -65,6 +65,14 @@ export class StatsActor extends Actor {
     return undefined;
   }
 
+  getDamage() {
+    const weapon = this.mainHandWeapon;
+    const rng = this.game.rng;
+    const damage = weapon ? rng.nextRange(weapon.minDamage, weapon.maxDamage + 1) : 1;
+    const damageModifier = weapon && weapon.finesse ? this.dexterityModifier : this.strengthModifier;
+    return damage + damageModifier;
+  }
+
   onAttack(target: Actor, damage: number) {
     if (damage > 0) {
       this.game.log(this.name + ' attacks ' + target.name + ' for ' + damage + ' hit points.', 0x808080FF);

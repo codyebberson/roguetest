@@ -51,13 +51,7 @@ export class Game extends wglt.Game {
         return true;
       }
       if (other instanceof Actor) {
-        // TODO: Calculate damage
-        // Unarmed combat: 1 + Str modifier
-        const weapon = player.mainHandWeapon;
-        const damage = weapon ? this.rng.nextRange(weapon.minDamage, weapon.maxDamage + 1) : 1;
-        const damageModifier = weapon && weapon.finesse ? player.dexterityModifier : player.strengthModifier;
-        const damageTotal = damage + damageModifier;
-        player.attack(other, damageTotal);
+        player.attack(other, player.getDamage());
         return true;
       }
       if (other.name === 'stairs') {

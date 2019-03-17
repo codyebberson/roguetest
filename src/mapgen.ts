@@ -396,7 +396,7 @@ export class MapGenerator {
       }
 
       const roll = rng.nextRange(0, 100);
-      const level = this.dungeonLevel * 3 + rng.nextRange(1, 3);
+      const level = this.dungeonLevel * 2 + rng.nextRange(1, 3);
       let monster = null;
 
       if (roll < 40) {

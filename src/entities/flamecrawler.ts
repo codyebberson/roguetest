@@ -8,16 +8,26 @@ const SPRITE = new Sprite(256, 312, 16, 24, 2, true, undefined, 0xd51111ff);
 const DAMAGE = 8;
 
 class FlameCrawlerAI extends AI {
+  aliveCount: number;
 
   constructor(actor: FlameCrawler) {
     super(actor);
     this.alwaysActive = true;
+    this.aliveCount = 0;
   }
 
   doAi() {
     const monster = this.actor as FlameCrawler;
     const player = monster.game.player;
     if (!player || player.hp <= 0) {
+      return;
+    }
+
+    // Count how long it has been alive
+    this.aliveCount++;
+
+    if (this.aliveCount === 1) {
+      // Do nothing on the first turn
       return;
     }
 

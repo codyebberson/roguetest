@@ -1,4 +1,4 @@
-import {ButtonSlot, Colors, Dialog, Rect, Button, Keys, Sprite} from 'wglt';
+import {ButtonSlot, Colors, Dialog, Rect, Button, Keys, Sprite, Message} from 'wglt';
 
 import {Player} from '../entities/player';
 
@@ -9,6 +9,29 @@ const CONSTITUTION_SPRITE = new Sprite(688, 144, 16, 24, 1, false, undefined, 0x
 const DEXTERITY_SPRITE = new Sprite(640, 144, 16, 24, 1, false, undefined, 0xC04020FF);
 const INTELLIGENCE_SPRITE = new Sprite(688, 168, 16, 24, 1, false, undefined, 0xC04020FF);
 const STRENGTH_SPRITE = new Sprite(608, 312, 16, 24, 1, false, undefined, 0xC04020FF);
+
+const DESCRIPTIONS = [
+  [
+    new Message('Constitution', Colors.YELLOW),
+    new Message('Health, staminal,', Colors.WHITE),
+    new Message('and vital force', Colors.WHITE)
+  ],
+  [
+    new Message('Dexterity', Colors.YELLOW),
+    new Message('Physical agility, reflexes,', Colors.WHITE),
+    new Message('balance, and poise', Colors.WHITE)
+  ],
+  [
+    new Message('Intelligence', Colors.YELLOW),
+    new Message('Mental acuity, recall,', Colors.WHITE),
+    new Message('and analytical skill', Colors.WHITE)
+  ],
+  [
+    new Message('Strength', Colors.YELLOW),
+    new Message('Natural athleticism,', Colors.WHITE),
+    new Message('and bodily power', Colors.WHITE)
+  ],
+];
 
 export class LevelUpDialog extends Dialog {
   readonly player: Player;
@@ -85,11 +108,15 @@ export class LevelUpDialog extends Dialog {
     this.gui.app.drawString('Choose ' + this.player.remainingAbilityPoints + ' stats to increase:', x, y, Colors.WHITE);
     y += 10;
 
-    // Left column:  head, neck, back, chest
     for (let i = 0; i < 4; i++) {
+      const desc = DESCRIPTIONS[i];
+      for (let j = 0; j < desc.length; j++) {
+        this.gui.app.drawString(desc[j].text, x + 25, y + 1 + j * 8, desc[j].color);
+      }
+
       const child = this.children.get(i);
       child.rect.x = x;
-      child.rect.y = y;// + i * (buttonRect.height + BUTTON_SPACING);
+      child.rect.y = y;
       child.rect.width = buttonRect.width;
       child.rect.height = buttonRect.height;
       y += buttonRect.height + BUTTON_SPACING;

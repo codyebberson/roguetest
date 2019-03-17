@@ -1,4 +1,5 @@
 import { Ability, Actor, Message, Sprite, TargetType } from 'wglt';
+import { StatsActor } from '../entities/statsactor';
 export declare class ShadowStrikeAbility implements Ability {
     readonly sprite: Sprite;
     readonly name: string;
@@ -8,5 +9,5 @@ export declare class ShadowStrikeAbility implements Ability {
     readonly cooldown: number;
     readonly tooltipMessages: Message[];
     constructor();
-    cast(caster: Actor, target: Actor): boolean;
+    cast(caster: StatsActor, target: Actor): boolean;
 }
