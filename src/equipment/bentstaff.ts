@@ -3,7 +3,7 @@ import {Colors, Game, Message, Sprite} from 'wglt';
 import {EquipmentSlot} from './equipment';
 import { Weapon } from './weapon';
 
-const NAME = 'Bent STaff';
+const NAME = 'Bent Staff';
 const SPRITE = new Sprite(640, 120, 16, 24, 1, false, undefined, 0xC0A080FF);
 const TOOLTIPS = [
   new Message(NAME, Colors.WHITE),

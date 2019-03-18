@@ -4,6 +4,8 @@ export declare class MapGenerator {
     dungeonLevel: number;
     constructor(game: Game);
     createMap(): void;
+    createDungeon(): void;
+    private clearMap;
     private createRoom;
     private createHTunnel;
     private createVTunnel;

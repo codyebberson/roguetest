@@ -79,7 +79,7 @@ export class Game extends wglt.Game {
 
     const inventoryButton = new Button(
         new Rect(0, 0, 20, 28),
-        new Sprite(834, 168, 16, 24, 1, true, 30, 0xe08020ff),
+        new Sprite(832, 168, 16, 24, 1, true, 30, 0xe08020ff),
         undefined,
         () => {
           inventoryDialog.visible = !inventoryDialog.visible;
@@ -206,7 +206,7 @@ export class Game extends wglt.Game {
     this.mapGen.createMap();
 
     this.addAnimation(new FadeInAnimation(30)).then(() => {
-      this.addAnimation(new CatEscapeAnimation(this));
+      // this.addAnimation(new CatEscapeAnimation(this));
     });
   }
 }

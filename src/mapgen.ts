@@ -36,6 +36,8 @@ const TILE_DOOR = getTileId(7, 19);
 const TILE_STAIRS = getTileId(14, 18);
 const TILE_BARREL = getTileId(24, 19);
 const TILE_STATUE = getTileId(16, 20);
+const TILE_GRASS = getTileId(0, 17);
+const TILE_TREE = getTileId(22, 23);
 
 function getTileId(tileX: number, tileY: number) {
   return 1 + tileY * 64 + tileX;
@@ -133,17 +135,54 @@ export class MapGenerator {
     const player = game.player as Player;
     const rng = game.rng;
 
-    // Clear the map to all walls
+    this.clearMap(map, TILE_GRASS, false);
+
+    player.x = (MAP_WIDTH / 2) | 0;
+    player.y = (MAP_HEIGHT / 2) | 0;
+
+    // Make sure there's a ring of trees around the map
+    for (let x = 0; x < MAP_WIDTH; x++) {
+      // Top
+      map.setTile(0, x, 1, TILE_GRASS, true);
+      map.setTile(1, x, 1, TILE_TREE);
+
+      // Bottom
+      map.setTile(0, x, MAP_HEIGHT - 2, TILE_GRASS, true);
+      map.setTile(1, x, MAP_HEIGHT - 2, TILE_TREE);
+    }
     for (let y = 0; y < MAP_HEIGHT; y++) {
-      for (let x = 0; x < MAP_WIDTH; x++) {
-        map.setTile(0, x, y, TILE_WALL, true);
-        map.setAnimated(x, y, 0, false);
-        for (let z = 1; z < 4; z++) {
-          map.setTile(z, x, y, TILE_EMPTY, true);
-          map.setAnimated(x, y, z, false);
-        }
+      // Left
+      map.setTile(0, 1, y, TILE_GRASS, true);
+      map.setTile(1, 1, y, TILE_TREE);
+
+      // Right
+      map.setTile(0, MAP_WIDTH - 2, y, TILE_GRASS, true);
+      map.setTile(1, MAP_WIDTH - 2, y, TILE_TREE);
+    }
+
+    for (let i = 0; i < 200; i++) {
+      const treeX = rng.nextRange(0, MAP_WIDTH);
+      const treeY = rng.nextRange(0, MAP_HEIGHT);
+      if (treeX !== player.x || treeY !== player.y) {
+        map.setTile(0, treeX, treeY, TILE_GRASS, true);
+        map.setTile(1, treeX, treeY, TILE_TREE);
       }
     }
+
+    // Initial FOV
+    game.resetViewport();
+    game.recomputeFov();
+  }
+
+
+  createDungeon() {
+    const game = this.game;
+    const map = game.tileMap as TileMap;
+    const player = game.player as Player;
+    const rng = game.rng;
+
+    // Clear the map to all walls
+    this.clearMap(map, TILE_WALL, true);
 
     // Create bodies of water
     const water = new Vec2(MAP_WIDTH / 2, MAP_HEIGHT / 2);
@@ -221,9 +260,9 @@ export class MapGenerator {
         player.x = center.x;
         player.y = center.y;
 
-        // Add the cat near the player
-        this.game.cat = new Cat(game, player.x + 2, player.y);
-        game.entities.push(this.game.cat);
+        // // Add the cat near the player
+        // this.game.cat = new Cat(game, player.x + 2, player.y);
+        // game.entities.push(this.game.cat);
 
       } else {
         // All rooms after the first:
@@ -294,8 +333,8 @@ export class MapGenerator {
       const stairs = new Entity(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE, true);
       game.entities.push(stairs);
 
-      // Tell the cat where the stairs are
-      (this.game.cat as Cat).destination = stairsLoc;
+      // // Tell the cat where the stairs are
+      // (this.game.cat as Cat).destination = stairsLoc;
     }
 
     // Touch up walls / half walls
@@ -358,6 +397,19 @@ export class MapGenerator {
     // Initial FOV
     game.resetViewport();
     game.recomputeFov();
+  }
+
+  private clearMap(map: TileMap, tile: number, blocked: boolean) {
+    for (let y = 0; y < MAP_HEIGHT; y++) {
+      for (let x = 0; x < MAP_WIDTH; x++) {
+        map.setTile(0, x, y, tile, blocked);
+        map.setAnimated(x, y, 0, false);
+        for (let z = 1; z < 4; z++) {
+          map.setTile(z, x, y, TILE_EMPTY);
+          map.setAnimated(x, y, z, false);
+        }
+      }
+    }
   }
 
   private createRoom(map: TileMap, room: Rect) {
