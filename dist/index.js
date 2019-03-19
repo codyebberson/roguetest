@@ -1388,6 +1388,93 @@ exports.Griffon = Griffon;
 
 /***/ }),
 
+/***/ "./src/entities/guard.ts":
+/*!*******************************!*\
+  !*** ./src/entities/guard.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
+const monster_1 = __webpack_require__(/*! ./monster */ "./src/entities/monster.ts");
+const SPRITE = new wglt_1.Sprite(320, 96, 16, 24, 2, true, undefined, 0x5790b7FF);
+class GuardAI extends wglt_1.AI {
+    constructor(actor, waypoints) {
+        super(actor);
+        this.waypoints = waypoints;
+        this.waypointIndex = 0;
+        this.waitCount = 0;
+        this.aggroCount = 0;
+    }
+    doAi() {
+        const guard = this.actor;
+        const game = guard.game;
+        const player = game.player;
+        if (guard.aggro) {
+            this.aggroCount++;
+            if (this.aggroCount === 1) {
+                // First attack
+                const game = guard.game;
+                game.log('Guard shouts for help!', wglt_1.Colors.LIGHT_BLUE);
+                for (let i = 0; i < game.entities.length; i++) {
+                    if (game.entities[i] instanceof Guard) {
+                        const otherGuard = game.entities[i];
+                        if (guard.distanceTo(otherGuard) < 6) {
+                            otherGuard.aggro = true;
+                        }
+                    }
+                }
+            }
+            else {
+                if (guard.distanceTo(player) > 1.0) {
+                    // Move towards player if far away
+                    guard.moveToward(player.x, player.y);
+                }
+                else if (player.hp > 0) {
+                    // Close enough, attack! (if the player is still alive.)
+                    const damage = 10;
+                    guard.attack(player, damage);
+                }
+            }
+            return;
+        }
+        if (this.waitCount > 0) {
+            this.waitCount--;
+            return;
+        }
+        const waypoint = this.waypoints[this.waypointIndex];
+        if (guard.x === waypoint.x && guard.y === waypoint.y) {
+            this.waypointIndex = (this.waypointIndex + 1) % this.waypoints.length;
+            this.waitCount = guard.game.rng.nextRange(5, 15);
+            return;
+        }
+        guard.moveToward(waypoint.x, waypoint.y);
+    }
+}
+class Guard extends monster_1.Monster {
+    constructor(game, x, y, waypoints) {
+        super(game, x, y, 'Guard', SPRITE);
+        this.aggro = false;
+        this.ai = new GuardAI(this, waypoints);
+        this.seen = true;
+        this.level = 10;
+        this.strength = 10 + 2 * this.level;
+        this.maxHp = 10 + 2 * this.level;
+        this.hp = this.maxHp;
+    }
+    takeDamage(damage) {
+        super.takeDamage(damage);
+        this.aggro = true;
+    }
+}
+exports.Guard = Guard;
+
+
+/***/ }),
+
 /***/ "./src/entities/monster.ts":
 /*!*********************************!*\
   !*** ./src/entities/monster.ts ***!
@@ -3243,9 +3330,10 @@ const troll_1 = __webpack_require__(/*! ./entities/troll */ "./src/entities/trol
 const healthpotion_1 = __webpack_require__(/*! ./items/healthpotion */ "./src/items/healthpotion.ts");
 const scroll_1 = __webpack_require__(/*! ./items/scroll */ "./src/items/scroll.ts");
 const reddragon_1 = __webpack_require__(/*! ./entities/reddragon */ "./src/entities/reddragon.ts");
+const guard_1 = __webpack_require__(/*! ./entities/guard */ "./src/entities/guard.ts");
 // Size of the map
-const MAP_WIDTH = 64;
-const MAP_HEIGHT = 48;
+const MAP_WIDTH = 256;
+const MAP_HEIGHT = 256;
 const TILE_EMPTY = 0;
 const TILE_SHADOW = getTileId(0, 3);
 const TILE_WALL = getTileId(0, 19);
@@ -3369,13 +3457,77 @@ class MapGenerator {
             map.setTile(0, MAP_WIDTH - 2, y, TILE_GRASS, true);
             map.setTile(1, MAP_WIDTH - 2, y, TILE_TREE);
         }
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 1000; i++) {
             const treeX = rng.nextRange(0, MAP_WIDTH);
             const treeY = rng.nextRange(0, MAP_HEIGHT);
             if (treeX !== player.x || treeY !== player.y) {
                 map.setTile(0, treeX, treeY, TILE_GRASS, true);
                 map.setTile(1, treeX, treeY, TILE_TREE);
             }
+        }
+        // Create moat
+        for (let y = 17; y <= 53; y++) {
+            for (let x = 17; x <= 53; x++) {
+                map.setTile(0, x, y, TILE_WATER, true, false);
+                map.setTile(1, x, y, TILE_EMPTY);
+                map.setAnimated(x, y, 0, true);
+            }
+        }
+        // Create castle
+        for (let y = 19; y <= 51; y++) {
+            for (let x = 19; x <= 51; x++) {
+                map.setTile(0, x, y, TILE_FLOOR, false);
+                map.setAnimated(x, y, 0, false);
+            }
+        }
+        // Create castle walls
+        for (let x = 19; x <= 51; x++) {
+            map.setTile(0, x, 19, TILE_WALL, true);
+            map.setTile(0, x, 51, TILE_WALL, true);
+        }
+        for (let y = 19; y <= 51; y++) {
+            map.setTile(0, 19, y, TILE_WALL, true);
+            map.setTile(0, 51, y, TILE_WALL, true);
+        }
+        // Create draw bridges
+        for (let y = 16; y <= 19; y++) {
+            for (let x = 34; x <= 35; x++) {
+                map.setTile(0, x, y, TILE_BRIDGE, false);
+                map.setAnimated(x, y, 0, false);
+            }
+        }
+        for (let y = 51; y <= 54; y++) {
+            for (let x = 34; x <= 35; x++) {
+                map.setTile(0, x, y, TILE_BRIDGE, false);
+                map.setAnimated(x, y, 0, false);
+            }
+        }
+        for (let y = 34; y <= 35; y++) {
+            for (let x = 16; x <= 19; x++) {
+                map.setTile(0, x, y, TILE_BRIDGE, false);
+                map.setAnimated(x, y, 0, false);
+            }
+        }
+        for (let y = 34; y <= 35; y++) {
+            for (let x = 51; x <= 54; x++) {
+                map.setTile(0, x, y, TILE_BRIDGE, false);
+                map.setAnimated(x, y, 0, false);
+            }
+        }
+        // Create guards
+        for (let i = 0; i < 10; i++) {
+            const waypoints = [new wglt_1.Vec2(rng.nextRange(21, 49), rng.nextRange(21, 49))];
+            for (let j = 1; j < 4; j++) {
+                const prev = waypoints[j - 1];
+                if (rng.nextRange(0, 2) === 0) {
+                    waypoints.push(new wglt_1.Vec2(prev.x, rng.nextRange(21, 49)));
+                }
+                else {
+                    waypoints.push(new wglt_1.Vec2(rng.nextRange(21, 49), prev.y));
+                }
+            }
+            const guard = new guard_1.Guard(game, waypoints[0].x, waypoints[0].y, waypoints);
+            game.entities.push(guard);
         }
         // Initial FOV
         game.resetViewport();

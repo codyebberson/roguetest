@@ -4,7 +4,6 @@ import {ConfuseAbility} from './abilities/confuse';
 import {FireballAbility} from './abilities/fireball';
 import {LightningAbility} from './abilities/lightning';
 import {Bat} from './entities/bat';
-import {Cat} from './entities/cat';
 import {Griffon} from './entities/griffon';
 import {Player} from './entities/player';
 import {Shark} from './entities/shark';
@@ -14,10 +13,11 @@ import {Game} from './game';
 import {HealthPotion} from './items/healthpotion';
 import {Scroll} from './items/scroll';
 import { RedDragon } from './entities/reddragon';
+import { Guard } from './entities/guard';
 
 // Size of the map
-const MAP_WIDTH = 64;
-const MAP_HEIGHT = 48;
+const MAP_WIDTH = 256;
+const MAP_HEIGHT = 256;
 
 const TILE_EMPTY = 0;
 const TILE_SHADOW = getTileId(0, 3);
@@ -160,13 +160,81 @@ export class MapGenerator {
       map.setTile(1, MAP_WIDTH - 2, y, TILE_TREE);
     }
 
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 1000; i++) {
       const treeX = rng.nextRange(0, MAP_WIDTH);
       const treeY = rng.nextRange(0, MAP_HEIGHT);
       if (treeX !== player.x || treeY !== player.y) {
         map.setTile(0, treeX, treeY, TILE_GRASS, true);
         map.setTile(1, treeX, treeY, TILE_TREE);
       }
+    }
+
+    // Create moat
+    for (let y = 17; y <= 53; y++) {
+      for (let x = 17; x <= 53; x++) {
+        map.setTile(0, x, y, TILE_WATER, true, false);
+        map.setTile(1, x, y, TILE_EMPTY);
+        map.setAnimated(x, y, 0, true);
+      }
+    }
+
+    // Create castle
+    for (let y = 19; y <= 51; y++) {
+      for (let x = 19; x <= 51; x++) {
+        map.setTile(0, x, y, TILE_FLOOR, false);
+        map.setAnimated(x, y, 0, false);
+      }
+    }
+
+    // Create castle walls
+    for (let x = 19; x <= 51; x++) {
+      map.setTile(0, x, 19, TILE_WALL, true);
+      map.setTile(0, x, 51, TILE_WALL, true);
+    }
+    for (let y = 19; y <= 51; y++) {
+      map.setTile(0, 19, y, TILE_WALL, true);
+      map.setTile(0, 51, y, TILE_WALL, true);
+    }
+
+    // Create draw bridges
+    for (let y = 16; y <= 19; y++) {
+      for (let x = 34; x<= 35; x++) {
+        map.setTile(0, x, y, TILE_BRIDGE, false);
+        map.setAnimated(x, y, 0, false);
+      }
+    }
+    for (let y = 51; y <= 54; y++) {
+      for (let x = 34; x<= 35; x++) {
+        map.setTile(0, x, y, TILE_BRIDGE, false);
+        map.setAnimated(x, y, 0, false);
+      }
+    }
+    for (let y = 34; y <= 35; y++) {
+      for (let x = 16; x<= 19; x++) {
+        map.setTile(0, x, y, TILE_BRIDGE, false);
+        map.setAnimated(x, y, 0, false);
+      }
+    }
+    for (let y = 34; y <= 35; y++) {
+      for (let x = 51; x<= 54; x++) {
+        map.setTile(0, x, y, TILE_BRIDGE, false);
+        map.setAnimated(x, y, 0, false);
+      }
+    }
+
+    // Create guards
+    for (let i = 0; i < 10; i++) {
+      const waypoints = [new Vec2(rng.nextRange(21, 49), rng.nextRange(21, 49))];
+      for (let j = 1; j < 4; j++) {
+        const prev = waypoints[j - 1];
+        if (rng.nextRange(0, 2) === 0) {
+          waypoints.push(new Vec2(prev.x, rng.nextRange(21, 49)));
+        } else {
+          waypoints.push(new Vec2(rng.nextRange(21, 49), prev.y));
+        }
+      }
+      const guard = new Guard(game, waypoints[0].x, waypoints[0].y, waypoints);
+      game.entities.push(guard);
     }
 
     // Initial FOV
