@@ -16,5 +16,7 @@ export class WeatheredCrossbow extends Weapon {
   constructor(game: Game, x?: number, y?: number) {
     super(game, x || 0, y || 0, NAME, SPRITE, EquipmentSlot.MAINHAND);
     this.tooltipMessages = TOOLTIPS;
+    this.ranged = true;
+    this.finesse = true;
   }
 }

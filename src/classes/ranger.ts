@@ -8,6 +8,7 @@ import { InitiatesVest } from '../equipment/initiatesvest';
 import { InitiatesPants } from '../equipment/initiatespants';
 import { InitiatesBoots } from '../equipment/initiatesboots';
 import { WeatheredCrossbow } from '../equipment/weatheredcrossbow';
+import { ShootAbility } from '../abilities/shoot';
 
 const NAME = 'Ranger';
 const ICON = new Sprite(168, 700, 24, 26, undefined, undefined, undefined, 0x80FF80FF);
@@ -28,6 +29,7 @@ export class Ranger extends CharacterClass {
 
     player.class = this;
     player.sprite = SPRITE;
+    player.talents.add(new Talent(player, new ShootAbility()));
     player.talents.add(new Talent(player, new LeapAbility()));
     player.equipment.add(new InitiatesVest(game));
     player.equipment.add(new InitiatesPants(game));
