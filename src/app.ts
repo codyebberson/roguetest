@@ -1,6 +1,6 @@
 
 import * as wglt from 'wglt';
-import {AppState, Rect} from 'wglt';
+import {AppState, Rect, FadeInAnimation} from 'wglt';
 
 import {CharacterClass} from './classes/characterclass';
 import {ClassMenu} from './classmenu';
@@ -60,7 +60,7 @@ export class App extends wglt.App {
       this.playerClass.initPlayer(this.game.player as Player);
     }
 
-    this.game.nextLevel();
+    this.game.addAnimation(new FadeInAnimation(30));
   }
 
   showHighScores() {

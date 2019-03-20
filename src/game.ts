@@ -37,30 +37,6 @@ export class Game extends wglt.Game {
     this.mapGen = new MapGenerator(this);
 
     const player = new Player(this, 30, 20);
-    player.onBump = (other: Entity) => {
-      if (other instanceof Gateway) {
-        if (other.other) {
-          const exit = other.other;
-          player.move(exit.x - player.x, exit.y - player.y, 16);
-        }
-        return;
-      }
-      if (other instanceof Item) {
-        player.moveToward(other.x, other.y);
-        player.pickup(other);
-        return true;
-      }
-      if (other instanceof Actor) {
-        player.attack(other, player.getDamage());
-        return true;
-      }
-      if (other.name === 'stairs') {
-        this.endLevel();
-        return true;
-      }
-      return false;
-    };
-
     this.player = player;
     this.entities.push(player);
     this.gui.renderer.baseRect = new Rect(0, 16, 24, 24);
@@ -184,29 +160,5 @@ export class Game extends wglt.Game {
 
     // Generate the map
     this.mapGen.createMap();
-  }
-
-  endLevel() {
-    this.addAnimation(new FadeOutAnimation(30)).then(() => {
-      // Advance to the next level
-      this.log('You take a moment to rest, and recover your strength.', Colors.LIGHT_MAGENTA);
-      this.log('After a rare moment of peace, you descend deeper...', Colors.LIGHT_RED);
-      this.mapGen.dungeonLevel++;
-      this.nextLevel();
-    });
-  }
-
-  nextLevel() {
-    // Clear all entities other than the player
-    this.entities.splice(0, this.entities.length);
-    this.entities.push(this.player as Player);
-
-    // Reset the players targets
-    this.stopAutoWalk();
-    this.mapGen.createMap();
-
-    this.addAnimation(new FadeInAnimation(30)).then(() => {
-      // this.addAnimation(new CatEscapeAnimation(this));
-    });
   }
 }

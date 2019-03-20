@@ -1,23 +1,31 @@
-import {Entity, Rect, Sprite, TileMap, Vec2} from 'wglt';
+import { Rect, Sprite, TileMap, Vec2 } from 'wglt';
 
-import {ConfuseAbility} from './abilities/confuse';
-import {FireballAbility} from './abilities/fireball';
-import {LightningAbility} from './abilities/lightning';
-import {Bat} from './entities/bat';
-import {Griffon} from './entities/griffon';
-import {Player} from './entities/player';
-import {Shark} from './entities/shark';
-import {Spider} from './entities/spider';
-import {Troll} from './entities/troll';
-import {Game} from './game';
-import {HealthPotion} from './items/healthpotion';
-import {Scroll} from './items/scroll';
+import { ConfuseAbility } from './abilities/confuse';
+import { FireballAbility } from './abilities/fireball';
+import { LightningAbility } from './abilities/lightning';
+import { Bat } from './entities/bat';
+import { Griffon } from './entities/griffon';
+import { Player } from './entities/player';
+import { Shark } from './entities/shark';
+import { Spider } from './entities/spider';
+import { Troll } from './entities/troll';
+import { Game } from './game';
+import { HealthPotion } from './items/healthpotion';
+import { Scroll } from './items/scroll';
 import { RedDragon } from './entities/reddragon';
 import { Guard } from './entities/guard';
+import { Portal } from './items/portal';
+import { Dungeon } from './dungeon';
 
 // Size of the map
-const MAP_WIDTH = 256;
-const MAP_HEIGHT = 256;
+const MAP_WIDTH = 512;
+const MAP_HEIGHT = 512;
+
+const OVERWORLD_WIDTH = 256;
+const OVERWORLD_HEIGHT = 256;
+
+const DUNGEON_WIDTH = 64;
+const DUNGEON_HEIGHT = 48;
 
 const TILE_EMPTY = 0;
 const TILE_SHADOW = getTileId(0, 3);
@@ -33,7 +41,8 @@ const TILE_COBWEB_NORTHEAST = getTileId(29, 22);
 const TILE_COBWEB_SOUTHWEST = getTileId(30, 22);
 const TILE_COBWEB_SOUTHEAST = getTileId(31, 22);
 const TILE_DOOR = getTileId(7, 19);
-const TILE_STAIRS = getTileId(14, 18);
+const TILE_STAIRS_DOWN = getTileId(14, 18);
+const TILE_STAIRS_UP = getTileId(15, 18);
 const TILE_BARREL = getTileId(24, 19);
 const TILE_STATUE = getTileId(16, 20);
 const TILE_GRASS = getTileId(0, 17);
@@ -58,70 +67,39 @@ const SPRITE_HEIGHT = 24;
 
 const STAIRS_SPRITE = new Sprite(700, 500, SPRITE_WIDTH, SPRITE_HEIGHT, 1);
 
-// const SECTOR_DEFINITIONS = [
-//   {
-//       // 0: Sector 1
-//       roomCount: 10,
-//       roomMinWidth: 5,
-//       roomMaxWidth: 12,
-//       roomMinHeight: 5,
-//       roomMaxHeight: 8,
-//       minEntities: 1,
-//       maxEntities: 1,
-//       // floorTiles: [
-//       //     [TILE_STEEL_FLOOR_1, 0.7],
-//       //     [TILE_GRAY_CHECKER_FLOOR_1, 0.1],
-//       //     [TILE_GRAY_CHECKER_FLOOR_2, 0.1],
-//       //     [TILE_GRAY_CHECKER_FLOOR_3, 0.1],
-//       // ],
-//       // wallTiles: [
-//       //     [TILE_GRAY_WALL_1, 0.6],
-//       //     [TILE_GRAY_WALL_2, 0.1],
-//       //     [TILE_GRAY_WALL_3, 0.1],
-//       //     [TILE_GRAY_WALL_4, 0.1],
-//       //     [TILE_GRAY_WALL_6, 0.1],
-//       // ],
-//       entitityTypes: [
-//           [Spider, 1.0]
-//       ]
-//   },
-// ];
-
 const BOSS_ZONE_HEIGHT = 10;
 const BOSS_LAYOUTS = [
   {
     // Top left
-    bossZone: new Rect(0, 0, MAP_WIDTH, BOSS_ZONE_HEIGHT),
+    bossZone: new Rect(0, 0, DUNGEON_WIDTH, BOSS_ZONE_HEIGHT),
     bossRoom: new Rect(8, 2, 14, 8),
     stairsRoom: new Rect(2, 4, 4, 4)
   },
   {
     // Top right
-    bossZone: new Rect(0, 0, MAP_WIDTH, BOSS_ZONE_HEIGHT),
-    bossRoom: new Rect(MAP_WIDTH - 22, 2, 14, 8),
-    stairsRoom: new Rect(MAP_WIDTH - 6, 4, 4, 4)
+    bossZone: new Rect(0, 0, DUNGEON_WIDTH, BOSS_ZONE_HEIGHT),
+    bossRoom: new Rect(DUNGEON_WIDTH - 22, 2, 14, 8),
+    stairsRoom: new Rect(DUNGEON_WIDTH - 6, 4, 4, 4)
   },
   {
     // Bottom left
-    bossZone: new Rect(0, MAP_HEIGHT - BOSS_ZONE_HEIGHT, MAP_WIDTH, BOSS_ZONE_HEIGHT),
-    bossRoom: new Rect(8, MAP_HEIGHT - BOSS_ZONE_HEIGHT, 14, 8),
-    stairsRoom: new Rect(2, MAP_HEIGHT - BOSS_ZONE_HEIGHT + 2, 4, 4)
+    bossZone: new Rect(0, DUNGEON_HEIGHT - BOSS_ZONE_HEIGHT, DUNGEON_WIDTH, BOSS_ZONE_HEIGHT),
+    bossRoom: new Rect(8, DUNGEON_HEIGHT - BOSS_ZONE_HEIGHT, 14, 8),
+    stairsRoom: new Rect(2, DUNGEON_HEIGHT - BOSS_ZONE_HEIGHT + 2, 4, 4)
   },
   {
     // Bottom right
-    bossZone: new Rect(0, MAP_HEIGHT - BOSS_ZONE_HEIGHT, MAP_WIDTH, BOSS_ZONE_HEIGHT),
-    bossRoom: new Rect(MAP_WIDTH - 22, MAP_HEIGHT - BOSS_ZONE_HEIGHT, 14, 8),
-    stairsRoom: new Rect(MAP_WIDTH - 6, MAP_HEIGHT - BOSS_ZONE_HEIGHT + 2, 4, 4)
+    bossZone: new Rect(0, DUNGEON_HEIGHT - BOSS_ZONE_HEIGHT, DUNGEON_WIDTH, BOSS_ZONE_HEIGHT),
+    bossRoom: new Rect(DUNGEON_WIDTH - 22, DUNGEON_HEIGHT - BOSS_ZONE_HEIGHT, 14, 8),
+    stairsRoom: new Rect(DUNGEON_WIDTH - 6, DUNGEON_HEIGHT - BOSS_ZONE_HEIGHT + 2, 4, 4)
   },
 ];
 
 export class MapGenerator {
   readonly game: Game;
-  dungeonLevel: number;
 
   constructor(game: Game) {
     this.game = game;
-    this.dungeonLevel = 0;
 
     const map = new TileMap(game.app.gl, MAP_WIDTH, MAP_HEIGHT, 4);
     map.tileWidth = 16;
@@ -130,39 +108,73 @@ export class MapGenerator {
   }
 
   createMap() {
+    this.createOverworld();
+
+    const dungeons = [];
+
+    for (let i = 0; i < 10; i++) {
+      const x = MAP_WIDTH - DUNGEON_WIDTH;
+      const y = i * DUNGEON_HEIGHT;
+      const dungeon = new Dungeon(new Rect(x, y, DUNGEON_WIDTH, DUNGEON_HEIGHT), i);
+      this.createDungeon(dungeon);
+      dungeons.push(dungeon);
+    }
+
+    // Create portal entrance
+    const game = this.game;
+    const player = game.player as Player;
+    const portalSprite = new Sprite(528, 408, 16, 24, 1, false, undefined, 0x00FFFFFF);
+    const portal1 = new Portal(game, player.x + 4, player.y, 'portal', portalSprite);
+    const portal2 = dungeons[0].entrance as Portal;
+    portal1.other = portal2;
+    portal2.other = portal1;
+    game.entities.push(portal1);
+    game.entities.push(portal2);
+
+    // Connect all of the dungeon floors to each other
+    for (let i = 1; i < 10; i++) {
+      const exit = dungeons[i - 1].exit as Portal;
+      const entrance = dungeons[i].entrance as Portal;
+      exit.other = entrance;
+      entrance.other = exit;
+    }
+  }
+
+  createOverworld() {
     const game = this.game;
     const map = game.tileMap as TileMap;
     const player = game.player as Player;
     const rng = game.rng;
+    const overworld = new Rect(0, 0, OVERWORLD_WIDTH, OVERWORLD_HEIGHT);
 
-    this.clearMap(map, TILE_GRASS, false);
+    this.clearMap(map, overworld, TILE_GRASS, false);
 
-    player.x = (MAP_WIDTH / 2) | 0;
-    player.y = (MAP_HEIGHT / 2) | 0;
+    player.x = (OVERWORLD_WIDTH / 2) | 0;
+    player.y = (OVERWORLD_HEIGHT / 2) | 0;
 
-    // Make sure there's a ring of trees around the map
-    for (let x = 0; x < MAP_WIDTH; x++) {
+    // Make sure there's a ring of water around the map
+    for (let x = overworld.x1; x < overworld.x2; x++) {
       // Top
-      map.setTile(0, x, 1, TILE_GRASS, true);
-      map.setTile(1, x, 1, TILE_TREE);
+      map.setTile(0, x, overworld.y1, TILE_GRASS, true);
+      map.setTile(1, x, overworld.y1, TILE_TREE);
 
       // Bottom
-      map.setTile(0, x, MAP_HEIGHT - 2, TILE_GRASS, true);
-      map.setTile(1, x, MAP_HEIGHT - 2, TILE_TREE);
+      map.setTile(0, x, overworld.y2 - 1, TILE_GRASS, true);
+      map.setTile(1, x, overworld.y2 - 1, TILE_TREE);
     }
-    for (let y = 0; y < MAP_HEIGHT; y++) {
+    for (let y = overworld.y1; y < overworld.y2; y++) {
       // Left
-      map.setTile(0, 1, y, TILE_GRASS, true);
-      map.setTile(1, 1, y, TILE_TREE);
+      map.setTile(0, overworld.x1, y, TILE_GRASS, true);
+      map.setTile(1, overworld.x1, y, TILE_TREE);
 
       // Right
-      map.setTile(0, MAP_WIDTH - 2, y, TILE_GRASS, true);
-      map.setTile(1, MAP_WIDTH - 2, y, TILE_TREE);
+      map.setTile(0, overworld.x2 - 1, y, TILE_GRASS, true);
+      map.setTile(1, overworld.x2 - 1, y, TILE_TREE);
     }
 
     for (let i = 0; i < 1000; i++) {
-      const treeX = rng.nextRange(0, MAP_WIDTH);
-      const treeY = rng.nextRange(0, MAP_HEIGHT);
+      const treeX = rng.nextRange(overworld.x1, overworld.x2);
+      const treeY = rng.nextRange(overworld.y1, overworld.y2);
       if (treeX !== player.x || treeY !== player.y) {
         map.setTile(0, treeX, treeY, TILE_GRASS, true);
         map.setTile(1, treeX, treeY, TILE_TREE);
@@ -198,25 +210,25 @@ export class MapGenerator {
 
     // Create draw bridges
     for (let y = 16; y <= 19; y++) {
-      for (let x = 34; x<= 35; x++) {
+      for (let x = 34; x <= 35; x++) {
         map.setTile(0, x, y, TILE_BRIDGE, false);
         map.setAnimated(x, y, 0, false);
       }
     }
     for (let y = 51; y <= 54; y++) {
-      for (let x = 34; x<= 35; x++) {
+      for (let x = 34; x <= 35; x++) {
         map.setTile(0, x, y, TILE_BRIDGE, false);
         map.setAnimated(x, y, 0, false);
       }
     }
     for (let y = 34; y <= 35; y++) {
-      for (let x = 16; x<= 19; x++) {
+      for (let x = 16; x <= 19; x++) {
         map.setTile(0, x, y, TILE_BRIDGE, false);
         map.setAnimated(x, y, 0, false);
       }
     }
     for (let y = 34; y <= 35; y++) {
-      for (let x = 51; x<= 54; x++) {
+      for (let x = 51; x <= 54; x++) {
         map.setTile(0, x, y, TILE_BRIDGE, false);
         map.setAnimated(x, y, 0, false);
       }
@@ -237,23 +249,31 @@ export class MapGenerator {
       game.entities.push(guard);
     }
 
+    // Create portal entrance
+    const portalSprite = new Sprite(528, 408, 16, 24, 1, false, undefined, 0xFF00FFFF);
+    const portal1 = new Portal(game, player.x + 2, player.y, 'portal', portalSprite);
+    const portal2 = new Portal(game, 35, 35, 'portal', portalSprite);
+    portal1.other = portal2;
+    portal2.other = portal1;
+    game.entities.push(portal1);
+    game.entities.push(portal2);
+
     // Initial FOV
     game.resetViewport();
     game.recomputeFov();
   }
 
 
-  createDungeon() {
+  createDungeon(dungeon: Dungeon) {
     const game = this.game;
     const map = game.tileMap as TileMap;
-    const player = game.player as Player;
     const rng = game.rng;
 
     // Clear the map to all walls
-    this.clearMap(map, TILE_WALL, true);
+    this.clearMap(map, dungeon.rect, TILE_WALL, true);
 
     // Create bodies of water
-    const water = new Vec2(MAP_WIDTH / 2, MAP_HEIGHT / 2);
+    const water = dungeon.rect.getCenter();
     for (let i = 0; i < 200; i++) {
       map.setTile(0, water.x, water.y, TILE_WATER, true, false);
       map.setTile(0, water.x - 1, water.y, TILE_WATER, true, false);
@@ -270,42 +290,57 @@ export class MapGenerator {
     }
 
     // Make sure there's a ring of "empty" all around
-    for (let x = 0; x < MAP_WIDTH; x++) {
-      map.setTile(0, x, 0, TILE_EMPTY, true);
-      map.setTile(0, x, MAP_HEIGHT - 1, TILE_EMPTY, true);
-      map.setAnimated(x, 0, 0, false);
-      map.setAnimated(x, MAP_HEIGHT - 1, 0, false);
-    }
-    for (let y = 0; y < MAP_HEIGHT; y++) {
-      map.setTile(0, 0, y, TILE_EMPTY, true);
-      map.setTile(0, MAP_WIDTH - 1, y, TILE_EMPTY, true);
-      map.setAnimated(0, y, 0, false);
-      map.setAnimated(MAP_WIDTH - 1, y, 0, false);
-    }
+    for (let x = dungeon.rect.x1; x < dungeon.rect.x2; x++) {
+      map.setTile(0, x, dungeon.rect.y1, TILE_EMPTY, true);
+      map.setAnimated(x, dungeon.rect.y1, 0, false);
 
-    // Reset field-of-view
-    map.resetFov();
+      map.setTile(0, x, dungeon.rect.y2 - 1, TILE_EMPTY, true);
+      map.setAnimated(x, dungeon.rect.y2 - 1, 0, false);
+    }
+    for (let y = dungeon.rect.y1; y < dungeon.rect.y2; y++) {
+      map.setTile(0, dungeon.rect.x1, y, TILE_EMPTY, true);
+      map.setAnimated(dungeon.rect.x1, y, 0, false);
+
+      map.setTile(0, dungeon.rect.x2 - 1, y, TILE_EMPTY, true);
+      map.setAnimated(dungeon.rect.x2 - 1, y, 0, false);
+    }
 
     const bossLayout = BOSS_LAYOUTS[rng.nextRange(0, BOSS_LAYOUTS.length)];
 
-    const rooms = [];
+    const bossZone = new Rect(
+      bossLayout.bossZone.x + dungeon.rect.x,
+      bossLayout.bossZone.y + dungeon.rect.y,
+      bossLayout.bossZone.width,
+      bossLayout.bossZone.height);
 
-    while (rooms.length < MAX_ROOMS) {
+    const bossRoom = new Rect(
+      bossLayout.bossRoom.x + dungeon.rect.x,
+      bossLayout.bossRoom.y + dungeon.rect.y,
+      bossLayout.bossRoom.width,
+      bossLayout.bossRoom.height);
+
+    const stairsRoom = new Rect(
+      bossLayout.stairsRoom.x + dungeon.rect.x,
+      bossLayout.stairsRoom.y + dungeon.rect.y,
+      bossLayout.stairsRoom.width,
+      bossLayout.stairsRoom.height);
+
+    while (dungeon.rooms.length < MAX_ROOMS) {
       // Random width and height
       const w = rng.nextRange(ROOM_MIN_WIDTH, ROOM_MAX_WIDTH);
       const h = rng.nextRange(ROOM_MIN_HEIGHT, ROOM_MAX_HEIGHT);
 
       // Random position without going out of the boundaries of the map
-      const x = rng.nextRange(2, MAP_WIDTH - w - 3);
-      const y = rng.nextRange(2, MAP_HEIGHT - h - 3);
+      const x = rng.nextRange(dungeon.rect.x1 + 2, dungeon.rect.x2 - w - 3);
+      const y = rng.nextRange(dungeon.rect.y1 + 2, dungeon.rect.y2 - h - 3);
 
       // "Rect" class makes rectangles easier to work with
       const newRoom = new Rect(x, y, w, h);
 
       // Run through the other rooms and see if they intersect with this one
-      let failed = newRoom.intersects(bossLayout.bossZone);
-      for (let j = 0; j < rooms.length; j++) {
-        if (newRoom.intersects(rooms[j])) {
+      let failed = newRoom.intersects(bossZone);
+      for (let j = 0; j < dungeon.rooms.length; j++) {
+        if (newRoom.intersects(dungeon.rooms[j])) {
           failed = true;
           break;
         }
@@ -323,21 +358,18 @@ export class MapGenerator {
       // Center coordinates of new room, will be useful later
       const center = newRoom.getCenter();
 
-      if (rooms.length === 0) {
+      if (dungeon.rooms.length === 0) {
         // This is the first room, where the player starts at
-        player.x = center.x;
-        player.y = center.y;
-
-        // // Add the cat near the player
-        // this.game.cat = new Cat(game, player.x + 2, player.y);
-        // game.entities.push(this.game.cat);
+        dungeon.entrance = new Portal(game, center.x, center.y, 'stairs', STAIRS_SPRITE);
+        game.entities.push(dungeon.entrance);
+        map.setTile(0, center.x, center.y, TILE_STAIRS_UP);
 
       } else {
         // All rooms after the first:
         // Connect it to the previous room with a tunnel
 
         // Center coordinates of previous room
-        const prev = rooms[rooms.length - 1].getCenter();
+        const prev = dungeon.rooms[dungeon.rooms.length - 1].getCenter();
 
         // Draw a coin (random number that is either 0 or 1)
         if (rng.nextRange(0, 1) === 1) {
@@ -350,23 +382,22 @@ export class MapGenerator {
           this.createHTunnel(map, prev.x, center.x, center.y);
         }
 
-        this.placeMonsters(newRoom);
+        this.placeMonsters(newRoom, dungeon.level);
       }
 
       // Add items (scrolls and health potions)
       this.placeItems(newRoom);
 
       // Finally, append the new room to the list
-      rooms.push(newRoom);
+      dungeon.rooms.push(newRoom);
     }
 
     {
       // Create boss room
-      const bossRoom = bossLayout.bossRoom;
       this.createRoom(map, bossRoom);
 
       // Connect boss room to previous room
-      const prev = rooms[rooms.length - 1].getCenter();
+      const prev = dungeon.rooms[dungeon.rooms.length - 1].getCenter();
       const center = bossRoom.getCenter();
       this.createHTunnel(map, prev.x, center.x, prev.y);
       this.createVTunnel(map, prev.y, center.y, center.x);
@@ -379,7 +410,7 @@ export class MapGenerator {
       }
 
       // Create boss
-      const bossLevel = this.dungeonLevel * 3 + 5;
+      const bossLevel = dungeon.level * 3 + 5;
       const dice = rng.nextRange(0, 1000);
       if (dice !== 0) {
         const redDragon = new RedDragon(game, center.x, center.y, bossLevel, bossRoom);
@@ -391,23 +422,19 @@ export class MapGenerator {
       }
 
       // Create stairs room
-      const stairsRoom = bossLayout.stairsRoom;
       this.createRoom(map, stairsRoom);
 
       // Create stairs
       const stairsLoc = stairsRoom.getCenter();
       this.createHTunnel(map, center.x, stairsLoc.x, stairsLoc.y);
-      map.setTile(0, stairsLoc.x, stairsLoc.y, TILE_STAIRS);
-      const stairs = new Entity(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE, true);
-      game.entities.push(stairs);
-
-      // // Tell the cat where the stairs are
-      // (this.game.cat as Cat).destination = stairsLoc;
+      map.setTile(0, stairsLoc.x, stairsLoc.y, TILE_STAIRS_DOWN);
+      dungeon.exit = new Portal(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE);
+      game.entities.push(dungeon.exit);
     }
 
     // Touch up walls / half walls
-    for (let y = 0; y < MAP_HEIGHT; y++) {
-      for (let x = 0; x < MAP_WIDTH; x++) {
+    for (let y = dungeon.rect.y1; y < dungeon.rect.y2; y++) {
+      for (let x = dungeon.rect.x1; x < dungeon.rect.x2; x++) {
         const t1 = map.getTile(x, y);
         const t2 = map.getTile(x, y + 1);
         const t3 = map.getTile(x - 1, y);
@@ -458,8 +485,8 @@ export class MapGenerator {
     }
 
     // Place obstacles after all rooms have been connected
-    for (let i = 0; i < rooms.length; i++) {
-      this.placeObstacles(rooms[i]);
+    for (let i = 0; i < dungeon.rooms.length; i++) {
+      this.placeObstacles(dungeon.rooms[i]);
     }
 
     // Initial FOV
@@ -467,9 +494,9 @@ export class MapGenerator {
     game.recomputeFov();
   }
 
-  private clearMap(map: TileMap, tile: number, blocked: boolean) {
-    for (let y = 0; y < MAP_HEIGHT; y++) {
-      for (let x = 0; x < MAP_WIDTH; x++) {
+  private clearMap(map: TileMap, rect: Rect, tile: number, blocked: boolean) {
+    for (let y = rect.y1; y < rect.y2; y++) {
+      for (let x = rect.x1; x < rect.x2; x++) {
         map.setTile(0, x, y, tile, blocked);
         map.setAnimated(x, y, 0, false);
         for (let z = 1; z < 4; z++) {
@@ -491,7 +518,11 @@ export class MapGenerator {
 
   private createHTunnel(map: TileMap, x1: number, x2: number, y: number) {
     for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
-      if (map.getTile(x, y) === TILE_WATER) {
+      const existing = map.getTile(x, y);
+      if (existing === TILE_STAIRS_UP || existing === TILE_STAIRS_DOWN) {
+        continue;
+      }
+      if (existing === TILE_WATER) {
         map.setTile(0, x, y, TILE_BRIDGE, false);
       } else {
         map.setTile(0, x, y, TILE_FLOOR, false);
@@ -503,6 +534,9 @@ export class MapGenerator {
   private createVTunnel(map: TileMap, y1: number, y2: number, x: number) {
     for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
       const existing = map.getTile(x, y);
+      if (existing === TILE_STAIRS_UP || existing === TILE_STAIRS_DOWN) {
+        continue;
+      }
       if (existing === TILE_WATER) {
         map.setTile(0, x, y, TILE_BRIDGE, false);
       } else {
@@ -512,7 +546,7 @@ export class MapGenerator {
     }
   }
 
-  private placeMonsters(room: Rect) {
+  private placeMonsters(room: Rect, dungeonLevel: number) {
     const game = this.game;
     const rng = game.rng;
 
@@ -530,7 +564,7 @@ export class MapGenerator {
       }
 
       const roll = rng.nextRange(0, 100);
-      const level = this.dungeonLevel * 2 + rng.nextRange(1, 3);
+      const level = dungeonLevel * 2 + rng.nextRange(1, 3);
       let monster = null;
 
       if (roll < 40) {

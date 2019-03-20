@@ -1,10 +1,11 @@
 import { Game } from './game';
+import { Dungeon } from './dungeon';
 export declare class MapGenerator {
     readonly game: Game;
-    dungeonLevel: number;
     constructor(game: Game);
     createMap(): void;
-    createDungeon(): void;
+    createOverworld(): void;
+    createDungeon(dungeon: Dungeon): void;
     private clearMap;
     private createRoom;
     private createHTunnel;

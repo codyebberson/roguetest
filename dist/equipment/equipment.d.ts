@@ -1,4 +1,5 @@
 import { Game, Item, Sprite } from 'wglt';
+import { Player } from '../entities/player';
 export declare enum EquipmentSlot {
     HEAD = 0,
     NECK = 1,
@@ -19,4 +20,5 @@ export declare abstract class Equipment extends Item {
     bonusConstitution: number;
     bonusIntelligence: number;
     constructor(game: Game, x: number, y: number, name: string, sprite: Sprite, slot: EquipmentSlot);
+    onUse(player: Player): boolean;
 }

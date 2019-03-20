@@ -1,12 +1,15 @@
-import {Colors, Sprite} from 'wglt';
+import { Colors, Sprite, Entity, Item, FadeOutAnimation, FadeInAnimation } from 'wglt';
 
-import {CharacterClass} from '../classes/characterclass';
-import {Paladin} from '../classes/paladin';
-import {Game} from '../game';
-import {CharacterRace} from '../races/characterrace';
-import {Human} from '../races/human';
+import { CharacterClass } from '../classes/characterclass';
+import { Paladin } from '../classes/paladin';
+import { Game } from '../game';
+import { CharacterRace } from '../races/characterrace';
+import { Human } from '../races/human';
 
-import {StatsActor} from './statsactor';
+import { StatsActor } from './statsactor';
+import { Gateway } from '../items/gateway';
+import { Monster } from './monster';
+import { Portal } from '../items/portal';
 
 const PLAYER_SPRITE = new Sprite(0, 96, 16, 24, 2, true, undefined, 0xffcf5cff);
 
@@ -27,6 +30,40 @@ export class Player extends StatsActor {
     this.race = new Human();
     this.class = new Paladin();
     this.remainingAbilityPoints = 0;
+  }
+
+  onBump(other: Entity) {
+    if (other instanceof Gateway) {
+      if (other.other) {
+        const exit = other.other;
+        this.move(exit.x - this.x, exit.y - this.y, 16);
+      }
+      return;
+    }
+    if (other instanceof Portal) {
+      const exit = other.other;
+      if (exit) {
+        this.game.addAnimation(new FadeOutAnimation(30)).then(() => {
+          this.x = exit.x;
+          this.y = exit.y;
+          this.game.stopAutoWalk();
+          this.game.resetViewport();
+          this.game.recomputeFov();
+          this.game.addAnimation(new FadeInAnimation(30));
+        });
+      }
+      return;
+    }
+    if (other instanceof Item) {
+      this.moveToward(other.x, other.y);
+      this.pickup(other);
+      return true;
+    }
+    if (other instanceof Monster) {
+      this.attack(other, this.getDamage());
+      return true;
+    }
+    return false;
   }
 
   onDeath() {

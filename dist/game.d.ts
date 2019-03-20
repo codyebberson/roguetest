@@ -7,6 +7,4 @@ export declare class Game extends wglt.Game {
     cat?: Cat;
     levelUpDialog: LevelUpDialog;
     constructor(app: App);
-    endLevel(): void;
-    nextLevel(): void;
 }
