@@ -17,5 +17,6 @@ export class WornDirk extends Weapon {
     super(game, x || 0, y || 0, NAME, SPRITE, EquipmentSlot.MAINHAND);
     this.tooltipMessages = TOOLTIPS;
     this.finesse = true;
+    this.bonusDexterity = 10;
   }
 }

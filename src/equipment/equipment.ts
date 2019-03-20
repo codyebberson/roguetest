@@ -1,4 +1,5 @@
 import {Game, Item, Sprite} from 'wglt';
+import { Player } from '../entities/player';
 
 export enum EquipmentSlot {
   HEAD,
@@ -29,5 +30,17 @@ export abstract class Equipment extends Item {
     this.bonusDexterity = 0;
     this.bonusConstitution = 0;
     this.bonusIntelligence = 0;
+  }
+
+  onUse(player: Player) {
+    const equipped = player.getEquipment(this.slot);
+    if (equipped) {
+      player.equipment.remove(equipped);
+      player.inventory.add(equipped);
+    }
+
+    player.inventory.remove(this);
+    player.equipment.add(this);
+    return false;
   }
 }

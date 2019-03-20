@@ -55,14 +55,18 @@ export class StatsActor extends Actor {
     return Math.floor((abilityScore - 10) / 2);
   }
 
-  get mainHandWeapon() {
+  getEquipment(slot: EquipmentSlot) {
     for (let i = 0; i < this.equipment.length; i++) {
       const item = this.equipment.get(i);
-      if (item.slot === EquipmentSlot.MAINHAND && item instanceof Weapon) {
+      if (item.slot === slot) {
         return item;
       }
     }
     return undefined;
+  }
+
+  get mainHandWeapon() {
+    return this.getEquipment(EquipmentSlot.MAINHAND) as Weapon | undefined;
   }
 
   getDamage() {
