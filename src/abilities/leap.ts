@@ -47,6 +47,13 @@ export class LeapAbility implements Ability {
       return false;
     }
 
+    if (game.tileMap && game.tileMap.isBlocked(target.x, target.y)) {
+      if (caster === game.player) {
+        game.log('Target is blocked.', Colors.LIGHT_GRAY);
+      }
+      return false;
+    }
+
     const existing = game.getActorAt(target.x, target.y);
     if (existing) {
       if (caster === game.player) {
