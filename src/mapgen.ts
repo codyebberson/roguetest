@@ -191,11 +191,16 @@ export class MapGenerator {
       }
     }
 
+    // Create the main castle
+    const castle = this.createCastle(map);
+
     // Create a road from the player to the castle
-    const path = computePath(map, player, new Vec2(35, 40), 10000);
+    const path = computePath(map, player, castle.getCenter(), 10000);
     if (path) {
       for (let i = 0; i < path.length; i++) {
-        map.setTile(1, path[i].x, path[i].y, TILE_PATH);
+        if (map.getTile(path[i].x, path[i].y) === TILE_GRASS) {
+          map.setTile(1, path[i].x, path[i].y, TILE_PATH);
+        }
       }
     } else {
       console.log('eek! no path!');
@@ -238,8 +243,6 @@ export class MapGenerator {
       game.entities.push(monster);
     }
 
-    this.createCastle(map, new Rect(20, 30, 30, 20));
-
     // Create portal entrance
     const portalSprite = new Sprite(528, 408, 16, 24, 1, false, undefined, 0xFF00FFFF);
     const portal1 = new Portal(game, player.x + 2, player.y, 'portal', portalSprite);
@@ -254,13 +257,19 @@ export class MapGenerator {
     game.recomputeFov();
   }
 
-  createCastle(map: TileMap, castle: Rect) {
+  createCastle(map: TileMap) {
+    const game = this.game;
+    const rng = game.rng;
+    const width = rng.nextRange(20, 40);
+    const height = rng.nextRange(15, 30);
+    const x = rng.nextRange(10, OVERWORLD_WIDTH - 10 - width);
+    const y = rng.nextRange(10, OVERWORLD_HEIGHT - 10 - height);
+    const castle = new Rect(x, y, width, height);
+
     const center = castle.getCenter();
     const moat = castle;
     const walls = new Rect(castle.x + 2, castle.y + 2, castle.width - 4, castle.height - 4);
     const floors = new Rect(walls.x + 1, walls.y + 1, walls.width - 2, walls.height - 2);
-    const game = this.game;
-    const rng = game.rng;
 
     // Create moat
     for (let y = moat.y1; y < moat.y2; y++) {
@@ -334,6 +343,7 @@ export class MapGenerator {
       game.entities.push(guard);
     }
 
+    return castle;
   }
 
   createDungeon(dungeon: Dungeon) {

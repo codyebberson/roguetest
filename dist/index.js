@@ -2926,8 +2926,6 @@ class EntityFrames extends wglt_1.Panel {
             // Draw the frame
             app.drawImage(2, y, 64, 48, 54, 18);
             // Draw the name
-            // const color = actor instanceof Monster ? Colors.DARK_RED : Colors.DARK_GREEN;
-            //app.drawImage(x + 1, y + 1, bo.x, bo.y, bo.width, bo.height, color, 38, 7);
             let nameColor = wglt_1.Colors.YELLOW;
             if (actor.sentiment === statsactor_1.Sentiment.FRIENDLY) {
                 nameColor = wglt_1.Colors.LIGHT_GREEN;
@@ -3708,11 +3706,15 @@ class MapGenerator {
                 map.setTile(1, treeX, treeY, TILE_TREE);
             }
         }
+        // Create the main castle
+        const castle = this.createCastle(map);
         // Create a road from the player to the castle
-        const path = wglt_1.computePath(map, player, new wglt_1.Vec2(35, 40), 10000);
+        const path = wglt_1.computePath(map, player, castle.getCenter(), 10000);
         if (path) {
             for (let i = 0; i < path.length; i++) {
-                map.setTile(1, path[i].x, path[i].y, TILE_PATH);
+                if (map.getTile(path[i].x, path[i].y) === TILE_GRASS) {
+                    map.setTile(1, path[i].x, path[i].y, TILE_PATH);
+                }
             }
         }
         else {
@@ -3750,7 +3752,6 @@ class MapGenerator {
             }
             game.entities.push(monster);
         }
-        this.createCastle(map, new wglt_1.Rect(20, 30, 30, 20));
         // Create portal entrance
         const portalSprite = new wglt_1.Sprite(528, 408, 16, 24, 1, false, undefined, 0xFF00FFFF);
         const portal1 = new portal_1.Portal(game, player.x + 2, player.y, 'portal', portalSprite);
@@ -3763,13 +3764,18 @@ class MapGenerator {
         game.resetViewport();
         game.recomputeFov();
     }
-    createCastle(map, castle) {
+    createCastle(map) {
+        const game = this.game;
+        const rng = game.rng;
+        const width = rng.nextRange(20, 40);
+        const height = rng.nextRange(15, 30);
+        const x = rng.nextRange(10, OVERWORLD_WIDTH - 10 - width);
+        const y = rng.nextRange(10, OVERWORLD_HEIGHT - 10 - height);
+        const castle = new wglt_1.Rect(x, y, width, height);
         const center = castle.getCenter();
         const moat = castle;
         const walls = new wglt_1.Rect(castle.x + 2, castle.y + 2, castle.width - 4, castle.height - 4);
         const floors = new wglt_1.Rect(walls.x + 1, walls.y + 1, walls.width - 2, walls.height - 2);
-        const game = this.game;
-        const rng = game.rng;
         // Create moat
         for (let y = moat.y1; y < moat.y2; y++) {
             for (let x = moat.x1; x < moat.x2; x++) {
@@ -3838,6 +3844,7 @@ class MapGenerator {
             const guard = new guard_1.Guard(game, waypoints[0].x, waypoints[0].y, waypoints);
             game.entities.push(guard);
         }
+        return castle;
     }
     createDungeon(dungeon) {
         const game = this.game;

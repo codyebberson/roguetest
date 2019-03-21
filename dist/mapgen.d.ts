@@ -6,7 +6,7 @@ export declare class MapGenerator {
     constructor(game: Game);
     createMap(): void;
     createOverworld(): void;
-    createCastle(map: TileMap, castle: Rect): void;
+    createCastle(map: TileMap): Rect;
     createDungeon(dungeon: Dungeon): void;
     private clearMap;
     private createRoom;
