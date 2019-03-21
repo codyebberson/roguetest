@@ -151,6 +151,8 @@ export class MapGenerator {
 
     player.x = (OVERWORLD_WIDTH / 2) | 0;
     player.y = (OVERWORLD_HEIGHT / 2) | 0;
+    player.home.x = player.x;
+    player.home.y = player.y;
 
     // Make sure there's a ring of water around the map
     for (let x = overworld.x1; x < overworld.x2; x++) {

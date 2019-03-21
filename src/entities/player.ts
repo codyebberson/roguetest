@@ -1,4 +1,4 @@
-import { Colors, Sprite, Entity, Item, FadeOutAnimation, FadeInAnimation } from 'wglt';
+import { Colors, Sprite, Entity, Item, Vec2 } from 'wglt';
 
 import { CharacterClass } from '../classes/characterclass';
 import { Paladin } from '../classes/paladin';
@@ -19,6 +19,7 @@ export class Player extends StatsActor {
   race: CharacterRace;
   class: CharacterClass;
   remainingAbilityPoints: number;
+  home: Vec2;
 
   constructor(game: Game, x: number, y: number) {
     super(game, x, y, 'Player', PLAYER_SPRITE);
@@ -30,6 +31,7 @@ export class Player extends StatsActor {
     this.race = new Human();
     this.class = new Paladin();
     this.remainingAbilityPoints = 0;
+    this.home = new Vec2(x, y);
   }
 
   onBump(other: Entity) {
@@ -43,14 +45,7 @@ export class Player extends StatsActor {
     if (other instanceof Portal) {
       const exit = other.other;
       if (exit) {
-        this.game.addAnimation(new FadeOutAnimation(30)).then(() => {
-          this.x = exit.x;
-          this.y = exit.y;
-          this.game.stopAutoWalk();
-          this.game.resetViewport();
-          this.game.recomputeFov();
-          this.game.addAnimation(new FadeInAnimation(30));
-        });
+        (this.game as Game).warpToPoint(exit);
       }
       return;
     }

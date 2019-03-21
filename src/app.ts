@@ -9,6 +9,7 @@ import {Game} from './game';
 import {MainMenu} from './mainmenu';
 import {RaceMenu} from './racemenu';
 import {CharacterRace} from './races/characterrace';
+import { Hearthstone } from './items/hearthstone';
 
 export class App extends wglt.App {
   readonly mainMenu: MainMenu;
@@ -51,6 +52,9 @@ export class App extends wglt.App {
 
   startGame() {
     this.state = this.game;
+
+    // TODO: Where to put this logic?  Game constructor?
+    (this.game.player as Player).inventory.add(new Hearthstone(this.game));
 
     if (this.playerRace) {
       this.playerRace.initPlayer(this.game.player as Player);

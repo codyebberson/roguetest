@@ -1,5 +1,5 @@
 import * as wglt from 'wglt';
-import {Actor, App, Button, Colors, Entity, FadeInAnimation, FadeOutAnimation, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog} from 'wglt';
+import {Actor, App, Button, Colors, Entity, FadeInAnimation, FadeOutAnimation, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog, Vec2} from 'wglt';
 
 import {CatEscapeAnimation} from './animations/catescapeanimation';
 import {Cat} from './entities/cat';
@@ -160,5 +160,18 @@ export class Game extends wglt.Game {
 
     // Generate the map
     this.mapGen.createMap();
+  }
+
+  warpToPoint(point: Vec2) {
+    this.addAnimation(new FadeOutAnimation(30)).then(() => {
+      if (this.player) {
+        this.player.x = point.x;
+        this.player.y = point.y;
+      }
+      this.stopAutoWalk();
+      this.resetViewport();
+      this.recomputeFov();
+      this.addAnimation(new FadeInAnimation(30));
+    });
   }
 }
