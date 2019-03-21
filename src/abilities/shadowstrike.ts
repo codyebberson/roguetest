@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, Message, SlideAnimation, Sprite, TargetType, Vec2} from 'wglt';
+import {Ability, Colors, Message, SlideAnimation, Sprite, TargetType, Vec2} from 'wglt';
 import { StatsActor } from '../entities/statsactor';
 
 const RANGE = 10;
@@ -29,7 +29,7 @@ export class ShadowStrikeAbility implements Ability {
     this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 
-  cast(caster: StatsActor, target: Actor) {
+  cast(caster: StatsActor, target: StatsActor) {
     const game = caster.game;
     const distance = caster.distanceTo(target);
     if (distance > RANGE) {
@@ -80,7 +80,7 @@ export class ShadowStrikeAbility implements Ability {
     game.addAnimation(new SlideAnimation(caster, xSpeed, ySpeed, count)).then(() => {
       caster.x = (farthestTile as Vec2).x;
       caster.y = (farthestTile as Vec2).y;
-      caster.attack(target, caster.getDamage() * 2);
+      caster.attack(target, caster.getDamage(target) * 2);
       caster.ap--;
     });
     return true;

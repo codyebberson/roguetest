@@ -69,12 +69,13 @@ export class StatsActor extends Actor {
     return this.getEquipment(EquipmentSlot.MAINHAND) as Weapon | undefined;
   }
 
-  getDamage() {
+  getDamage(target: StatsActor) {
     const weapon = this.mainHandWeapon;
     const rng = this.game.rng;
     const damage = weapon ? rng.nextRange(weapon.minDamage, weapon.maxDamage + 1) : 1;
     const damageModifier = weapon && weapon.finesse ? this.dexterityModifier : this.strengthModifier;
-    return damage + damageModifier;
+    const damageResist = Math.round(0.25 * target.armor);
+    return Math.max(0, damage + damageModifier - damageResist);
   }
 
   onAttack(target: Actor, damage: number) {

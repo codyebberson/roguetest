@@ -55,7 +55,7 @@ export class Player extends StatsActor {
       return true;
     }
     if (other instanceof Monster) {
-      this.attack(other, this.getDamage());
+      this.attack(other, this.getDamage(other));
       return true;
     }
     return false;

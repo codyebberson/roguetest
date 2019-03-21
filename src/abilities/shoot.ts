@@ -1,4 +1,4 @@
-import { Ability, Actor, Colors, Message, Sprite, TargetType } from 'wglt';
+import { Ability, Colors, Message, Sprite, TargetType } from 'wglt';
 import { StatsActor } from '../entities/statsactor';
 
 const RANGE = 8;
@@ -28,7 +28,7 @@ export class ShootAbility implements Ability {
     this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 
-  cast(caster: StatsActor, target: Actor) {
+  cast(caster: StatsActor, target: StatsActor) {
     const game = caster.game;
 
     const weapon = caster.mainHandWeapon;
@@ -53,7 +53,7 @@ export class ShootAbility implements Ability {
       return false;
     }
 
-    const damage = caster.getDamage();
+    const damage = caster.getDamage(target);
     target.takeDamage(damage);
     caster.ap--;
     return true;

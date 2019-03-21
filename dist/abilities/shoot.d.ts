@@ -1,4 +1,4 @@
-import { Ability, Actor, Message, Sprite, TargetType } from 'wglt';
+import { Ability, Message, Sprite, TargetType } from 'wglt';
 import { StatsActor } from '../entities/statsactor';
 export declare class ShootAbility implements Ability {
     readonly sprite: Sprite;
@@ -9,5 +9,5 @@ export declare class ShootAbility implements Ability {
     readonly cooldown: number;
     readonly tooltipMessages: Message[];
     constructor();
-    cast(caster: StatsActor, target: Actor): boolean;
+    cast(caster: StatsActor, target: StatsActor): boolean;
 }

@@ -2,6 +2,7 @@ import { Panel, Rect, Colors } from "wglt";
 import { Game } from "../game";
 import { StatsActor } from "../entities/statsactor";
 import { Monster } from "../entities/monster";
+import { Player } from "../entities/player";
 
 export class EntityFrames extends Panel {
   readonly game: Game;
@@ -22,6 +23,7 @@ export class EntityFrames extends Panel {
     }
 
     const app = this.gui.app;
+    const player = this.game.player as Player;
     const entities = this.game.entities;
     const x = 2;
     let y = 40;
@@ -50,7 +52,16 @@ export class EntityFrames extends Panel {
       app.drawCenteredString(actor.hp + '/' + actor.maxHp, x + 20, y + 9, Colors.WHITE);
 
       // Draw the level
-      const levelColor = Colors.RED;
+      let levelColor = Colors.YELLOW;
+      if (actor.level > player.level + 3) {
+        levelColor = Colors.RED;
+      } else if (actor.level > player.level + 1) {
+        levelColor = Colors.ORANGE;
+      } else if (actor.level < player.level - 3) {
+        levelColor = Colors.LIGHT_GREEN;
+      } else if (actor.level < player.level - 1) {
+        levelColor = 0xbbee44FF; // Yellow-green
+      }
       app.drawCenteredString(actor.level.toString(), x + 47, y + 5, levelColor);
 
       y += 24;
