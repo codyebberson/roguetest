@@ -5,6 +5,7 @@ import {Game} from '../game';
 
 import {Monster} from './monster';
 import {Player} from './player';
+import { Sentiment } from './statsactor';
 
 const SPRITE = new Sprite(448, 144, 16, 24, 2, true, undefined, 0xf2f261ff);
 const DAMAGE = 10;
@@ -29,7 +30,7 @@ class GriffonAI extends AI {
     const dist = griffon.distanceTo(player);
     if (dist <= 2) {
       griffon.attack(player, DAMAGE);
-    } else if (griffon.aggro) {
+    } else if (griffon.sentiment === Sentiment.HOSTILE) {
       griffon.moveToward(player.x, player.y);
     } else {
       const rng = player.game.rng;
@@ -61,7 +62,6 @@ class GriffonAI extends AI {
 }
 
 export class Griffon extends Monster {
-  aggro = false;
 
   constructor(game: Game, x: number, y: number, level: number) {
     super(game, x, y, 'Griffon', SPRITE);
@@ -70,6 +70,7 @@ export class Griffon extends Monster {
     this.hp = this.maxHp;
     this.ai = new GriffonAI(this);
     this.talents.add(new Talent(this, new LeapAbility()));
+    this.sentiment = Sentiment.NEUTRAL;
   }
 
   get leapTalent() {
@@ -78,6 +79,6 @@ export class Griffon extends Monster {
 
   takeDamage(damage: number) {
     super.takeDamage(damage);
-    this.aggro = true;
+    this.sentiment = Sentiment.HOSTILE;
   }
 }

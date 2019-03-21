@@ -4,6 +4,7 @@ import { Game } from '../game';
 
 import { Monster } from './monster';
 import { Player } from './player';
+import { Sentiment } from './statsactor';
 
 const SPRITE = new Sprite(320, 96, 16, 24, 2, true, undefined, 0x5790b7FF);
 
@@ -83,6 +84,7 @@ export class Guard extends Monster {
     this.strength = 10 + 2 * this.level;
     this.maxHp = 10 + 2 * this.level;
     this.hp = this.maxHp;
+    this.sentiment = Sentiment.FRIENDLY;
   }
 
   takeDamage(damage: number) {

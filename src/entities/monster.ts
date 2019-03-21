@@ -3,7 +3,7 @@ import {Actor, BasicMonster, Sprite, TileMap} from 'wglt';
 import {Game} from '../game';
 
 import {Player} from './player';
-import {StatsActor} from './statsactor';
+import {StatsActor, Sentiment} from './statsactor';
 import { Gold } from '../items/gold';
 
 const START_BLOOD = 1367;
@@ -16,6 +16,7 @@ export abstract class Monster extends StatsActor {
     this.maxHp = 10;
     this.hp = 10;
     this.ai = new BasicMonster(this, this.calculateDamage);
+    this.sentiment = Sentiment.HOSTILE;
   }
 
   onDeath() {

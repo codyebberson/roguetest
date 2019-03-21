@@ -5,6 +5,12 @@ import {Equipment, EquipmentSlot} from '../equipment/equipment';
 import {Game} from '../game';
 import { Weapon } from '../equipment/weapon';
 
+export enum Sentiment {
+  HOSTILE = -1,
+  NEUTRAL = 0,
+  FRIENDLY = 1
+}
+
 export class StatsActor extends Actor {
   level: number;
   mp: number;
@@ -15,6 +21,7 @@ export class StatsActor extends Actor {
   constitution: number;
   intelligence: number;
   showFrame: boolean;
+  sentiment: Sentiment;
   readonly equipment: ArrayList<Equipment>;
   readonly buffs: Buff[];
 
@@ -29,6 +36,7 @@ export class StatsActor extends Actor {
     this.constitution = 10;
     this.intelligence = 10;
     this.showFrame = true;
+    this.sentiment = Sentiment.NEUTRAL;
     this.equipment = new ArrayList<Equipment>();
     this.buffs = [];
 

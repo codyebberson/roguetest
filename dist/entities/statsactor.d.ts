@@ -3,6 +3,11 @@ import { Buff } from '../buffs/buff';
 import { Equipment, EquipmentSlot } from '../equipment/equipment';
 import { Game } from '../game';
 import { Weapon } from '../equipment/weapon';
+export declare enum Sentiment {
+    HOSTILE = -1,
+    NEUTRAL = 0,
+    FRIENDLY = 1
+}
 export declare class StatsActor extends Actor {
     level: number;
     mp: number;
@@ -13,6 +18,7 @@ export declare class StatsActor extends Actor {
     constitution: number;
     intelligence: number;
     showFrame: boolean;
+    sentiment: Sentiment;
     readonly equipment: ArrayList<Equipment>;
     readonly buffs: Buff[];
     constructor(game: Game, x: number, y: number, name: string, sprite: Sprite);

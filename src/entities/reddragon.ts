@@ -5,6 +5,7 @@ import {Game} from '../game';
 import {Monster} from './monster';
 import {Player} from './player';
 import { FlameCrawler } from './flamecrawler';
+import { Sentiment } from './statsactor';
 
 const SPRITE = new Sprite(576, 312, 16, 24, 2, true, undefined, 0xd51111ff);
 const DAMAGE = 10;
@@ -18,7 +19,7 @@ class RedDragonAI extends AI {
       return;
     }
 
-    if (dragon.aggro && dragon.cooldown === 0) {
+    if (dragon.sentiment === Sentiment.HOSTILE && dragon.cooldown === 0) {
       const room = dragon.room;
       const rng = game.rng;
 
@@ -57,7 +58,6 @@ class RedDragonAI extends AI {
 
 export class RedDragon extends Monster {
   readonly room: Rect;
-  aggro = false;
   cooldown = 0;
 
   constructor(game: Game, x: number, y: number, level: number, room: Rect) {
@@ -67,10 +67,11 @@ export class RedDragon extends Monster {
     this.maxHp = 10 * level;
     this.hp = this.maxHp;
     this.ai = new RedDragonAI(this);
+    this.sentiment = Sentiment.NEUTRAL;
   }
 
   takeDamage(damage: number) {
     super.takeDamage(damage);
-    this.aggro = true;
+    this.sentiment = Sentiment.HOSTILE;
   }
 }

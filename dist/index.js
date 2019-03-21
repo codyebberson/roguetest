@@ -1410,6 +1410,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
 const leap_1 = __webpack_require__(/*! ../abilities/leap */ "./src/abilities/leap.ts");
 const monster_1 = __webpack_require__(/*! ./monster */ "./src/entities/monster.ts");
+const statsactor_1 = __webpack_require__(/*! ./statsactor */ "./src/entities/statsactor.ts");
 const SPRITE = new wglt_1.Sprite(448, 144, 16, 24, 2, true, undefined, 0xf2f261ff);
 const DAMAGE = 10;
 class GriffonAI extends wglt_1.AI {
@@ -1431,7 +1432,7 @@ class GriffonAI extends wglt_1.AI {
         if (dist <= 2) {
             griffon.attack(player, DAMAGE);
         }
-        else if (griffon.aggro) {
+        else if (griffon.sentiment === statsactor_1.Sentiment.HOSTILE) {
             griffon.moveToward(player.x, player.y);
         }
         else {
@@ -1464,19 +1465,19 @@ class GriffonAI extends wglt_1.AI {
 class Griffon extends monster_1.Monster {
     constructor(game, x, y, level) {
         super(game, x, y, 'Griffon', SPRITE);
-        this.aggro = false;
         this.level = level;
         this.maxHp = 10 * this.level;
         this.hp = this.maxHp;
         this.ai = new GriffonAI(this);
         this.talents.add(new wglt_1.Talent(this, new leap_1.LeapAbility()));
+        this.sentiment = statsactor_1.Sentiment.NEUTRAL;
     }
     get leapTalent() {
         return this.talents.get(0);
     }
     takeDamage(damage) {
         super.takeDamage(damage);
-        this.aggro = true;
+        this.sentiment = statsactor_1.Sentiment.HOSTILE;
     }
 }
 exports.Griffon = Griffon;
@@ -1496,6 +1497,7 @@ exports.Griffon = Griffon;
 Object.defineProperty(exports, "__esModule", { value: true });
 const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
 const monster_1 = __webpack_require__(/*! ./monster */ "./src/entities/monster.ts");
+const statsactor_1 = __webpack_require__(/*! ./statsactor */ "./src/entities/statsactor.ts");
 const SPRITE = new wglt_1.Sprite(320, 96, 16, 24, 2, true, undefined, 0x5790b7FF);
 class GuardAI extends wglt_1.AI {
     constructor(actor, waypoints) {
@@ -1560,6 +1562,7 @@ class Guard extends monster_1.Monster {
         this.strength = 10 + 2 * this.level;
         this.maxHp = 10 + 2 * this.level;
         this.hp = this.maxHp;
+        this.sentiment = statsactor_1.Sentiment.FRIENDLY;
     }
     takeDamage(damage) {
         super.takeDamage(damage);
@@ -1592,6 +1595,7 @@ class Monster extends statsactor_1.StatsActor {
         this.maxHp = 10;
         this.hp = 10;
         this.ai = new wglt_1.BasicMonster(this, this.calculateDamage);
+        this.sentiment = statsactor_1.Sentiment.HOSTILE;
     }
     onDeath() {
         this.game.log(this.name + ' is dead');
@@ -1727,6 +1731,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
 const monster_1 = __webpack_require__(/*! ./monster */ "./src/entities/monster.ts");
 const flamecrawler_1 = __webpack_require__(/*! ./flamecrawler */ "./src/entities/flamecrawler.ts");
+const statsactor_1 = __webpack_require__(/*! ./statsactor */ "./src/entities/statsactor.ts");
 const SPRITE = new wglt_1.Sprite(576, 312, 16, 24, 2, true, undefined, 0xd51111ff);
 const DAMAGE = 10;
 class RedDragonAI extends wglt_1.AI {
@@ -1737,7 +1742,7 @@ class RedDragonAI extends wglt_1.AI {
         if (!player || player.hp <= 0) {
             return;
         }
-        if (dragon.aggro && dragon.cooldown === 0) {
+        if (dragon.sentiment === statsactor_1.Sentiment.HOSTILE && dragon.cooldown === 0) {
             const room = dragon.room;
             const rng = game.rng;
             // Top and bottom edges
@@ -1773,17 +1778,17 @@ class RedDragonAI extends wglt_1.AI {
 class RedDragon extends monster_1.Monster {
     constructor(game, x, y, level, room) {
         super(game, x, y, 'Dragon', SPRITE);
-        this.aggro = false;
         this.cooldown = 0;
         this.room = room;
         this.level = level;
         this.maxHp = 10 * level;
         this.hp = this.maxHp;
         this.ai = new RedDragonAI(this);
+        this.sentiment = statsactor_1.Sentiment.NEUTRAL;
     }
     takeDamage(damage) {
         super.takeDamage(damage);
-        this.aggro = true;
+        this.sentiment = statsactor_1.Sentiment.HOSTILE;
     }
 }
 exports.RedDragon = RedDragon;
@@ -1868,6 +1873,12 @@ exports.Spider = Spider;
 Object.defineProperty(exports, "__esModule", { value: true });
 const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
 const equipment_1 = __webpack_require__(/*! ../equipment/equipment */ "./src/equipment/equipment.ts");
+var Sentiment;
+(function (Sentiment) {
+    Sentiment[Sentiment["HOSTILE"] = -1] = "HOSTILE";
+    Sentiment[Sentiment["NEUTRAL"] = 0] = "NEUTRAL";
+    Sentiment[Sentiment["FRIENDLY"] = 1] = "FRIENDLY";
+})(Sentiment = exports.Sentiment || (exports.Sentiment = {}));
 class StatsActor extends wglt_1.Actor {
     constructor(game, x, y, name, sprite) {
         super(game, x, y, name, sprite, true);
@@ -1880,6 +1891,7 @@ class StatsActor extends wglt_1.Actor {
         this.constitution = 10;
         this.intelligence = 10;
         this.showFrame = true;
+        this.sentiment = Sentiment.NEUTRAL;
         this.equipment = new wglt_1.ArrayList();
         this.buffs = [];
         this.equipment.addListener({ onAdd: (_, item) => this.addItem(item), onRemove: (_, item) => this.removeItem(item) });
@@ -2884,7 +2896,6 @@ exports.CharacterDialog = CharacterDialog;
 Object.defineProperty(exports, "__esModule", { value: true });
 const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
 const statsactor_1 = __webpack_require__(/*! ../entities/statsactor */ "./src/entities/statsactor.ts");
-const monster_1 = __webpack_require__(/*! ../entities/monster */ "./src/entities/monster.ts");
 class EntityFrames extends wglt_1.Panel {
     constructor(game) {
         super(new wglt_1.Rect(0, 40, 40, 200));
@@ -2915,9 +2926,16 @@ class EntityFrames extends wglt_1.Panel {
             // Draw the frame
             app.drawImage(2, y, 64, 48, 54, 18);
             // Draw the name
-            const color = actor instanceof monster_1.Monster ? wglt_1.Colors.DARK_RED : wglt_1.Colors.DARK_GREEN;
-            app.drawImage(x + 1, y + 1, bo.x, bo.y, bo.width, bo.height, color, 38, 7);
-            app.drawCenteredString(actor.name, x + 20, y + 1, wglt_1.Colors.YELLOW);
+            // const color = actor instanceof Monster ? Colors.DARK_RED : Colors.DARK_GREEN;
+            //app.drawImage(x + 1, y + 1, bo.x, bo.y, bo.width, bo.height, color, 38, 7);
+            let nameColor = wglt_1.Colors.YELLOW;
+            if (actor.sentiment === statsactor_1.Sentiment.FRIENDLY) {
+                nameColor = wglt_1.Colors.LIGHT_GREEN;
+            }
+            else if (actor.sentiment === statsactor_1.Sentiment.HOSTILE) {
+                nameColor = wglt_1.Colors.RED;
+            }
+            app.drawCenteredString(actor.name, x + 20, y + 1, nameColor);
             // Draw the health
             const healthWidth = Math.round(38.0 * actor.hp / actor.maxHp);
             app.drawImage(x + 1, y + 9, bo.x, bo.y, bo.width, bo.height, wglt_1.Colors.DARK_GREEN, healthWidth, 7);
