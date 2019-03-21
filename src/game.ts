@@ -11,6 +11,7 @@ import {MapGenerator} from './mapgen';
 import {Gateway} from './items/gateway';
 import { LevelUpDialog } from './gui/levelupdialog';
 import { EntityFrames } from './gui/entityframes';
+import { Hearthstone } from './items/hearthstone';
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -146,6 +147,10 @@ export class Game extends wglt.Game {
 
     player.inventory.addListener({
       onAdd: (_, item) => {
+        if (item instanceof Hearthstone) {
+          // Don't add hearthstone to shortcut bar
+          return;
+        }
         bottomPanel.shortcutBar.addItem(player.inventory, item, true);
       },
       onRemove: () => {}
