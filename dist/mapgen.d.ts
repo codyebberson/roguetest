@@ -1,3 +1,4 @@
+import { Rect, TileMap } from 'wglt';
 import { Game } from './game';
 import { Dungeon } from './dungeon';
 export declare class MapGenerator {
@@ -5,6 +6,7 @@ export declare class MapGenerator {
     constructor(game: Game);
     createMap(): void;
     createOverworld(): void;
+    createCastle(map: TileMap, castle: Rect): void;
     createDungeon(dungeon: Dungeon): void;
     private clearMap;
     private createRoom;
@@ -13,4 +15,6 @@ export declare class MapGenerator {
     private placeMonsters;
     private placeItems;
     private placeObstacles;
+    private createRiver;
+    private touchUp;
 }
