@@ -74,7 +74,7 @@ export class StatsActor extends Actor {
     const rng = this.game.rng;
     const damage = weapon ? rng.nextRange(weapon.minDamage, weapon.maxDamage + 1) : 1;
     const damageModifier = weapon && weapon.finesse ? this.dexterityModifier : this.strengthModifier;
-    const damageResist = Math.round(0.25 * target.armor);
+    const damageResist = Math.round(0.1 * target.armor);
     return Math.max(0, damage + damageModifier - damageResist);
   }
 

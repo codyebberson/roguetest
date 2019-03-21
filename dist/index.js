@@ -1583,6 +1583,7 @@ exports.Guard = Guard;
 Object.defineProperty(exports, "__esModule", { value: true });
 const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
 const statsactor_1 = __webpack_require__(/*! ./statsactor */ "./src/entities/statsactor.ts");
+const gold_1 = __webpack_require__(/*! ../items/gold */ "./src/items/gold.ts");
 const START_BLOOD = 1367;
 const END_BLOOD = 1371;
 class Monster extends statsactor_1.StatsActor {
@@ -1606,6 +1607,10 @@ class Monster extends statsactor_1.StatsActor {
         // Add blood to the map
         const map = this.game.tileMap;
         map.setTile(3, this.x, this.y, this.game.rng.nextRange(START_BLOOD, END_BLOOD));
+        if (this.game.rng.nextRange(1, 6) !== 1) {
+            const gold = new gold_1.Gold(this.game, this.x, this.y);
+            this.game.entities.push(gold);
+        }
     }
     calculateDamage(attacker, target) {
         const statsActor = attacker;
@@ -1613,7 +1618,7 @@ class Monster extends statsactor_1.StatsActor {
         const maxDamage = 1 + Math.round(1.5 * statsActor.level);
         const damage = statsActor.game.rng.nextRange(minDamage, maxDamage + 1);
         const damageModifier = statsActor.strengthModifier;
-        const damageResist = Math.round(0.25 * target.armor);
+        const damageResist = Math.round(0.1 * target.armor);
         return Math.max(0, damage + damageModifier - damageResist);
     }
 }
@@ -1911,7 +1916,7 @@ class StatsActor extends wglt_1.Actor {
         const rng = this.game.rng;
         const damage = weapon ? rng.nextRange(weapon.minDamage, weapon.maxDamage + 1) : 1;
         const damageModifier = weapon && weapon.finesse ? this.dexterityModifier : this.strengthModifier;
-        const damageResist = Math.round(0.25 * target.armor);
+        const damageResist = Math.round(0.1 * target.armor);
         return Math.max(0, damage + damageModifier - damageResist);
     }
     onAttack(target, damage) {
@@ -2526,6 +2531,7 @@ const mapgen_1 = __webpack_require__(/*! ./mapgen */ "./src/mapgen.ts");
 const levelupdialog_1 = __webpack_require__(/*! ./gui/levelupdialog */ "./src/gui/levelupdialog.ts");
 const entityframes_1 = __webpack_require__(/*! ./gui/entityframes */ "./src/gui/entityframes.ts");
 const hearthstone_1 = __webpack_require__(/*! ./items/hearthstone */ "./src/items/hearthstone.ts");
+const gold_1 = __webpack_require__(/*! ./items/gold */ "./src/items/gold.ts");
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
 const TARGET_SPRITE = new wglt_1.Sprite(16, 40, SPRITE_WIDTH, SPRITE_HEIGHT);
@@ -2616,7 +2622,7 @@ class Game extends wglt.Game {
         this.levelUpDialog = levelUpDialog;
         player.inventory.addListener({
             onAdd: (_, item) => {
-                if (item instanceof hearthstone_1.Hearthstone) {
+                if (item instanceof hearthstone_1.Hearthstone || item instanceof gold_1.Gold) {
                     // Don't add hearthstone to shortcut bar
                     return;
                 }
@@ -3240,6 +3246,36 @@ class Gateway extends wglt_1.Item {
     }
 }
 exports.Gateway = Gateway;
+
+
+/***/ }),
+
+/***/ "./src/items/gold.ts":
+/*!***************************!*\
+  !*** ./src/items/gold.ts ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
+const SPRITE = new wglt_1.Sprite(896, 168, 16, 24, 1, true, undefined, 0xFFFF80FF);
+const TOOLTIPS = [
+    new wglt_1.Message('Gold', wglt_1.Colors.WHITE),
+    new wglt_1.Message('The coin of the realm.', wglt_1.Colors.WHITE),
+];
+class Gold extends wglt_1.Item {
+    constructor(game, x, y) {
+        super(game, x, y, 'gold', SPRITE, false);
+        this.tooltipMessages = TOOLTIPS;
+    }
+    onPickup(entity) {
+        this.game.log(entity.name + ' picked up a ' + this.name, wglt_1.Colors.LIGHT_GREEN);
+    }
+}
+exports.Gold = Gold;
 
 
 /***/ }),

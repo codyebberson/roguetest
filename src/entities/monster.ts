@@ -4,6 +4,7 @@ import {Game} from '../game';
 
 import {Player} from './player';
 import {StatsActor} from './statsactor';
+import { Gold } from '../items/gold';
 
 const START_BLOOD = 1367;
 const END_BLOOD = 1371;
@@ -33,6 +34,11 @@ export abstract class Monster extends StatsActor {
     // Add blood to the map
     const map = this.game.tileMap as TileMap;
     map.setTile(3, this.x, this.y, this.game.rng.nextRange(START_BLOOD, END_BLOOD));
+
+    if (this.game.rng.nextRange(1, 6) !== 1) {
+      const gold = new Gold(this.game, this.x, this.y);
+      this.game.entities.push(gold);
+    }
   }
 
   private calculateDamage(attacker: Actor, target: Actor) {
@@ -41,7 +47,7 @@ export abstract class Monster extends StatsActor {
     const maxDamage = 1 + Math.round(1.5 * statsActor.level);
     const damage = statsActor.game.rng.nextRange(minDamage, maxDamage + 1);
     const damageModifier = statsActor.strengthModifier;
-    const damageResist = Math.round(0.25 * (target as StatsActor).armor);
+    const damageResist = Math.round(0.1 * (target as StatsActor).armor);
     return Math.max(0, damage + damageModifier - damageResist);
   }
 }

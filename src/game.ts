@@ -12,6 +12,7 @@ import {Gateway} from './items/gateway';
 import { LevelUpDialog } from './gui/levelupdialog';
 import { EntityFrames } from './gui/entityframes';
 import { Hearthstone } from './items/hearthstone';
+import { Gold } from './items/gold';
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -147,7 +148,7 @@ export class Game extends wglt.Game {
 
     player.inventory.addListener({
       onAdd: (_, item) => {
-        if (item instanceof Hearthstone) {
+        if (item instanceof Hearthstone || item instanceof Gold) {
           // Don't add hearthstone to shortcut bar
           return;
         }
