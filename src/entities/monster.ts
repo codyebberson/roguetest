@@ -1,4 +1,4 @@
-import {Actor, BasicMonster, Sprite, TileMap} from 'wglt';
+import {Actor, BasicMonster, Sprite, TileMap, Item} from 'wglt';
 
 import {Game} from '../game';
 
@@ -10,6 +10,7 @@ const START_BLOOD = 1367;
 const END_BLOOD = 1371;
 
 export abstract class Monster extends StatsActor {
+  loot: Item[];
 
   constructor(game: Game, x: number, y: number, name: string, sprite: Sprite) {
     super(game, x, y, name, sprite);
@@ -17,6 +18,11 @@ export abstract class Monster extends StatsActor {
     this.hp = 10;
     this.ai = new BasicMonster(this, this.calculateDamage);
     this.sentiment = Sentiment.HOSTILE;
+    this.loot = this.getLoot();
+  }
+
+  onBump(player: Player) {
+    player.attack(this, player.getDamage(this));
   }
 
   onDeath() {
@@ -36,9 +42,13 @@ export abstract class Monster extends StatsActor {
     const map = this.game.tileMap as TileMap;
     map.setTile(3, this.x, this.y, this.game.rng.nextRange(START_BLOOD, END_BLOOD));
 
-    if (this.game.rng.nextRange(1, 6) !== 1) {
-      const gold = new Gold(this.game, this.x, this.y);
-      this.game.entities.push(gold);
+    // Drop loot
+    for (let i = 0; i < this.loot.length; i++) {
+      // TODO: Spread loot around multiple tiles
+      const loot = this.loot[i];
+      loot.x = this.x;
+      loot.y = this.y;
+      this.game.entities.add(loot);
     }
   }
 
@@ -50,5 +60,13 @@ export abstract class Monster extends StatsActor {
     const damageModifier = statsActor.strengthModifier;
     const damageResist = Math.round(0.1 * (target as StatsActor).armor);
     return Math.max(0, damage + damageModifier - damageResist);
+  }
+
+  getLoot() {
+    const result: Item[] = [];
+    if (this.game.rng.nextRange(0, 6) <= 2) {
+      result.push(new Gold(this.game, this.x, this.y));
+    }
+    return result;
   }
 }

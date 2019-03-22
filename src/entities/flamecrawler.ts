@@ -38,10 +38,7 @@ class FlameCrawlerAI extends AI {
       monster.attack(player, DAMAGE);
     } else {
       if (!monster.move(monster.dx, monster.dy)) {
-        const index = monster.game.entities.indexOf(monster);
-        if (index >= 0) {
-          monster.game.entities.splice(index, 1);
-        }
+        monster.game.entities.remove(monster);
       }
     }
   }

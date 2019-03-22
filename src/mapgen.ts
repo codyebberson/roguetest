@@ -16,6 +16,9 @@ import { RedDragon } from './entities/reddragon';
 import { Guard } from './entities/guard';
 import { Portal } from './items/portal';
 import { Dungeon } from './dungeon';
+import { LockedDoor } from './items/lockeddoor';
+import { Key } from './items/key';
+import { BossDoor } from './items/bossdoor';
 
 // Size of the map
 const MAP_WIDTH = 512;
@@ -40,7 +43,7 @@ const TILE_COBWEB_NORTHWEST = getTileId(28, 22);
 const TILE_COBWEB_NORTHEAST = getTileId(29, 22);
 const TILE_COBWEB_SOUTHWEST = getTileId(30, 22);
 const TILE_COBWEB_SOUTHEAST = getTileId(31, 22);
-const TILE_DOOR = getTileId(7, 19);
+const TILE_DOOR = getTileId(7, 20);
 const TILE_STAIRS_DOWN = getTileId(14, 18);
 const TILE_STAIRS_UP = getTileId(15, 18);
 const TILE_BARREL = getTileId(24, 19);
@@ -98,6 +101,7 @@ const BOSS_LAYOUTS = [
 
 export class MapGenerator {
   readonly game: Game;
+  nextKeyId = 0;
 
   constructor(game: Game) {
     this.game = game;
@@ -128,8 +132,8 @@ export class MapGenerator {
     const portal2 = dungeons[0].entrance as Portal;
     portal1.other = portal2;
     portal2.other = portal1;
-    game.entities.push(portal1);
-    game.entities.push(portal2);
+    game.entities.add(portal1);
+    game.entities.add(portal2);
 
     // Connect all of the dungeon floors to each other
     for (let i = 1; i < 10; i++) {
@@ -240,7 +244,7 @@ export class MapGenerator {
         monster = new Troll(game, x, y, level);
       }
 
-      game.entities.push(monster);
+      game.entities.add(monster);
     }
 
     // Create portal entrance
@@ -249,8 +253,14 @@ export class MapGenerator {
     const portal2 = new Portal(game, 35, 35, 'portal', portalSprite);
     portal1.other = portal2;
     portal2.other = portal1;
-    game.entities.push(portal1);
-    game.entities.push(portal2);
+    game.entities.add(portal1);
+    game.entities.add(portal2);
+
+    const doorTest = new LockedDoor(game, player.x - 2, player.y, 0);
+    game.entities.add(doorTest);
+
+    const keyTest = new Key(game, player.x, player.y - 2, 0);
+    game.entities.add(keyTest);
 
     // Initial FOV
     game.resetViewport();
@@ -340,7 +350,7 @@ export class MapGenerator {
         }
       }
       const guard = new Guard(game, waypoints[0].x, waypoints[0].y, waypoints);
-      game.entities.push(guard);
+      game.entities.add(guard);
     }
 
     return castle;
@@ -350,6 +360,7 @@ export class MapGenerator {
     const game = this.game;
     const map = game.tileMap as TileMap;
     const rng = game.rng;
+    const keyId = this.nextKeyId++;
 
     // Clear the map to all walls
     this.clearMap(map, dungeon.rect, TILE_WALL, true, true);
@@ -429,7 +440,7 @@ export class MapGenerator {
       if (dungeon.rooms.length === 0) {
         // This is the first room, where the player starts at
         dungeon.entrance = new Portal(game, center.x, center.y, 'stairs', STAIRS_SPRITE);
-        game.entities.push(dungeon.entrance);
+        game.entities.add(dungeon.entrance);
         map.setTile(0, center.x, center.y, TILE_STAIRS_UP);
 
       } else {
@@ -470,23 +481,26 @@ export class MapGenerator {
       this.createHTunnel(map, prev.x, center.x, prev.y);
       this.createVTunnel(map, prev.y, center.y, center.x);
 
-      // Create a door to boss room
-      if (center.y > prev.y) {
-        map.setTile(0, center.x, bossRoom.y1, TILE_DOOR, false, true);
-      } else {
-        map.setTile(0, center.x, bossRoom.y2, TILE_DOOR, false, true);
-      }
-
       // Create boss
       const bossLevel = dungeon.level * 3 + 5;
       const dice = rng.nextRange(0, 1000);
+      let boss = undefined;
       if (dice !== 0) {
-        const redDragon = new RedDragon(game, center.x, center.y, bossLevel, bossRoom);
-        game.entities.push(redDragon);
-
+        boss = new RedDragon(game, center.x, center.y, bossLevel, bossRoom);
       } else {
-        const griffon = new Griffon(game, center.x, center.y, bossLevel);
-        game.entities.push(griffon);
+        boss = new Griffon(game, center.x, center.y, bossLevel);
+      }
+
+      boss.loot = [new Key(game, boss.x, boss.y, keyId)];
+      game.entities.add(boss);
+
+      // Create a door to boss room
+      if (center.y > prev.y) {
+        map.setTile(0, center.x, bossRoom.y1, TILE_DOOR, false, true);
+        game.entities.add(new BossDoor(game, center.x, bossRoom.y1, boss));
+      } else {
+        map.setTile(0, center.x, bossRoom.y2, TILE_DOOR, false, true);
+        game.entities.add(new BossDoor(game, center.x, bossRoom.y2, boss));
       }
 
       // Create stairs room
@@ -497,7 +511,16 @@ export class MapGenerator {
       this.createHTunnel(map, center.x, stairsLoc.x, stairsLoc.y);
       map.setTile(0, stairsLoc.x, stairsLoc.y, TILE_STAIRS_DOWN);
       dungeon.exit = new Portal(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE);
-      game.entities.push(dungeon.exit);
+      game.entities.add(dungeon.exit);
+
+      // Create door to stairs room
+      if (center.x > stairsLoc.x) {
+        map.setTile(0, bossRoom.x1, center.y, TILE_DOOR, false, true);
+        game.entities.add(new LockedDoor(game, bossRoom.x1, center.y, keyId));
+      } else {
+        map.setTile(0, bossRoom.x2, center.y, TILE_DOOR, false, true);
+        game.entities.add(new LockedDoor(game, bossRoom.x2, center.y, keyId));
+      }
     }
 
     // Place obstacles after all rooms have been connected
@@ -591,7 +614,7 @@ export class MapGenerator {
         monster = new Troll(game, x, y, level);
       }
 
-      game.entities.push(monster);
+      game.entities.add(monster);
     }
   }
 
@@ -632,7 +655,7 @@ export class MapGenerator {
         item = new Scroll(game, x, y, new ConfuseAbility());
       }
 
-      game.entities.push(item);
+      game.entities.add(item);
     }
   }
 
@@ -719,11 +742,11 @@ export class MapGenerator {
           map.setTile(1, x, y, TILE_COBWEB_SOUTHEAST);
         }
 
-        if (t1 === TILE_DOOR) {
+        if (t1 === TILE_DOOR && t2 !== TILE_WALL) {
           map.setTile(2, x, y + 1, TILE_SHADOW);
         }
 
-        if (t1 === TILE_WALL && t2 !== TILE_WALL) {
+        if (t1 === TILE_WALL && t2 !== TILE_WALL && t2 !== TILE_DOOR) {
           const r = rng.nextRange(0, 20);
           if (r === 0) {
             map.setTile(0, x, y, TILE_HALF_WALL2, true);
@@ -741,7 +764,7 @@ export class MapGenerator {
 
         const nearBridge = t2 === TILE_BRIDGE || t3 === TILE_BRIDGE || t4 === TILE_BRIDGE || t5 === TILE_BRIDGE;
         if (t1 === TILE_WATER && nearBridge && rng.nextRange(0, 20) === 1) {
-          game.entities.push(new Shark(game, x, y));
+          game.entities.add(new Shark(game, x, y));
         }
       }
     }

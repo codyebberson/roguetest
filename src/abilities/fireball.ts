@@ -66,7 +66,7 @@ export class FireballAbility implements Ability {
         game.log('The fireball explodes, burning everything within ' + FIREBALL_RADIUS + ' tiles!', Colors.ORANGE);
 
         for (let i = game.entities.length - 1; i >= 0; i--) {
-          const entity = game.entities[i];
+          const entity = game.entities.get(i);
           if (entity instanceof Actor && entity.distanceTo(target) <= FIREBALL_RADIUS) {
             game.log('The ' + entity.name + ' gets burned for ' + FIREBALL_DAMAGE + ' hit points.', Colors.ORANGE);
             entity.takeDamage(FIREBALL_DAMAGE);

@@ -3,6 +3,7 @@ import { Game } from './game';
 import { Dungeon } from './dungeon';
 export declare class MapGenerator {
     readonly game: Game;
+    nextKeyId: number;
     constructor(game: Game);
     createMap(): void;
     createOverworld(): void;

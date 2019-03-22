@@ -53,8 +53,8 @@ export class DemonicGatewayAbility implements Ability {
     const gateway2 = new Gateway(game, target.x, target.y, caster);
     gateway1.other = gateway2;
     gateway2.other = gateway1;
-    game.entities.push(gateway1);
-    game.entities.push(gateway2);
+    game.entities.add(gateway1);
+    game.entities.add(gateway2);
     caster.move(target.x - caster.x, target.y - caster.y, 16);
     caster.ap--;
     return true;

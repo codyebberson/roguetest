@@ -71,7 +71,7 @@ export class LeapAbility implements Ability {
 
       let count = 0;
       for (let i = game.entities.length - 1; i >= 0; i--) {
-        const entity = game.entities[i];
+        const entity = game.entities.get(i);
         if (entity === caster) {
           continue;
         }

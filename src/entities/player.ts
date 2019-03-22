@@ -1,4 +1,4 @@
-import { Colors, Sprite, Entity, Item, Vec2 } from 'wglt';
+import { Colors, Sprite, Vec2 } from 'wglt';
 
 import { CharacterClass } from '../classes/characterclass';
 import { Paladin } from '../classes/paladin';
@@ -7,9 +7,6 @@ import { CharacterRace } from '../races/characterrace';
 import { Human } from '../races/human';
 
 import { StatsActor } from './statsactor';
-import { Gateway } from '../items/gateway';
-import { Monster } from './monster';
-import { Portal } from '../items/portal';
 
 const PLAYER_SPRITE = new Sprite(0, 96, 16, 24, 2, true, undefined, 0xffcf5cff);
 
@@ -20,6 +17,7 @@ export class Player extends StatsActor {
   class: CharacterClass;
   remainingAbilityPoints: number;
   home: Vec2;
+  keys: boolean[];
 
   constructor(game: Game, x: number, y: number) {
     super(game, x, y, 'Player', PLAYER_SPRITE);
@@ -32,33 +30,7 @@ export class Player extends StatsActor {
     this.class = new Paladin();
     this.remainingAbilityPoints = 0;
     this.home = new Vec2(x, y);
-  }
-
-  onBump(other: Entity) {
-    if (other instanceof Gateway) {
-      if (other.other) {
-        const exit = other.other;
-        this.move(exit.x - this.x, exit.y - this.y, 16);
-      }
-      return;
-    }
-    if (other instanceof Portal) {
-      const exit = other.other;
-      if (exit) {
-        (this.game as Game).warpToPoint(exit);
-      }
-      return;
-    }
-    if (other instanceof Item) {
-      this.moveToward(other.x, other.y);
-      this.pickup(other);
-      return true;
-    }
-    if (other instanceof Monster) {
-      this.attack(other, this.getDamage(other));
-      return true;
-    }
-    return false;
+    this.keys = new Array(1000);
   }
 
   onDeath() {

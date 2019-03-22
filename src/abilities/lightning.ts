@@ -60,7 +60,7 @@ export class LightningAbility implements Ability {
     let minDist = range + 1;
     let result = null;
     for (let i = 0; i < game.entities.length; i++) {
-      const entity = game.entities[i];
+      const entity = game.entities.get(i);
       if (entity === player) {
         continue;
       }

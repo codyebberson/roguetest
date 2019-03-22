@@ -40,7 +40,7 @@ export class Game extends wglt.Game {
 
     const player = new Player(this, 30, 20);
     this.player = player;
-    this.entities.push(player);
+    this.entities.add(player);
     this.gui.renderer.baseRect = new Rect(0, 16, 24, 24);
     this.gui.renderer.buttonSlotRect = new Rect(64, 16, 20, 28);
     this.messageLog = new MessageLog(new Rect(1, -84, 100, 50));

@@ -1,6 +1,6 @@
 import {Actor, Colors, Game, Item, Message, Sprite} from 'wglt';
 
-const SPRITE = new Sprite(896, 168, 16, 24, 1, true, undefined, 0xFFFF80FF);
+const SPRITE = new Sprite(896, 168, 16, 24, 1, true, undefined, 0xFFFF00FF);
 
 const TOOLTIPS = [
   new Message('Gold', Colors.WHITE),
@@ -14,6 +14,6 @@ export class Gold extends Item {
   }
 
   onPickup(entity: Actor) {
-    this.game.log(entity.name + ' picked up a ' + this.name, Colors.LIGHT_GREEN);
+    this.game.log(entity.name + ' picked up gold coins', Colors.LIGHT_GREEN);
   }
 }

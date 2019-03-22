@@ -35,8 +35,9 @@ class GuardAI extends AI {
         const game = guard.game as Game;
         game.log('Guard shouts for help!', Colors.LIGHT_BLUE);
         for (let i = 0; i < game.entities.length; i++) {
-          if (game.entities[i] instanceof Guard) {
-            const otherGuard = game.entities[i] as Guard;
+          const entity = game.entities.get(i);
+          if (entity instanceof Guard) {
+            const otherGuard = entity as Guard;
             if (guard.distanceTo(otherGuard) < 6) {
               otherGuard.aggro = true;
             }

@@ -1,7 +1,6 @@
 import { Panel, Rect, Colors } from "wglt";
 import { Game } from "../game";
 import { StatsActor, Sentiment } from "../entities/statsactor";
-import { Monster } from "../entities/monster";
 import { Player } from "../entities/player";
 
 export class EntityFrames extends Panel {
@@ -29,7 +28,7 @@ export class EntityFrames extends Panel {
     let y = 40;
 
     for (let i = 0; i < entities.length; i++) {
-      const entity = entities[i];
+      const entity = entities.get(i);
       if (entity === this.game.player || !(entity instanceof StatsActor)) {
         continue;
       }

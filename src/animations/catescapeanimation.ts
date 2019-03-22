@@ -68,9 +68,6 @@ export class CatEscapeAnimation extends Animation {
     this.countdown = 0;
 
     // Remove the cat from the game
-    const index = this.game.entities.indexOf(this.cat);
-    if (index) {
-      this.game.entities.splice(index, 1);
-    }
+    this.game.entities.remove(this.cat);
   }
 }
