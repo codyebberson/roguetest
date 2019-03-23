@@ -49,7 +49,7 @@ export class LightningAbility implements Ability {
     const explosion = new Sprite(256, 408, 16, 24, 2, true, 8, Colors.YELLOW);
     game.addAnimation(new ProjectileAnimation(explosion, new Vec2(monster.pixelX, monster.pixelY), new Vec2(0, 0), 32)).then(() => {
       game.log('The damage is ' + damage + ' hit points', Colors.LIGHT_BLUE);
-      monster.takeDamage(damage);
+      monster.takeDamage(caster, damage);
       caster.ap--;
     });
 

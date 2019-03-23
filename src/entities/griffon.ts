@@ -76,9 +76,4 @@ export class Griffon extends Monster {
   get leapTalent() {
     return this.talents.get(0);
   }
-
-  takeDamage(damage: number) {
-    super.takeDamage(damage);
-    this.sentiment = Sentiment.HOSTILE;
-  }
 }

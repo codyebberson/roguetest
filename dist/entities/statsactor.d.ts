@@ -3,6 +3,7 @@ import { Buff } from '../buffs/buff';
 import { Equipment, EquipmentSlot } from '../equipment/equipment';
 import { Game } from '../game';
 import { Weapon } from '../equipment/weapon';
+import { Player } from './player';
 export declare enum Sentiment {
     HOSTILE = -1,
     NEUTRAL = 0,
@@ -30,6 +31,8 @@ export declare class StatsActor extends Actor {
     getEquipment(slot: EquipmentSlot): Equipment | undefined;
     readonly mainHandWeapon: Weapon | undefined;
     getDamage(target: StatsActor): number;
+    onBump(player: Player): void;
+    onTalk(player: Player): void;
     onAttack(target: Actor, damage: number): void;
     startTurn(): void;
     private addItem;

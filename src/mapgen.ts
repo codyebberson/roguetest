@@ -19,6 +19,7 @@ import { Dungeon } from './dungeon';
 import { LockedDoor } from './items/lockeddoor';
 import { Key } from './items/key';
 import { BossDoor } from './items/bossdoor';
+import { King } from './entities/king';
 
 // Size of the map
 const MAP_WIDTH = 512;
@@ -256,11 +257,8 @@ export class MapGenerator {
     game.entities.add(portal1);
     game.entities.add(portal2);
 
-    const doorTest = new LockedDoor(game, player.x - 2, player.y, 0);
-    game.entities.add(doorTest);
-
-    const keyTest = new Key(game, player.x, player.y - 2, 0);
-    game.entities.add(keyTest);
+    const king = new King(game, player.x - 2, player.y);
+    game.entities.add(king);
 
     // Initial FOV
     game.resetViewport();

@@ -54,7 +54,7 @@ export class ShootAbility implements Ability {
     }
 
     const damage = caster.getDamage(target);
-    target.takeDamage(damage);
+    target.takeDamage(caster, damage);
     caster.ap--;
     return true;
   }

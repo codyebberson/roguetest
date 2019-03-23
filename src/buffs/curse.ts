@@ -3,18 +3,20 @@ import {StatsActor} from '../entities/statsactor';
 import {Buff} from './buff';
 
 export class Curse extends Buff {
+  caster: StatsActor;
   damage: number;
   countdown: number;
 
-  constructor(actor: StatsActor, damage: number, duration: number) {
-    super(actor);
+  constructor(caster: StatsActor, target: StatsActor, damage: number, duration: number) {
+    super(target);
+    this.caster = caster;
     this.damage = damage;
     this.countdown = duration;
   }
 
   update() {
     if (this.countdown > 0) {
-      this.actor.takeDamage(this.damage);
+      this.actor.takeDamage(this.caster, this.damage);
       this.countdown--;
     }
   }

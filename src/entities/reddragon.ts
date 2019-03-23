@@ -71,11 +71,6 @@ export class RedDragon extends Monster {
     this.sentiment = Sentiment.NEUTRAL;
   }
 
-  takeDamage(damage: number) {
-    super.takeDamage(damage);
-    this.sentiment = Sentiment.HOSTILE;
-  }
-
   getLoot() {
     return [
       new Key(this.game, this.x, this.y, 0)

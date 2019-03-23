@@ -4,6 +4,7 @@ import {Buff} from '../buffs/buff';
 import {Equipment, EquipmentSlot} from '../equipment/equipment';
 import {Game} from '../game';
 import { Weapon } from '../equipment/weapon';
+import { Player } from './player';
 
 export enum Sentiment {
   HOSTILE = -1,
@@ -85,6 +86,16 @@ export class StatsActor extends Actor {
     const damageResist = Math.round(0.1 * target.armor);
     return Math.max(0, damage + damageModifier - damageResist);
   }
+
+  onBump(player: Player) {
+    if (this.sentiment === Sentiment.FRIENDLY) {
+      this.onTalk(player);
+    } else {
+      player.attack(this, player.getDamage(this));
+    }
+  }
+
+  onTalk(player: Player) {}
 
   onAttack(target: Actor, damage: number) {
     if (damage > 0) {

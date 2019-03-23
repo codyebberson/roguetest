@@ -21,22 +21,23 @@ export abstract class Monster extends StatsActor {
     this.loot = this.getLoot();
   }
 
-  onBump(player: Player) {
-    player.attack(this, player.getDamage(this));
+  takeDamage(attacker: StatsActor, damage: number) {
+    super.takeDamage(attacker, damage);
+    this.sentiment = Sentiment.HOSTILE;
   }
 
-  onDeath() {
+  onDeath(attacker: StatsActor) {
     this.game.log(this.name + ' is dead');
     this.blocks = false;
     this.ai = undefined;
-    this.name = 'remains of ' + this.name;
     this.sendToBack();
 
-    // Based on DnD xp rules
-    // TODO: Add XP to the attacker, not the player
-    const player = this.game.player as Player;
-    const xpGain = Math.round(10 * player.level * Math.pow(2.0, (this.level - player.level) * 0.5));
-    player.addXp(xpGain);
+    if (attacker instanceof Player) {
+      // Based on DnD xp rules
+      const player = this.game.player as Player;
+      const xpGain = Math.round(10 * player.level * Math.pow(2.0, (this.level - player.level) * 0.5));
+      player.addXp(xpGain);
+    }
 
     // Add blood to the map
     const map = this.game.tileMap as TileMap;

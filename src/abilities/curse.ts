@@ -50,7 +50,7 @@ export class CurseAbility implements Ability {
     }
 
     const damage = Math.round((1 + caster.intelligenceModifier) / 4);
-    target.buffs.push(new Curse(target, damage, 8));
+    target.buffs.push(new Curse(caster, target, damage, 8));
     caster.ap--;
     return true;
   }

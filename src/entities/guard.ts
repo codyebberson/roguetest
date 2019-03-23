@@ -27,7 +27,7 @@ class GuardAI extends AI {
     const game = guard.game as Game;
     const player = game.player as Player;
 
-    if (guard.aggro) {
+    if (guard.sentiment === Sentiment.HOSTILE) {
       this.aggroCount++;
 
       if (this.aggroCount === 1) {
@@ -39,7 +39,7 @@ class GuardAI extends AI {
           if (entity instanceof Guard) {
             const otherGuard = entity as Guard;
             if (guard.distanceTo(otherGuard) < 6) {
-              otherGuard.aggro = true;
+              otherGuard.sentiment = Sentiment.HOSTILE;
             }
           }
         }
@@ -75,7 +75,6 @@ class GuardAI extends AI {
 }
 
 export class Guard extends Monster {
-  aggro = false;
 
   constructor(game: Game, x: number, y: number, waypoints: Vec2[]) {
     super(game, x, y, 'Guard', SPRITE);
@@ -86,10 +85,5 @@ export class Guard extends Monster {
     this.maxHp = 10 + 2 * this.level;
     this.hp = this.maxHp;
     this.sentiment = Sentiment.FRIENDLY;
-  }
-
-  takeDamage(damage: number) {
-    super.takeDamage(damage);
-    this.aggro = true;
   }
 }
