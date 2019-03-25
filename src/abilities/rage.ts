@@ -1,18 +1,17 @@
 import {Ability, Colors, Message, Sprite, TargetType} from 'wglt';
 
 import {StatsActor} from '../entities/statsactor';
-import { Bubble } from '../buffs/bubble';
+import { Rage } from '../buffs/rage';
 
-const SPRITE = new Sprite(896, 216, 16, 24, 1, true, undefined, 0xCCEEFFFF);
+const SPRITE = new Sprite(656, 192, 16, 24, undefined, undefined, undefined, 0xDD2222FF);
 const TOOLTIP_MESSAGES = [
-  new Message('Bubble', Colors.WHITE),
-  new Message('20 mana', Colors.WHITE),
+  new Message('Rage', Colors.WHITE),
   new Message('Instant cast', Colors.WHITE),
-  new Message('Shields the caster absorbing 4 + INT', Colors.YELLOW),
-  new Message('damage.', Colors.YELLOW),
+  new Message('Become enraged increasing damage by', Colors.YELLOW),
+  new Message('100% for 8 turns.', Colors.YELLOW),
 ];
 
-export class BubbleAbility implements Ability {
+export class RageAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;
   readonly targetType: TargetType;
@@ -23,7 +22,7 @@ export class BubbleAbility implements Ability {
 
   constructor() {
     this.sprite = SPRITE;
-    this.name = 'Bubble';
+    this.name = 'Rage';
     this.targetType = TargetType.SELF;
     this.minRange = 1;
     this.maxRange = 1;
@@ -33,16 +32,16 @@ export class BubbleAbility implements Ability {
 
   cast(caster: StatsActor) {
     for (let i = 0; i < caster.buffs.length; i++) {
-      if (caster.buffs[i] instanceof Bubble) {
+      if (caster.buffs[i] instanceof Rage) {
         if (caster === caster.game.player) {
-          caster.game.log('You already have a bubble.', Colors.LIGHT_GRAY);
+          caster.game.log('You already have rage.', Colors.LIGHT_GRAY);
         }
         return false;
       }
     }
 
-    const absorb = 4 + caster.intelligenceModifier;
-    caster.buffs.push(new Bubble(caster, absorb));
+    const duration = 8;
+    caster.buffs.push(new Rage(caster, duration));
     caster.ap--;
     return true;
   }

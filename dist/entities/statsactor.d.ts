@@ -30,11 +30,14 @@ export declare class StatsActor extends Actor {
     private calculateModifier;
     getEquipment(slot: EquipmentSlot): Equipment | undefined;
     readonly mainHandWeapon: Weapon | undefined;
-    getDamage(target: StatsActor): number;
+    getDamage(): number;
+    buffDamage(damage: number): number;
+    takeDamage(attacker: StatsActor, damage: number): void;
     onBump(player: Player): void;
     onTalk(player: Player): void;
     onAttack(target: Actor, damage: number): void;
     startTurn(): void;
     private addItem;
     private removeItem;
+    draw(): void;
 }

@@ -1,4 +1,5 @@
-import { Ability, Actor, Message, Sprite, TargetType, TileMapCell } from 'wglt';
+import { Ability, Message, Sprite, TargetType, TileMapCell } from 'wglt';
+import { StatsActor } from '../entities/statsactor';
 export declare class FireballAbility implements Ability {
     readonly sprite: Sprite;
     readonly name: string;
@@ -8,5 +9,5 @@ export declare class FireballAbility implements Ability {
     readonly cooldown: number;
     readonly tooltipMessages: Message[];
     constructor();
-    cast(caster: Actor, target: TileMapCell): boolean;
+    cast(caster: StatsActor, target: TileMapCell): boolean;
 }

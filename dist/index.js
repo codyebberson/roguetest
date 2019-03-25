@@ -98,6 +98,56 @@
 
 /***/ }),
 
+/***/ "./src/abilities/bubble.ts":
+/*!*********************************!*\
+  !*** ./src/abilities/bubble.ts ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
+const bubble_1 = __webpack_require__(/*! ../buffs/bubble */ "./src/buffs/bubble.ts");
+const SPRITE = new wglt_1.Sprite(896, 216, 16, 24, 1, true, undefined, 0xCCEEFFFF);
+const TOOLTIP_MESSAGES = [
+    new wglt_1.Message('Bubble', wglt_1.Colors.WHITE),
+    new wglt_1.Message('20 mana', wglt_1.Colors.WHITE),
+    new wglt_1.Message('Instant cast', wglt_1.Colors.WHITE),
+    new wglt_1.Message('Shields the caster absorbing 4 + INT', wglt_1.Colors.YELLOW),
+    new wglt_1.Message('damage.', wglt_1.Colors.YELLOW),
+];
+class BubbleAbility {
+    constructor() {
+        this.sprite = SPRITE;
+        this.name = 'Bubble';
+        this.targetType = wglt_1.TargetType.SELF;
+        this.minRange = 1;
+        this.maxRange = 1;
+        this.cooldown = 20;
+        this.tooltipMessages = TOOLTIP_MESSAGES;
+    }
+    cast(caster) {
+        for (let i = 0; i < caster.buffs.length; i++) {
+            if (caster.buffs[i] instanceof bubble_1.Bubble) {
+                if (caster === caster.game.player) {
+                    caster.game.log('You already have a bubble.', wglt_1.Colors.LIGHT_GRAY);
+                }
+                return false;
+            }
+        }
+        const absorb = 4 + caster.intelligenceModifier;
+        caster.buffs.push(new bubble_1.Bubble(caster, absorb));
+        caster.ap--;
+        return true;
+    }
+}
+exports.BubbleAbility = BubbleAbility;
+
+
+/***/ }),
+
 /***/ "./src/abilities/confuse.ts":
 /*!**********************************!*\
   !*** ./src/abilities/confuse.ts ***!
@@ -284,7 +334,6 @@ const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.j
 const explosionanimation_1 = __webpack_require__(/*! ../animations/explosionanimation */ "./src/animations/explosionanimation.ts");
 const FIREBALL_RANGE = 10;
 const FIREBALL_RADIUS = 3;
-const FIREBALL_DAMAGE = 12;
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
 const FIRE_COLOR = wglt_1.Colors.ORANGE;
@@ -293,7 +342,7 @@ const TOOLTIP_MESSAGES = [
     new wglt_1.Message('Fireball', wglt_1.Colors.WHITE),
     new wglt_1.Message('2% of base mana', wglt_1.Colors.WHITE),
     new wglt_1.Message('2 turn cast', wglt_1.Colors.WHITE),
-    new wglt_1.Message('Throws a fiery ball causing 10 damage', wglt_1.Colors.YELLOW),
+    new wglt_1.Message('Throws a fiery ball causing 8 + INT damage', wglt_1.Colors.YELLOW),
     new wglt_1.Message('to all enemies within 3 tiles.', wglt_1.Colors.YELLOW),
 ];
 class FireballAbility {
@@ -329,11 +378,12 @@ class FireballAbility {
         game.addAnimation(new wglt_1.ProjectileAnimation(FIREBALL_SPRITE, new wglt_1.Vec2(caster.pixelX, caster.pixelY), new wglt_1.Vec2(dx, dy), count)).then(() => {
             game.addAnimation(new explosionanimation_1.ExplosionAnimation(game, target, FIREBALL_RADIUS, 30)).then(() => {
                 game.log('The fireball explodes, burning everything within ' + FIREBALL_RADIUS + ' tiles!', wglt_1.Colors.ORANGE);
+                const damage = caster.buffDamage(8 + caster.intelligenceModifier);
                 for (let i = game.entities.length - 1; i >= 0; i--) {
                     const entity = game.entities.get(i);
-                    if (entity instanceof wglt_1.Actor && entity.distanceTo(target) <= FIREBALL_RADIUS) {
-                        game.log('The ' + entity.name + ' gets burned for ' + FIREBALL_DAMAGE + ' hit points.', wglt_1.Colors.ORANGE);
-                        entity.takeDamage(caster, FIREBALL_DAMAGE);
+                    if (entity !== caster && entity instanceof wglt_1.Actor && entity.distanceTo(target) <= FIREBALL_RADIUS) {
+                        game.log('The ' + entity.name + ' gets burned for ' + damage + ' hit points.', wglt_1.Colors.ORANGE);
+                        entity.takeDamage(caster, damage);
                     }
                 }
             });
@@ -560,6 +610,55 @@ exports.LightningAbility = LightningAbility;
 
 /***/ }),
 
+/***/ "./src/abilities/rage.ts":
+/*!*******************************!*\
+  !*** ./src/abilities/rage.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
+const rage_1 = __webpack_require__(/*! ../buffs/rage */ "./src/buffs/rage.ts");
+const SPRITE = new wglt_1.Sprite(656, 192, 16, 24, undefined, undefined, undefined, 0xDD2222FF);
+const TOOLTIP_MESSAGES = [
+    new wglt_1.Message('Rage', wglt_1.Colors.WHITE),
+    new wglt_1.Message('Instant cast', wglt_1.Colors.WHITE),
+    new wglt_1.Message('Become enraged increasing damage by', wglt_1.Colors.YELLOW),
+    new wglt_1.Message('100% for 8 turns.', wglt_1.Colors.YELLOW),
+];
+class RageAbility {
+    constructor() {
+        this.sprite = SPRITE;
+        this.name = 'Rage';
+        this.targetType = wglt_1.TargetType.SELF;
+        this.minRange = 1;
+        this.maxRange = 1;
+        this.cooldown = 20;
+        this.tooltipMessages = TOOLTIP_MESSAGES;
+    }
+    cast(caster) {
+        for (let i = 0; i < caster.buffs.length; i++) {
+            if (caster.buffs[i] instanceof rage_1.Rage) {
+                if (caster === caster.game.player) {
+                    caster.game.log('You already have rage.', wglt_1.Colors.LIGHT_GRAY);
+                }
+                return false;
+            }
+        }
+        const duration = 8;
+        caster.buffs.push(new rage_1.Rage(caster, duration));
+        caster.ap--;
+        return true;
+    }
+}
+exports.RageAbility = RageAbility;
+
+
+/***/ }),
+
 /***/ "./src/abilities/shadowstrike.ts":
 /*!***************************************!*\
   !*** ./src/abilities/shadowstrike.ts ***!
@@ -635,7 +734,7 @@ class ShadowStrikeAbility {
         game.addAnimation(new wglt_1.SlideAnimation(caster, xSpeed, ySpeed, count)).then(() => {
             caster.x = farthestTile.x;
             caster.y = farthestTile.y;
-            caster.attack(target, caster.getDamage(target) * 2);
+            caster.attack(target, caster.getDamage() * 2);
             caster.ap--;
         });
         return true;
@@ -695,8 +794,7 @@ class ShootAbility {
             }
             return false;
         }
-        const damage = caster.getDamage(target);
-        target.takeDamage(caster, damage);
+        target.takeDamage(caster, caster.getDamage());
         caster.ap--;
         return true;
     }
@@ -847,6 +945,54 @@ exports.App = App;
 
 /***/ }),
 
+/***/ "./src/buffs/bubble.ts":
+/*!*****************************!*\
+  !*** ./src/buffs/bubble.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const buff_1 = __webpack_require__(/*! ./buff */ "./src/buffs/buff.ts");
+const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
+const COLOR = 0xAADDFFFF;
+const SPRITE = new wglt_1.Sprite(608, 408, 16, 24, 2, true, undefined, COLOR);
+class Bubble extends buff_1.Buff {
+    constructor(actor, remaining) {
+        super(actor);
+        this.remaining = remaining;
+    }
+    modifyDamageTaken(damage) {
+        if (damage <= 0) {
+            return damage;
+        }
+        const absorb = Math.min(this.remaining, damage);
+        this.remaining -= absorb;
+        if (this.remaining <= 0) {
+            this.actor.game.log('Absorbed the last ' + absorb + ' of the bubble!', COLOR);
+        }
+        else {
+            this.actor.game.log('Bubble absorbed ' + absorb + ' damage.', COLOR);
+        }
+        return damage - absorb;
+    }
+    draw() {
+        const actor = this.actor;
+        const game = actor.game;
+        const app = game.app;
+        SPRITE.draw(app, actor.pixelX - game.viewport.x, actor.pixelY - game.viewport.y);
+    }
+    isDone() {
+        return this.remaining <= 0;
+    }
+}
+exports.Bubble = Bubble;
+
+
+/***/ }),
+
 /***/ "./src/buffs/buff.ts":
 /*!***************************!*\
   !*** ./src/buffs/buff.ts ***!
@@ -861,7 +1007,32 @@ class Buff {
     constructor(actor) {
         this.actor = actor;
     }
+    /**
+     * Called once per turn.
+     * For example, a curse might countdown over time.
+     */
     update() { }
+    /**
+     * Modifies damage taken.
+     * For example, a bubble might mitigate incoming damage.
+     * @param damage Original damage taken.
+     */
+    modifyDamageTaken(damage) {
+        return damage;
+    }
+    /**
+     * Modifies damage dealt.
+     * For example, rage doubles output damage.
+     * @param damage Original damage dealt.
+     */
+    modifyDamageDealt(damage) {
+        return damage;
+    }
+    /**
+     * Optionally draw an overlay over the player.
+     * For example, a bubble might draw a buble around the player.
+     */
+    draw() { }
     isDone() {
         return false;
     }
@@ -900,6 +1071,51 @@ class Curse extends buff_1.Buff {
     }
 }
 exports.Curse = Curse;
+
+
+/***/ }),
+
+/***/ "./src/buffs/rage.ts":
+/*!***************************!*\
+  !*** ./src/buffs/rage.ts ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const buff_1 = __webpack_require__(/*! ./buff */ "./src/buffs/buff.ts");
+const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
+const COLOR = 0xDD2222FF;
+const SPRITE = new wglt_1.Sprite(640, 408, 16, 24, 2, true, undefined, COLOR);
+class Rage extends buff_1.Buff {
+    constructor(actor, countdown) {
+        super(actor);
+        this.countdown = countdown;
+    }
+    update() {
+        if (this.countdown > 0) {
+            this.countdown--;
+        }
+    }
+    modifyDamageDealt(damage) {
+        if (damage <= 0) {
+            return damage;
+        }
+        return damage * 2;
+    }
+    draw() {
+        const actor = this.actor;
+        const game = actor.game;
+        const app = game.app;
+        SPRITE.draw(app, actor.pixelX - game.viewport.x, actor.pixelY - game.viewport.y);
+    }
+    isDone() {
+        return this.countdown <= 0;
+    }
+}
+exports.Rage = Rage;
 
 
 /***/ }),
@@ -997,6 +1213,7 @@ const acolytesrobe_1 = __webpack_require__(/*! ../equipment/acolytesrobe */ "./s
 const acolytesshoes_1 = __webpack_require__(/*! ../equipment/acolytesshoes */ "./src/equipment/acolytesshoes.ts");
 const bentstaff_1 = __webpack_require__(/*! ../equipment/bentstaff */ "./src/equipment/bentstaff.ts");
 const characterclass_1 = __webpack_require__(/*! ./characterclass */ "./src/classes/characterclass.ts");
+const bubble_1 = __webpack_require__(/*! ../abilities/bubble */ "./src/abilities/bubble.ts");
 const NAME = 'Priest';
 const ICON = new wglt_1.Sprite(0, 700, 24, 26, undefined, undefined, undefined, 0xFFFFFFFF);
 const SPRITE = new wglt_1.Sprite(384, 96, 16, 24, 2, true, undefined, 0xf8f8f8ff);
@@ -1016,6 +1233,7 @@ class Priest extends characterclass_1.CharacterClass {
         player.talents.add(new wglt_1.Talent(player, new fireball_1.FireballAbility()));
         player.talents.add(new wglt_1.Talent(player, new lightning_1.LightningAbility()));
         player.talents.add(new wglt_1.Talent(player, new flashheal_1.FlashHealAbility()));
+        player.talents.add(new wglt_1.Talent(player, new bubble_1.BubbleAbility()));
         player.equipment.add(new acolytesrobe_1.AcolytesRobe(game));
         player.equipment.add(new acolytespants_1.AcolytesPants(game));
         player.equipment.add(new acolytesshoes_1.AcolytesShoes(game));
@@ -1193,7 +1411,7 @@ const squiresvest_1 = __webpack_require__(/*! ../equipment/squiresvest */ "./src
 const squirespants_1 = __webpack_require__(/*! ../equipment/squirespants */ "./src/equipment/squirespants.ts");
 const squiresboots_1 = __webpack_require__(/*! ../equipment/squiresboots */ "./src/equipment/squiresboots.ts");
 const worngreatsword_1 = __webpack_require__(/*! ../equipment/worngreatsword */ "./src/equipment/worngreatsword.ts");
-const worndirk_1 = __webpack_require__(/*! ../equipment/worndirk */ "./src/equipment/worndirk.ts");
+const rage_1 = __webpack_require__(/*! ../abilities/rage */ "./src/abilities/rage.ts");
 const NAME = 'Warrior';
 const ICON = new wglt_1.Sprite(216, 700, 24, 26, undefined, undefined, undefined, 0x804000FF);
 const SPRITE = new wglt_1.Sprite(0, 96, 16, 24, 2, true, undefined, 0xffcf5cff);
@@ -1211,11 +1429,11 @@ class Warrior extends characterclass_1.CharacterClass {
         player.class = this;
         player.sprite = SPRITE;
         player.talents.add(new wglt_1.Talent(player, new leap_1.LeapAbility()));
+        player.talents.add(new wglt_1.Talent(player, new rage_1.RageAbility()));
         player.equipment.add(new squiresvest_1.SquiresVest(game));
         player.equipment.add(new squirespants_1.SquiresPants(game));
         player.equipment.add(new squiresboots_1.SquiresBoots(game));
         player.equipment.add(new worngreatsword_1.WornGreatsword(game));
-        player.inventory.add(new worndirk_1.WornDirk(game));
         player.constitution += 2;
         player.strength += 5;
     }
@@ -1301,17 +1519,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const wglt_1 = __webpack_require__(/*! wglt */ "./node_modules/wglt/dist/index.js");
 const monster_1 = __webpack_require__(/*! ./monster */ "./src/entities/monster.ts");
 const SPRITE = new wglt_1.Sprite(192, 144, 16, 24, 2, true, undefined, 0x6757d9FF);
-const DAMAGE = 8;
 class BatAI extends wglt_1.AI {
     doAi() {
-        const monster = this.actor;
-        const player = monster.game.player;
+        const bat = this.actor;
+        const player = bat.game.player;
         if (!player) {
             return;
         }
         const rng = player.game.rng;
-        if (monster.distanceTo(player) < 3 && rng.nextRange(0, 100) < 33) {
-            monster.attack(player, DAMAGE);
+        if (bat.distanceTo(player) < 3 && rng.nextRange(0, 100) < 33) {
+            bat.attack(player, bat.getDamage());
         }
         else {
             this.actor.move(rng.nextRange(-2, 3), rng.nextRange(-2, 3));
@@ -1624,7 +1841,7 @@ class KingAI extends wglt_1.AI {
         }
         else if (player.hp > 0) {
             // Close enough, attack! (if the player is still alive.)
-            king.attack(player, king.getDamage(player));
+            king.attack(player, king.getDamage());
         }
     }
 }
@@ -1736,13 +1953,7 @@ class Monster extends statsactor_1.StatsActor {
         }
     }
     calculateDamage(attacker, target) {
-        const statsActor = attacker;
-        const minDamage = 1 + statsActor.level;
-        const maxDamage = 1 + Math.round(1.5 * statsActor.level);
-        const damage = statsActor.game.rng.nextRange(minDamage, maxDamage + 1);
-        const damageModifier = statsActor.strengthModifier;
-        const damageResist = Math.round(0.1 * target.armor);
-        return Math.max(0, damage + damageModifier - damageResist);
+        return attacker.getDamage();
     }
     getLoot() {
         const result = [];
@@ -2023,20 +2234,40 @@ class StatsActor extends wglt_1.Actor {
     get mainHandWeapon() {
         return this.getEquipment(equipment_1.EquipmentSlot.MAINHAND);
     }
-    getDamage(target) {
+    getDamage() {
         const weapon = this.mainHandWeapon;
         const rng = this.game.rng;
-        const damage = weapon ? rng.nextRange(weapon.minDamage, weapon.maxDamage + 1) : 1;
-        const damageModifier = weapon && weapon.finesse ? this.dexterityModifier : this.strengthModifier;
-        const damageResist = Math.round(0.1 * target.armor);
-        return Math.max(0, damage + damageModifier - damageResist);
+        let baseDamage = 1;
+        let modifier = this.strengthModifier;
+        if (weapon) {
+            baseDamage = rng.nextRange(weapon.minDamage, weapon.maxDamage + 1);
+            modifier = weapon.finesse ? this.dexterityModifier : this.strengthModifier;
+        }
+        return this.buffDamage(baseDamage + modifier);
+    }
+    buffDamage(damage) {
+        let result = damage;
+        for (let i = 0; i < this.buffs.length; i++) {
+            result = this.buffs[i].modifyDamageDealt(result);
+        }
+        return result;
+    }
+    takeDamage(attacker, damage) {
+        // Start by subtracting armor modifier
+        let result = Math.max(0, damage - Math.round(0.1 * this.armor));
+        // Apply any buffs from the target
+        for (let i = 0; i < this.buffs.length; i++) {
+            result = this.buffs[i].modifyDamageTaken(result);
+        }
+        // Finally apply the damage
+        super.takeDamage(attacker, result);
     }
     onBump(player) {
         if (this.sentiment === Sentiment.FRIENDLY) {
             this.onTalk(player);
         }
         else {
-            player.attack(this, player.getDamage(this));
+            player.attack(this, player.getDamage());
         }
     }
     onTalk(player) { }
@@ -2071,6 +2302,12 @@ class StatsActor extends wglt_1.Actor {
         this.dexterity -= item.bonusDexterity;
         this.strength -= item.bonusStrength;
         this.intelligence -= item.bonusIntelligence;
+    }
+    draw() {
+        super.draw();
+        for (let i = 0; i < this.buffs.length; i++) {
+            this.buffs[i].draw();
+        }
     }
 }
 exports.StatsActor = StatsActor;
