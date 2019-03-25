@@ -20,6 +20,7 @@ import { LockedDoor } from './items/lockeddoor';
 import { Key } from './items/key';
 import { BossDoor } from './items/bossdoor';
 import { King } from './entities/king';
+import { Ghost } from './entities/ghost';
 
 // Size of the map
 const MAP_WIDTH = 512;
@@ -50,8 +51,19 @@ const TILE_STAIRS_UP = getTileId(15, 18);
 const TILE_BARREL = getTileId(24, 19);
 const TILE_STATUE = getTileId(16, 20);
 const TILE_GRASS = getTileId(0, 17);
-const TILE_TREE = getTileId(22, 23);
+const TILE_TREE1 = getTileId(20, 23);
+const TILE_TREE2 = getTileId(22, 23);
 const TILE_PATH = getTileId(18, 17);
+const TILE_FENCE1 = getTileId(16, 22);
+const TILE_FENCE2 = getTileId(17, 22);
+const TILE_FENCE3 = getTileId(18, 22);
+const TILE_FENCE4 = getTileId(19, 22);
+const TILE_FENCE5 = getTileId(20, 22);
+const TILE_FENCE6 = getTileId(21, 22);
+const TILE_FENCE7 = getTileId(22, 22);
+const TILE_FENCE8 = getTileId(23, 22);
+const TILE_FENCE9 = getTileId(24, 22);
+const TILE_FENCE10 = getTileId(25, 22);
 
 function getTileId(tileX: number, tileY: number) {
   return 1 + tileY * 64 + tileX;
@@ -186,13 +198,88 @@ export class MapGenerator {
       }
     }
 
+    // Create graveyards
+    const graveyards = [];
+    for (let i = 0; i < 1; i++) {
+      const w = rng.nextRange(14, 18);
+      const h = rng.nextRange(8, 12);
+      const x = rng.nextRange(overworld.x1, overworld.x2 - w);
+      const y = rng.nextRange(overworld.y1, overworld.y2 - h);
+      const graveyard = new Rect(x, y, w, h);
+      const center = graveyard.getCenter();
+      for (let y = graveyard.y1; y < graveyard.y2; y++) {
+        for (let x = graveyard.x1; x < graveyard.x2; x++) {
+          if (x === graveyard.x1 && y === graveyard.y1) {
+            // Top-left corner
+            map.setTile(0, x, y, TILE_GRASS, true, false);
+            map.setTile(1, x, y, TILE_FENCE8);
+
+          } else if (x === graveyard.x2 - 1 && y === graveyard.y1) {
+            // Top-right corner
+            map.setTile(0, x, y, TILE_GRASS, true, false);
+            map.setTile(1, x, y, TILE_FENCE7);
+
+          } else if (x === graveyard.x1 && y === graveyard.y2 - 1) {
+            // Bottom-left corner
+            map.setTile(0, x, y, TILE_GRASS, true, false);
+            map.setTile(1, x, y, TILE_FENCE6);
+
+          } else if (x === graveyard.x2 - 1 && y === graveyard.y2 - 1) {
+            // Bottom-right corner
+            map.setTile(0, x, y, TILE_GRASS, true, false);
+            map.setTile(1, x, y, TILE_FENCE5);
+
+          } else if (x === graveyard.x1) {
+            // Vertical-left fence
+            map.setTile(0, x, y, TILE_GRASS, true, false);
+            map.setTile(1, x, y, TILE_FENCE10);
+
+          } else if (x === graveyard.x2 - 1) {
+            // Vertical-right fence
+            map.setTile(0, x, y, TILE_GRASS, true, false);
+            map.setTile(1, x, y, TILE_FENCE9);
+
+          } else if (y === graveyard.y1 || y === graveyard.y2 - 1) {
+            // Horizontal fence
+            map.setTile(0, x, y, TILE_GRASS, true, false);
+            map.setTile(1, x, y, TILE_FENCE1);
+
+          } else {
+            // Middle space
+            map.setTile(0, x, y, TILE_GRASS, false);
+            map.setAnimated(x, y, 0, false);
+          }
+        }
+      }
+
+      // Create entrances
+      map.setTile(0, center.x, graveyard.y1, TILE_GRASS, false);
+      map.setTile(1, center.x, graveyard.y1, TILE_EMPTY);
+      map.setTile(0, center.x, graveyard.y2 - 1, TILE_GRASS, false);
+      map.setTile(1, center.x, graveyard.y2 - 1, TILE_EMPTY);
+
+      // Create a ghost
+      const ghost = new Ghost(game, center.x, center.y, 15);
+      game.entities.add(ghost);
+
+      graveyards.push(graveyard);
+    }
+
     // Create trees
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 2000; i++) {
       const treeX = rng.nextRange(overworld.x1, overworld.x2);
       const treeY = rng.nextRange(overworld.y1, overworld.y2);
-      if ((treeX !== player.x || treeY !== player.y) && map.getTile(treeX, treeY) === TILE_GRASS) {
+      if ((treeX !== player.x || treeY !== player.y) &&
+          map.getTile(treeX, treeY) === TILE_GRASS &&
+          !map.isBlocked(treeX, treeY)) {
+
         map.setTile(0, treeX, treeY, TILE_GRASS, true);
-        map.setTile(1, treeX, treeY, TILE_TREE);
+        const treeType = rng.nextRange(0, 2);
+        if (treeType === 0) {
+          map.setTile(1, treeX, treeY, TILE_TREE1);
+        } else {
+          map.setTile(1, treeX, treeY, TILE_TREE2);
+        }
       }
     }
 
@@ -251,7 +338,7 @@ export class MapGenerator {
     // Create portal entrance
     const portalSprite = new Sprite(528, 408, 16, 24, 1, false, undefined, 0xFF00FFFF);
     const portal1 = new Portal(game, player.x + 2, player.y, 'portal', portalSprite);
-    const portal2 = new Portal(game, 35, 35, 'portal', portalSprite);
+    const portal2 = new Portal(game, graveyards[0].x + 2, graveyards[0].y + 2, 'portal', portalSprite);
     portal1.other = portal2;
     portal2.other = portal1;
     game.entities.add(portal1);

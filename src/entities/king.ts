@@ -34,7 +34,6 @@ class KingAI extends AI {
 }
 
 export class King extends StatsActor {
-  // destination?: Vec2;
   dialog?: Dialog;
 
   constructor(game: Game, x: number, y: number) {
