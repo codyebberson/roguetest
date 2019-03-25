@@ -10,6 +10,7 @@ import {AcolytesShoes} from '../equipment/acolytesshoes';
 import {BentStaff} from '../equipment/bentstaff';
 
 import {CharacterClass} from './characterclass';
+import { BubbleAbility } from '../abilities/bubble';
 
 const NAME = 'Priest';
 const ICON = new Sprite(0, 700, 24, 26, undefined, undefined, undefined, 0xFFFFFFFF);
@@ -33,6 +34,7 @@ export class Priest extends CharacterClass {
     player.talents.add(new Talent(player, new FireballAbility()));
     player.talents.add(new Talent(player, new LightningAbility()));
     player.talents.add(new Talent(player, new FlashHealAbility()));
+    player.talents.add(new Talent(player, new BubbleAbility()));
     player.equipment.add(new AcolytesRobe(game));
     player.equipment.add(new AcolytesPants(game));
     player.equipment.add(new AcolytesShoes(game));

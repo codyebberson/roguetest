@@ -1,10 +1,10 @@
 import {Ability, Actor, Colors, Message, ProjectileAnimation, Sprite, TargetType, TileMapCell, Vec2} from 'wglt';
 
 import {ExplosionAnimation} from '../animations/explosionanimation';
+import { StatsActor } from '../entities/statsactor';
 
 const FIREBALL_RANGE = 10;
 const FIREBALL_RADIUS = 3;
-const FIREBALL_DAMAGE = 12;
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -14,7 +14,7 @@ const TOOLTIP_MESSAGES = [
   new Message('Fireball', Colors.WHITE),
   new Message('2% of base mana', Colors.WHITE),
   new Message('2 turn cast', Colors.WHITE),
-  new Message('Throws a fiery ball causing 10 damage', Colors.YELLOW),
+  new Message('Throws a fiery ball causing 8 + INT damage', Colors.YELLOW),
   new Message('to all enemies within 3 tiles.', Colors.YELLOW),
 ];
 
@@ -37,7 +37,7 @@ export class FireballAbility implements Ability {
     this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 
-  cast(caster: Actor, target: TileMapCell) {
+  cast(caster: StatsActor, target: TileMapCell) {
     const game = caster.game;
     const distance = caster.distanceTo(target);
     if (distance > FIREBALL_RANGE) {
@@ -65,11 +65,13 @@ export class FireballAbility implements Ability {
       game.addAnimation(new ExplosionAnimation(game, target, FIREBALL_RADIUS, 30)).then(() => {
         game.log('The fireball explodes, burning everything within ' + FIREBALL_RADIUS + ' tiles!', Colors.ORANGE);
 
+        const damage = caster.buffDamage(8 + caster.intelligenceModifier);
+
         for (let i = game.entities.length - 1; i >= 0; i--) {
           const entity = game.entities.get(i);
-          if (entity instanceof Actor && entity.distanceTo(target) <= FIREBALL_RADIUS) {
-            game.log('The ' + entity.name + ' gets burned for ' + FIREBALL_DAMAGE + ' hit points.', Colors.ORANGE);
-            entity.takeDamage(caster, FIREBALL_DAMAGE);
+          if (entity !== caster && entity instanceof Actor && entity.distanceTo(target) <= FIREBALL_RADIUS) {
+            game.log('The ' + entity.name + ' gets burned for ' + damage + ' hit points.', Colors.ORANGE);
+            entity.takeDamage(caster, damage);
           }
         }
       });

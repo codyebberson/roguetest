@@ -78,20 +78,46 @@ export class StatsActor extends Actor {
     return this.getEquipment(EquipmentSlot.MAINHAND) as Weapon | undefined;
   }
 
-  getDamage(target: StatsActor) {
+  getDamage() {
     const weapon = this.mainHandWeapon;
     const rng = this.game.rng;
-    const damage = weapon ? rng.nextRange(weapon.minDamage, weapon.maxDamage + 1) : 1;
-    const damageModifier = weapon && weapon.finesse ? this.dexterityModifier : this.strengthModifier;
-    const damageResist = Math.round(0.1 * target.armor);
-    return Math.max(0, damage + damageModifier - damageResist);
+    let baseDamage = 1;
+    let modifier = this.strengthModifier;
+
+    if (weapon) {
+      baseDamage = rng.nextRange(weapon.minDamage, weapon.maxDamage + 1);
+      modifier = weapon.finesse ? this.dexterityModifier : this.strengthModifier;
+    }
+
+    return this.buffDamage(baseDamage + modifier);
+  }
+
+  buffDamage(damage: number) {
+    let result = damage;
+    for (let i = 0; i < this.buffs.length; i++) {
+      result = this.buffs[i].modifyDamageDealt(result);
+    }
+    return result;
+  }
+
+  takeDamage(attacker: StatsActor, damage: number) {
+    // Start by subtracting armor modifier
+    let result = Math.max(0, damage - Math.round(0.1 * this.armor));
+
+    // Apply any buffs from the target
+    for (let i = 0; i < this.buffs.length; i++) {
+      result = this.buffs[i].modifyDamageTaken(result);
+    }
+
+    // Finally apply the damage
+    super.takeDamage(attacker, result);
   }
 
   onBump(player: Player) {
     if (this.sentiment === Sentiment.FRIENDLY) {
       this.onTalk(player);
     } else {
-      player.attack(this, player.getDamage(this));
+      player.attack(this, player.getDamage());
     }
   }
 
@@ -130,5 +156,13 @@ export class StatsActor extends Actor {
     this.dexterity -= item.bonusDexterity;
     this.strength -= item.bonusStrength;
     this.intelligence -= item.bonusIntelligence;
+  }
+
+  draw() {
+    super.draw();
+
+    for (let i = 0; i < this.buffs.length; i++) {
+      this.buffs[i].draw();
+    }
   }
 }

@@ -80,7 +80,7 @@ export class ShadowStrikeAbility implements Ability {
     game.addAnimation(new SlideAnimation(caster, xSpeed, ySpeed, count)).then(() => {
       caster.x = (farthestTile as Vec2).x;
       caster.y = (farthestTile as Vec2).y;
-      caster.attack(target, caster.getDamage(target) * 2);
+      caster.attack(target, caster.getDamage() * 2);
       caster.ap--;
     });
     return true;

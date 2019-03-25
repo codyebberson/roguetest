@@ -28,7 +28,7 @@ class KingAI extends AI {
 
     } else if (player.hp > 0) {
       // Close enough, attack! (if the player is still alive.)
-      king.attack(player, king.getDamage(player));
+      king.attack(player, king.getDamage());
     }
   }
 }
