@@ -46,7 +46,6 @@ export class King extends StatsActor {
   }
 
   onBump(player: Player) {
-    console.log('talk to the king');
     if (!this.dialog) {
       const desc = [
         'A THREAT WITHIN',
@@ -82,6 +81,7 @@ export class King extends StatsActor {
       this.dialog = dialog;
     }
     this.dialog.visible = true;
+    return true;
   }
 
   takeDamage(attacker: StatsActor, damage: number) {

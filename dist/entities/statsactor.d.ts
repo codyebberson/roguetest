@@ -33,7 +33,7 @@ export declare class StatsActor extends Actor {
     getDamage(): number;
     buffDamage(damage: number): number;
     takeDamage(attacker: StatsActor, damage: number): void;
-    onBump(player: Player): void;
+    onBump(player: Player): boolean;
     onTalk(player: Player): void;
     onAttack(target: Actor, damage: number): void;
     startTurn(): void;

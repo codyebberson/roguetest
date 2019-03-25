@@ -5,5 +5,5 @@ export declare class Gateway extends Item {
     readonly owner: StatsActor;
     other?: Gateway;
     constructor(game: Game, x: number, y: number, owner: StatsActor);
-    onBump(player: Player): void;
+    onBump(player: Player): boolean;
 }

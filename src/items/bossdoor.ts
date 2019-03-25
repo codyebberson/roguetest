@@ -1,14 +1,13 @@
-import { Game, Item, Sprite } from 'wglt';
+import { Game } from 'wglt';
 import { Monster } from '../entities/monster';
 import { Player } from '../entities/player';
+import { Door } from './door';
 
-const SPRITE = new Sprite(256, 432, 16, 24, 1, true, undefined, 0x804020FF);
-
-export class BossDoor extends Item {
+export class BossDoor extends Door {
   readonly boss: Monster;
 
   constructor(game: Game, x: number, y: number, boss: Monster) {
-    super(game, x, y, 'door', SPRITE, true);
+    super(game, x, y);
     this.boss = boss;
     this.zIndex = 0;
   }
@@ -16,19 +15,24 @@ export class BossDoor extends Item {
   onBump(player: Player) {
     if (this.boss.hp <= 0) {
       // Boss is dead
-      this.game.entities.remove(this);
+      this.openDoor();
       player.moveTo(this.x, this.y);
+      return true;
     }
 
     const dotProduct =
-        (this.x - player.x) * (this.boss.x - player.x) +
-        (this.y - player.y) * (this.boss.y - player.y);
+      (this.x - player.x) * (this.boss.x - player.x) +
+      (this.y - player.y) * (this.boss.y - player.y);
 
     if (dotProduct > 0) {
       // Walking toward the boss
       const dx = this.x - player.x;
       const dy = this.y - player.y;
       player.move(dx * 2, dy * 2);
+      return true;
     }
+
+    // Otherwise, door is locked
+    return false;
   }
 }

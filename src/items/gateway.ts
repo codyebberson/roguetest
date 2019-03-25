@@ -16,8 +16,10 @@ export class Gateway extends Item {
 
   onBump(player: Player) {
     const exit = this.other;
-    if (exit) {
-      player.move(exit.x - player.x, exit.y - player.y, 16);
+    if (!exit) {
+      return false;
     }
+    player.move(exit.x - player.x, exit.y - player.y, 16);
+    return true;
   }
 }

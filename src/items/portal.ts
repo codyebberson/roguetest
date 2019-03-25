@@ -14,8 +14,11 @@ export class Portal extends Item {
 
   onBump(_: Player) {
     const exit = this.other;
-    if (exit) {
-      (this.game as Game).warpToPoint(exit);
+    if (!exit) {
+      return false;
     }
+
+    (this.game as Game).warpToPoint(exit);
+    return true;
   }
 }

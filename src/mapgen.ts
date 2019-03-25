@@ -1,4 +1,4 @@
-import { Rect, Sprite, TileMap, Vec2, computePath } from 'wglt';
+import { Rect, Sprite, TileMap, Vec2, computePath, getTileId } from 'wglt';
 
 import { ConfuseAbility } from './abilities/confuse';
 import { FireballAbility } from './abilities/fireball';
@@ -21,6 +21,7 @@ import { Key } from './items/key';
 import { BossDoor } from './items/bossdoor';
 import { King } from './entities/king';
 import { Ghost } from './entities/ghost';
+import { WindElemental } from './entities/windelemental';
 
 // Size of the map
 const MAP_WIDTH = 512;
@@ -45,7 +46,7 @@ const TILE_COBWEB_NORTHWEST = getTileId(28, 22);
 const TILE_COBWEB_NORTHEAST = getTileId(29, 22);
 const TILE_COBWEB_SOUTHWEST = getTileId(30, 22);
 const TILE_COBWEB_SOUTHEAST = getTileId(31, 22);
-const TILE_DOOR = getTileId(7, 20);
+const TILE_CLOSED_DOOR = getTileId(7, 19);
 const TILE_STAIRS_DOWN = getTileId(14, 18);
 const TILE_STAIRS_UP = getTileId(15, 18);
 const TILE_BARREL = getTileId(24, 19);
@@ -64,10 +65,6 @@ const TILE_FENCE7 = getTileId(22, 22);
 const TILE_FENCE8 = getTileId(23, 22);
 const TILE_FENCE9 = getTileId(24, 22);
 const TILE_FENCE10 = getTileId(25, 22);
-
-function getTileId(tileX: number, tileY: number) {
-  return 1 + tileY * 64 + tileX;
-}
 
 // Parameters for dungeon generator
 const ROOM_MIN_WIDTH = 6;
@@ -568,10 +565,12 @@ export class MapGenerator {
 
       // Create boss
       const bossLevel = dungeon.level * 3 + 5;
-      const dice = rng.nextRange(0, 1000);
+      const dice = rng.nextRange(0, 3);
       let boss = undefined;
-      if (dice !== 0) {
+      if (dice === 0) {
         boss = new RedDragon(game, center.x, center.y, bossLevel, bossRoom);
+      } else if (dice === 1) {
+        boss = new WindElemental(game, center.x, center.y, bossLevel);
       } else {
         boss = new Griffon(game, center.x, center.y, bossLevel);
       }
@@ -581,10 +580,10 @@ export class MapGenerator {
 
       // Create a door to boss room
       if (center.y > prev.y) {
-        map.setTile(0, center.x, bossRoom.y1, TILE_DOOR, false, true);
+        map.setTile(0, center.x, bossRoom.y1, TILE_CLOSED_DOOR, false, true);
         game.entities.add(new BossDoor(game, center.x, bossRoom.y1, boss));
       } else {
-        map.setTile(0, center.x, bossRoom.y2, TILE_DOOR, false, true);
+        map.setTile(0, center.x, bossRoom.y2, TILE_CLOSED_DOOR, false, true);
         game.entities.add(new BossDoor(game, center.x, bossRoom.y2, boss));
       }
 
@@ -600,10 +599,10 @@ export class MapGenerator {
 
       // Create door to stairs room
       if (center.x > stairsLoc.x) {
-        map.setTile(0, bossRoom.x1, center.y, TILE_DOOR, false, true);
+        map.setTile(0, bossRoom.x1, center.y, TILE_CLOSED_DOOR, false, true);
         game.entities.add(new LockedDoor(game, bossRoom.x1, center.y, keyId));
       } else {
-        map.setTile(0, bossRoom.x2, center.y, TILE_DOOR, false, true);
+        map.setTile(0, bossRoom.x2, center.y, TILE_CLOSED_DOOR, false, true);
         game.entities.add(new LockedDoor(game, bossRoom.x2, center.y, keyId));
       }
     }
@@ -827,11 +826,11 @@ export class MapGenerator {
           map.setTile(1, x, y, TILE_COBWEB_SOUTHEAST);
         }
 
-        if (t1 === TILE_DOOR && t2 !== TILE_WALL) {
+        if (t1 === TILE_CLOSED_DOOR && t2 !== TILE_WALL) {
           map.setTile(2, x, y + 1, TILE_SHADOW);
         }
 
-        if (t1 === TILE_WALL && t2 !== TILE_WALL && t2 !== TILE_DOOR) {
+        if (t1 === TILE_WALL && t2 !== TILE_WALL && t2 !== TILE_CLOSED_DOOR) {
           const r = rng.nextRange(0, 20);
           if (r === 0) {
             map.setTile(0, x, y, TILE_HALF_WALL2, true);

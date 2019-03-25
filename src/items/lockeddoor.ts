@@ -1,21 +1,24 @@
-import { Game, Item, Sprite } from 'wglt';
+import { Game } from 'wglt';
 import { Player } from '../entities/player';
+import { Door } from './door';
 
-const SPRITE = new Sprite(256, 432, 16, 24, 1, true, undefined, 0x804020FF);
-
-export class LockedDoor extends Item {
+export class LockedDoor extends Door {
   readonly keyId: number;
 
   constructor(game: Game, x: number, y: number, keyId: number) {
-    super(game, x, y, 'door', SPRITE, true);
+    super(game, x, y);
     this.keyId = keyId;
     this.zIndex = 0;
   }
 
   onBump(player: Player) {
     if (player.keys[this.keyId]) {
-      this.game.entities.remove(this);
+      this.openDoor();
       player.moveTo(this.x, this.y);
+      return true;
     }
+
+    // Otherwise, door is locked
+    return false;
   }
 }

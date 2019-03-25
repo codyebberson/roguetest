@@ -12,6 +12,7 @@ export declare class Player extends StatsActor {
     home: Vec2;
     keys: boolean[];
     constructor(game: Game, x: number, y: number);
+    takeDamage(attacker: StatsActor, damage: number): void;
     onDeath(): void;
     addXp(xpGain: number): void;
     private nextMaxXp;

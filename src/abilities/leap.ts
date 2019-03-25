@@ -76,7 +76,7 @@ export class LeapAbility implements Ability {
           continue;
         }
         if (entity instanceof Actor && entity.distanceTo(target) < LEAP_RADIUS) {
-          entity.ai = new Stunned(entity, 3);
+          entity.ai = new Stunned(entity, 1);
           count++;
         }
       }

@@ -5,6 +5,6 @@ import { Player } from './player';
 export declare class King extends StatsActor {
     dialog?: Dialog;
     constructor(game: Game, x: number, y: number);
-    onBump(player: Player): void;
+    onBump(player: Player): boolean;
     takeDamage(attacker: StatsActor, damage: number): void;
 }

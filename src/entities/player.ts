@@ -33,6 +33,11 @@ export class Player extends StatsActor {
     this.keys = new Array(1000);
   }
 
+  takeDamage(attacker: StatsActor, damage: number) {
+    this.game.stopAutoWalk();
+    super.takeDamage(attacker, damage);
+  }
+
   onDeath() {
     this.game.log('You died!');
   }
@@ -45,7 +50,6 @@ export class Player extends StatsActor {
     while (this.xp >= this.maxXp) {
       this.level++;
       this.maxHp += 2;
-      this.hp = this.maxHp;
       this.xp = 0;
       this.maxXp = this.nextMaxXp(this.maxXp);
       this.remainingAbilityPoints += 2;

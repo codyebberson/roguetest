@@ -15,5 +15,6 @@ export class Key extends Item {
     player.keys[this.keyId] = true;
     player.moveTo(this.x, this.y);
     this.game.entities.remove(this);
+    return true;
   }
 }

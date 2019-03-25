@@ -119,6 +119,7 @@ export class StatsActor extends Actor {
     } else {
       player.attack(this, player.getDamage());
     }
+    return true;
   }
 
   onTalk(player: Player) {}
