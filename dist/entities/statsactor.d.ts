@@ -1,9 +1,9 @@
 import { Actor, ArrayList, Sprite } from 'wglt';
 import { Buff } from '../buffs/buff';
-import { Equipment, EquipmentSlot } from '../equipment/equipment';
 import { Game } from '../game';
-import { Weapon } from '../equipment/weapon';
 import { Player } from './player';
+import { Equipment } from '../equipment/equipment';
+import { EquipmentSlot } from '../equipment/equipmentslot';
 export declare enum Sentiment {
     HOSTILE = -1,
     NEUTRAL = 0,
@@ -29,7 +29,7 @@ export declare class StatsActor extends Actor {
     readonly intelligenceModifier: number;
     private calculateModifier;
     getEquipment(slot: EquipmentSlot): Equipment | undefined;
-    readonly mainHandWeapon: Weapon | undefined;
+    readonly mainHandWeapon: Equipment | undefined;
     getDamage(): number;
     buffDamage(damage: number): number;
     takeDamage(attacker: StatsActor, damage: number): void;

@@ -11,8 +11,8 @@ const TOOLTIPS = [
 ];
 
 export class HealthPotion extends Item {
-  constructor(game: Game, x: number, y: number) {
-    super(game, x, y, 'health potion', SPRITE, false);
+  constructor(game: Game, x?: number, y?: number) {
+    super(game, x || 0, y || 0, 'health potion', SPRITE, false);
     this.tooltipMessages = TOOLTIPS;
   }
 

@@ -1,24 +1,23 @@
-import { Game, Item, Sprite } from 'wglt';
+import { Item } from 'wglt';
 import { Player } from '../entities/player';
-export declare enum EquipmentSlot {
-    HEAD = 0,
-    NECK = 1,
-    BACK = 2,
-    CHEST = 3,
-    HANDS = 4,
-    LEGS = 5,
-    FEET = 6,
-    RING = 7,
-    MAINHAND = 8,
-    OFFHAND = 9
-}
-export declare abstract class Equipment extends Item {
+import { EquipmentBuilder } from './equipmentbuilder';
+import { EquipmentSlot } from './equipmentslot';
+import { EquipmentMaterial } from './equipmentmaterial';
+import { EquipmentQuality } from './equipmentquality';
+export declare class Equipment extends Item {
     readonly slot: EquipmentSlot;
-    bonusArmor: number;
-    bonusStrength: number;
-    bonusDexterity: number;
-    bonusConstitution: number;
-    bonusIntelligence: number;
-    constructor(game: Game, x: number, y: number, name: string, sprite: Sprite, slot: EquipmentSlot);
+    readonly material: EquipmentMaterial;
+    readonly quality: EquipmentQuality;
+    readonly bonusArmor: number;
+    readonly bonusStrength: number;
+    readonly bonusDexterity: number;
+    readonly bonusConstitution: number;
+    readonly bonusIntelligence: number;
+    readonly minDamage: number;
+    readonly maxDamage: number;
+    readonly ranged: boolean;
+    readonly finesse: boolean;
+    constructor(builder: EquipmentBuilder);
+    private getColor;
     onUse(player: Player): boolean;
 }

@@ -580,10 +580,10 @@ export class MapGenerator {
 
       // Create a door to boss room
       if (center.y > prev.y) {
-        map.setTile(0, center.x, bossRoom.y1, TILE_CLOSED_DOOR, false, true);
+        map.setTile(0, center.x, bossRoom.y1, TILE_CLOSED_DOOR, true);
         game.entities.add(new BossDoor(game, center.x, bossRoom.y1, boss));
       } else {
-        map.setTile(0, center.x, bossRoom.y2, TILE_CLOSED_DOOR, false, true);
+        map.setTile(0, center.x, bossRoom.y2, TILE_CLOSED_DOOR, true);
         game.entities.add(new BossDoor(game, center.x, bossRoom.y2, boss));
       }
 
@@ -599,10 +599,10 @@ export class MapGenerator {
 
       // Create door to stairs room
       if (center.x > stairsLoc.x) {
-        map.setTile(0, bossRoom.x1, center.y, TILE_CLOSED_DOOR, false, true);
+        map.setTile(0, bossRoom.x1, center.y, TILE_CLOSED_DOOR, true);
         game.entities.add(new LockedDoor(game, bossRoom.x1, center.y, keyId));
       } else {
-        map.setTile(0, bossRoom.x2, center.y, TILE_CLOSED_DOOR, false, true);
+        map.setTile(0, bossRoom.x2, center.y, TILE_CLOSED_DOOR, true);
         game.entities.add(new LockedDoor(game, bossRoom.x2, center.y, keyId));
       }
     }

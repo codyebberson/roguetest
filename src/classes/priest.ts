@@ -3,14 +3,15 @@ import {Colors, Message, Sprite, Talent} from 'wglt';
 import {FireballAbility} from '../abilities/fireball';
 import {FlashHealAbility} from '../abilities/flashheal';
 import {LightningAbility} from '../abilities/lightning';
+import { Game } from '../game';
 import {Player} from '../entities/player';
-import {AcolytesPants} from '../equipment/acolytespants';
-import {AcolytesRobe} from '../equipment/acolytesrobe';
-import {AcolytesShoes} from '../equipment/acolytesshoes';
-import {BentStaff} from '../equipment/bentstaff';
-
 import {CharacterClass} from './characterclass';
 import { BubbleAbility } from '../abilities/bubble';
+import { PANTS_SPRITE_1, STAFF_SPRITE_1, BOOTS_SPRITE_1, ROBE_SPRITE_1 } from '../equipment/equipmentsprites';
+import { EquipmentBuilder } from '../equipment/equipmentbuilder';
+import { EquipmentSlot } from '../equipment/equipmentslot';
+import { EquipmentQuality } from '../equipment/equipmentquality';
+import { EquipmentMaterial } from '../equipment/equipmentmaterial';
 
 const NAME = 'Priest';
 const ICON = new Sprite(0, 700, 24, 26, undefined, undefined, undefined, 0xFFFFFFFF);
@@ -27,7 +28,7 @@ export class Priest extends CharacterClass {
   }
 
   initPlayer(player: Player) {
-    const game = player.game;
+    const game = player.game as Game;
 
     player.class = this;
     player.sprite = SPRITE;
@@ -35,10 +36,46 @@ export class Priest extends CharacterClass {
     player.talents.add(new Talent(player, new LightningAbility()));
     player.talents.add(new Talent(player, new FlashHealAbility()));
     player.talents.add(new Talent(player, new BubbleAbility()));
-    player.equipment.add(new AcolytesRobe(game));
-    player.equipment.add(new AcolytesPants(game));
-    player.equipment.add(new AcolytesShoes(game));
-    player.equipment.add(new BentStaff(game));
+
+    player.equipment.add(new EquipmentBuilder(game)
+        .withName('Neophyte\'s Robe')
+        .withItemLevel(1)
+        .withSlot(EquipmentSlot.CHEST)
+        .withQuality(EquipmentQuality.COMMON)
+        .withMaterial(EquipmentMaterial.CLOTH)
+        .withSprite(ROBE_SPRITE_1, 0xC0A080FF)
+        .withArmor(2)
+        .build());
+
+    player.equipment.add(new EquipmentBuilder(game)
+        .withName('Neophyte\'s Pants')
+        .withItemLevel(1)
+        .withSlot(EquipmentSlot.LEGS)
+        .withQuality(EquipmentQuality.COMMON)
+        .withMaterial(EquipmentMaterial.CLOTH)
+        .withSprite(PANTS_SPRITE_1, 0xC0A080FF)
+        .withArmor(2)
+        .build());
+
+    player.equipment.add(new EquipmentBuilder(game)
+        .withName('Neophyte\'s Shoes')
+        .withItemLevel(1)
+        .withSlot(EquipmentSlot.FEET)
+        .withQuality(EquipmentQuality.COMMON)
+        .withMaterial(EquipmentMaterial.CLOTH)
+        .withSprite(BOOTS_SPRITE_1, 0xC0A080FF)
+        .withArmor(1)
+        .build());
+
+    player.equipment.add(new EquipmentBuilder(game)
+        .withName('Bent Staff')
+        .withItemLevel(1)
+        .withSlot(EquipmentSlot.MAINHAND)
+        .withQuality(EquipmentQuality.COMMON)
+        .withDamage(1, 2)
+        .withSprite(STAFF_SPRITE_1, 0xC0A080FF)
+        .build());
+
     player.intelligence += 5;
   }
 }

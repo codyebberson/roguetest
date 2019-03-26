@@ -1,10 +1,10 @@
 import {Actor, ArrayList, Sprite} from 'wglt';
 
 import {Buff} from '../buffs/buff';
-import {Equipment, EquipmentSlot} from '../equipment/equipment';
 import {Game} from '../game';
-import { Weapon } from '../equipment/weapon';
 import { Player } from './player';
+import { Equipment } from '../equipment/equipment';
+import { EquipmentSlot } from '../equipment/equipmentslot';
 
 export enum Sentiment {
   HOSTILE = -1,
@@ -75,7 +75,7 @@ export class StatsActor extends Actor {
   }
 
   get mainHandWeapon() {
-    return this.getEquipment(EquipmentSlot.MAINHAND) as Weapon | undefined;
+    return this.getEquipment(EquipmentSlot.MAINHAND);
   }
 
   getDamage() {

@@ -1,7 +1,8 @@
 import {ButtonSlot, Colors, Dialog, ItemButton, Rect} from 'wglt';
 
 import {Player} from '../entities/player';
-import {Equipment, EquipmentSlot} from '../equipment/equipment';
+import {Equipment} from '../equipment/equipment';
+import { EquipmentSlot } from '../equipment/equipmentslot';
 
 const MARGIN = 4;
 const BUTTON_SPACING = 2;
