@@ -37,6 +37,7 @@ export declare class StatsActor extends Actor {
     onTalk(player: Player): void;
     onAttack(target: Actor, damage: number): void;
     startTurn(): void;
+    equipItem(item: Equipment): void;
     private addItem;
     private removeItem;
     recalculateMaxHp(): void;

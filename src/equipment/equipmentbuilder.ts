@@ -4,7 +4,7 @@ import { EquipmentSlot } from "./equipmentslot";
 import { EquipmentMaterial } from "./equipmentmaterial";
 import { EquipmentQuality } from "./equipmentquality";
 import { Equipment } from "./equipment";
-import { HELM_SPRITE_1, CLOTH_HELM_SPRITES, LEATHER_HELM_SPRITES, PLATE_HELM_SPRITES, ROBE_SPRITES, SHIRT_SPRITES, GLOVES_SPRITES, PANTS_SPRITES, BOOTS_SPRITES, NECKLACE_SPRITE_1, CLOAK_SPRITES, RING_SPRITES, SWORD_SPRITES, AXE_SPRITE_1, MACE_SPRITES, DAGGER_SPRITE_1, BOW_SPRITE_1, CROSSBOW_SPRITE_1, STAFF_SPRITES } from "./equipmentsprites";
+import { HELM_SPRITE_1, CLOTH_HELM_SPRITES, LEATHER_HELM_SPRITES, PLATE_HELM_SPRITES, ROBE_SPRITES, SHIRT_SPRITES, GLOVES_SPRITES, PANTS_SPRITES, BOOTS_SPRITES, NECKLACE_SPRITE_1, CLOAK_SPRITES, RING_SPRITES, SWORD_SPRITES, AXE_SPRITE_1, MACE_SPRITES, DAGGER_SPRITE_1, BOW_SPRITE_1, CROSSBOW_SPRITE_1, STAFF_SPRITES, SHIELD_SPRITES, BOOK_SPRITE, LANTERN_SPRITE, ORB_SPRITE } from "./equipmentsprites";
 
 const DEFAULT_SPRITE = new Sprite(160, 240, 16, 24, 1, false, undefined, 0x808080FF);
 
@@ -27,7 +27,7 @@ export class EquipmentBuilder {
   maxDamage: number = 2;
   ranged: boolean = false;
   finesse: boolean = false;
-  statValue: number = 0;
+  statMultiplier: number = 1.0;
 
   constructor(game: Game) {
     this.game = game;
@@ -103,7 +103,6 @@ export class EquipmentBuilder {
 
   withRandomDrop(itemLevel: number) {
     this.itemLevel = itemLevel;
-    this.statValue = itemLevel;
     this.chooseQuality();
     this.chooseSlot();
     this.chooseFlair();
@@ -115,21 +114,22 @@ export class EquipmentBuilder {
     const quality = rng.nextRange(0, 100);
     if (quality === 99) {
       this.quality = EquipmentQuality.LEGENDARY;
-      this.statValue += 5;
-    } else if (quality > 95) {
+      this.statMultiplier = 1.75;
+    } else if (quality > 97) {
       this.quality = EquipmentQuality.EPIC;
-      this.statValue += 4;
+      this.statMultiplier = 1.5;
     } else if (quality > 90) {
       this.quality = EquipmentQuality.RARE;
-      this.statValue += 3;
-    } else if (quality > 60) {
+      this.statMultiplier = 1.25;
+    } else if (quality > 75) {
       this.quality = EquipmentQuality.UNCOMMON;
-      this.statValue += 2;
-    } else if (quality > 30) {
+      this.statMultiplier = 1.1;
+    } else if (quality > 40) {
       this.quality = EquipmentQuality.COMMON;
-      this.statValue += 1;
+      this.statMultiplier = 1.0;
     } else {
       this.quality = EquipmentQuality.POOR;
+      this.statMultiplier = 0.75;
     }
   }
 
@@ -174,19 +174,19 @@ export class EquipmentBuilder {
       case 0:
         this.material = EquipmentMaterial.CLOTH;
         this.name = this.chooseValue('Cowl', 'Crown', 'Hood', 'Wizard Hat');
-        this.armor = this.statValue;
+        this.armor = Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(CLOTH_HELM_SPRITES);
         break;
       case 1:
         this.material = EquipmentMaterial.LEATHER;
         this.name = this.chooseValue('Hood', 'Cover', 'Facemask', 'Mask');
-        this.armor = this.statValue * 2;
+        this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(LEATHER_HELM_SPRITES);
         break;
       case 2:
         this.material = EquipmentMaterial.PLATE;
         this.name = this.chooseValue('Helm', 'Helmet', 'Headguard', 'Faceguard', 'Greathelm');
-        this.armor = this.statValue * 3;
+        this.armor = Math.ceil(4.5 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(PLATE_HELM_SPRITES);
         break;
     }
@@ -202,7 +202,7 @@ export class EquipmentBuilder {
     this.slot = EquipmentSlot.BACK;
     this.name = this.chooseValue('Cloak');
     this.sprite = this.chooseArrayValue(CLOAK_SPRITES);
-    this.armor = this.statValue;
+    this.armor = Math.ceil(this.itemLevel * this.statMultiplier);
   }
 
   private chooseChest() {
@@ -211,19 +211,19 @@ export class EquipmentBuilder {
       case 0:
         this.material = EquipmentMaterial.CLOTH;
         this.name = this.chooseValue('Robe', 'Tunic');
-        this.armor = this.statValue;
+        this.armor = Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(ROBE_SPRITES);
         break;
       case 1:
         this.material = EquipmentMaterial.LEATHER;
         this.name = this.chooseValue('Vest', 'Chestpiece', 'Tunic');
-        this.armor = this.statValue * 2;
+        this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(SHIRT_SPRITES);
         break;
       case 2:
         this.material = EquipmentMaterial.PLATE;
         this.name = this.chooseValue('Breastplate', 'Chestguard');
-        this.armor = this.statValue * 3;
+        this.armor = Math.ceil(4.5 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(SHIRT_SPRITES);
         break;
     }
@@ -235,19 +235,19 @@ export class EquipmentBuilder {
       case 0:
         this.material = EquipmentMaterial.CLOTH;
         this.name = this.chooseValue('Gloves', 'Wraps');
-        this.armor = this.statValue;
+        this.armor = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(GLOVES_SPRITES);
         break;
       case 1:
         this.material = EquipmentMaterial.LEATHER;
         this.name = this.chooseValue('Gloves', 'Gauntlets');
-        this.armor = this.statValue * 2;
+        this.armor = Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(GLOVES_SPRITES);
         break;
       case 2:
         this.material = EquipmentMaterial.PLATE;
         this.name = this.chooseValue('Gloves', 'Gauntlets');
-        this.armor = this.statValue * 3;
+        this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(GLOVES_SPRITES);
         break;
     }
@@ -259,19 +259,19 @@ export class EquipmentBuilder {
       case 0:
         this.material = EquipmentMaterial.CLOTH;
         this.name = this.chooseValue('Leggings', 'Pants');
-        this.armor = this.statValue;
+        this.armor = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(PANTS_SPRITES);
         break;
       case 1:
         this.material = EquipmentMaterial.LEATHER;
         this.name = this.chooseValue('Legguards', 'Pants');
-        this.armor = this.statValue * 2;
+        this.armor = Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(PANTS_SPRITES);
         break;
       case 2:
         this.material = EquipmentMaterial.PLATE;
         this.name = this.chooseValue('Legplates', 'Legguards');
-        this.armor = this.statValue * 3;
+        this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(PANTS_SPRITES);
         break;
     }
@@ -283,19 +283,19 @@ export class EquipmentBuilder {
       case 0:
         this.material = EquipmentMaterial.CLOTH;
         this.name = this.chooseValue('Boots', 'Sandals', 'Shoes', 'Slippers', 'Footpads');
-        this.armor = this.statValue;
+        this.armor = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(BOOTS_SPRITES);
         break;
       case 1:
         this.material = EquipmentMaterial.LEATHER;
         this.name = this.chooseValue('Boots', 'Shoes', 'Treads');
-        this.armor = this.statValue * 2;
+        this.armor = Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(BOOTS_SPRITES);
         break;
       case 2:
         this.material = EquipmentMaterial.PLATE;
         this.name = this.chooseValue('Boots', 'Greaves', 'Sabatons');
-        this.armor = this.statValue * 3;
+        this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(BOOTS_SPRITES);
         break;
     }
@@ -309,6 +309,8 @@ export class EquipmentBuilder {
 
   private chooseMainHand() {
     this.slot = EquipmentSlot.MAINHAND;
+    this.minDamage = Math.floor(1.0 * this.itemLevel * this.statMultiplier);
+    this.maxDamage = Math.ceil(1.2 * this.itemLevel * this.statMultiplier);
     switch (this.game.rng.nextRange(0, 7)) {
       case 0:
         this.name = this.chooseValue('Sword', 'Blade', 'Slicer', 'Sabre');
@@ -325,14 +327,19 @@ export class EquipmentBuilder {
       case 3:
         this.name = this.chooseValue('Dagger', 'Knife', 'Edge');
         this.sprite = DAGGER_SPRITE_1;
+        this.finesse = true;
         break;
       case 4:
         this.name = this.chooseValue('Bow', 'Shortbow', 'Longbow', 'Recurve', 'Greatbow');
         this.sprite = BOW_SPRITE_1;
+        this.finesse = true;
+        this.ranged = true;
         break;
       case 5:
         this.name = this.chooseValue('Crossbow', 'Bolt-Thrower', 'Speargun', 'Repeater');
         this.sprite = CROSSBOW_SPRITE_1;
+        this.finesse = true;
+        this.ranged = true;
         break;
       case 6:
         this.name = this.chooseValue('Staff', 'Spellstaff');
@@ -343,13 +350,27 @@ export class EquipmentBuilder {
 
   private chooseOffHand() {
     this.slot = EquipmentSlot.OFFHAND;
-    switch (this.game.rng.nextRange(0, 2)) {
-      case 0:
-        this.name = this.chooseValue('Shield', 'Shield Wall', 'Bulwark', 'Barrier');
-        break;
-      case 1:
-        this.name = this.chooseValue('Lantern', 'Globe');
-        break;
+    const dice = this.game.rng.nextRange(0, 10);
+    if (dice === 9) {
+      this.name = 'Lantern';
+      this.sprite = LANTERN_SPRITE;
+      this.intelligence = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
+
+    } else if (dice === 8) {
+      this.name = 'Orb';
+      this.sprite = ORB_SPRITE;
+      this.intelligence = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
+
+    } else if (dice >= 5) {
+      this.name = this.chooseValue('Spellbook', 'Tome');
+      this.sprite = BOOK_SPRITE;
+      this.intelligence = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
+
+    } else {
+      this.name = this.chooseValue('Shield', 'Shield Wall', 'Bulwark', 'Barrier');
+      this.sprite = this.chooseArrayValue(SHIELD_SPRITES);
+      this.armor = Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
+      this.constitution = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
     }
   }
 
@@ -390,38 +411,38 @@ export class EquipmentBuilder {
     switch (this.game.rng.nextRange(0, 6)) {
       case 0:
         this.name += ' of the Tiger';
-        this.strength += this.statValue;
-        this.dexterity += this.statValue;
+        this.strength += Math.ceil(this.itemLevel * this.statMultiplier);
+        this.dexterity += Math.ceil(this.itemLevel * this.statMultiplier);
         this.withColor(Colors.ORANGE);
         break;
       case 1:
         this.name += ' of the Bear';
-        this.strength += this.statValue;
-        this.constitution += this.statValue;
+        this.strength += Math.ceil(this.itemLevel * this.statMultiplier);
+        this.constitution += Math.ceil(this.itemLevel * this.statMultiplier);
         this.withColor(Colors.BROWN);
         break;
       case 2:
         this.name += ' of the Gorilla';
-        this.strength += this.statValue;
-        this.intelligence += this.statValue;
+        this.strength += Math.ceil(this.itemLevel * this.statMultiplier);
+        this.intelligence += Math.ceil(this.itemLevel * this.statMultiplier);
         this.withColor(Colors.LIGHT_CYAN);
         break;
       case 3:
         this.name += ' of the Monkey';
-        this.dexterity += this.statValue;
-        this.constitution += this.statValue;
+        this.dexterity += Math.ceil(this.itemLevel * this.statMultiplier);
+        this.constitution += Math.ceil(this.itemLevel * this.statMultiplier);
         this.withColor(Colors.LIGHT_GREEN);
         break;
       case 4:
         this.name += ' of the Falcon';
-        this.dexterity += this.statValue;
-        this.intelligence += this.statValue;
+        this.dexterity += Math.ceil(this.itemLevel * this.statMultiplier);
+        this.intelligence += Math.ceil(this.itemLevel * this.statMultiplier);
         this.withColor(Colors.LIGHT_RED);
         break;
       case 5:
         this.name += ' of the Eagle';
-        this.constitution += this.statValue;
-        this.intelligence += this.statValue;
+        this.constitution += Math.ceil(this.itemLevel * this.statMultiplier);
+        this.intelligence += Math.ceil(this.itemLevel * this.statMultiplier);
         this.withColor(Colors.LIGHT_BLUE);
         break;
     }
@@ -431,27 +452,27 @@ export class EquipmentBuilder {
     switch (this.game.rng.nextRange(0, 4)) {
       case 0:
         this.name = 'Elven ' + this.name;
-        this.dexterity += this.statValue;
-        this.constitution += this.statValue;
-        this.intelligence += this.statValue;
+        this.dexterity += Math.ceil(this.itemLevel * this.statMultiplier);
+        this.constitution += Math.ceil(this.itemLevel * this.statMultiplier);
+        this.intelligence += Math.ceil(this.itemLevel * this.statMultiplier);
         this.withColor(Colors.LIGHT_MAGENTA);
         break;
       case 1:
         this.name = 'Obsidian ' + this.name;
-        this.strength += 2 * this.statValue;
-        this.constitution += 2 * this.statValue;
+        this.strength += Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
+        this.constitution += Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
         this.withColor(Colors.DARK_MAGENTA);
         break;
       case 2:
         this.name = 'Saphiron ' + this.name;
-        this.dexterity += 2 * this.statValue;
-        this.constitution += 2 * this.statValue;
+        this.dexterity += Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
+        this.constitution += Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
         this.withColor(Colors.DARK_BLUE);
         break;
       case 3:
         this.name = 'Scarlet ' + this.name;
-        this.intelligence += 2 * this.statValue;
-        this.constitution += 2 * this.statValue;
+        this.intelligence += Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
+        this.constitution += Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
         this.withColor(Colors.DARK_RED);
         break;
     }
@@ -459,19 +480,19 @@ export class EquipmentBuilder {
 
   private chooseEpicFlair() {
     this.name = 'Cody\'s ' + this.name;
-    this.dexterity += 3 * this.statValue;
-    this.strength += 3 * this.statValue;
-    this.intelligence += 3 * this.statValue;
-    this.constitution += 3 * this.statValue;
+    this.dexterity += Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
+    this.strength += Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
+    this.intelligence += Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
+    this.constitution += Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
     this.withColor(Colors.LIGHT_BLUE);
   }
 
   private chooseLegendaryFlair() {
     this.name = 'Cody\'s ' + this.name;
-    this.dexterity += 4 * this.statValue;
-    this.strength += 4 * this.statValue;
-    this.intelligence += 4 * this.statValue;
-    this.constitution += 4 * this.statValue;
+    this.dexterity += Math.ceil(2.5 * this.itemLevel * this.statMultiplier);
+    this.strength += Math.ceil(2.5 * this.itemLevel * this.statMultiplier);
+    this.intelligence += Math.ceil(2.5 * this.itemLevel * this.statMultiplier);
+    this.constitution += Math.ceil(2.5 * this.itemLevel * this.statMultiplier);
     this.withColor(Colors.LIGHT_BLUE);
   }
 

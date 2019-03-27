@@ -167,15 +167,15 @@ export const PLATE_HELM_SPRITES = [
 ];
 
 export const GLOVES_SPRITE_1 = new Sprite(608, 312, W, H, 1, false, undefined, C);
-export const GLOVES_SPRITE_2 = new Sprite(608, 312, W, H, 1, false, undefined, C);
-export const GLOVES_SPRITE_3 = new Sprite(608, 312, W, H, 1, false, undefined, C);
-export const GLOVES_SPRITE_4 = new Sprite(608, 312, W, H, 1, false, undefined, C);
-export const GLOVES_SPRITE_5 = new Sprite(608, 312, W, H, 1, false, undefined, C);
-export const GLOVES_SPRITE_6 = new Sprite(608, 312, W, H, 1, false, undefined, C);
-export const GLOVES_SPRITE_7 = new Sprite(608, 312, W, H, 1, false, undefined, C);
-export const GLOVES_SPRITE_8 = new Sprite(608, 312, W, H, 1, false, undefined, C);
-export const GLOVES_SPRITE_9 = new Sprite(608, 312, W, H, 1, false, undefined, C);
-export const GLOVES_SPRITE_10 = new Sprite(608, 312, W, H, 1, false, undefined, C);
+export const GLOVES_SPRITE_2 = new Sprite(624, 312, W, H, 1, false, undefined, C);
+export const GLOVES_SPRITE_3 = new Sprite(640, 312, W, H, 1, false, undefined, C);
+export const GLOVES_SPRITE_4 = new Sprite(656, 312, W, H, 1, false, undefined, C);
+export const GLOVES_SPRITE_5 = new Sprite(672, 312, W, H, 1, false, undefined, C);
+export const GLOVES_SPRITE_6 = new Sprite(688, 312, W, H, 1, false, undefined, C);
+export const GLOVES_SPRITE_7 = new Sprite(704, 312, W, H, 1, false, undefined, C);
+export const GLOVES_SPRITE_8 = new Sprite(720, 312, W, H, 1, false, undefined, C);
+export const GLOVES_SPRITE_9 = new Sprite(736, 312, W, H, 1, false, undefined, C);
+export const GLOVES_SPRITE_10 = new Sprite(752, 312, W, H, 1, false, undefined, C);
 export const GLOVES_SPRITES = [
   GLOVES_SPRITE_1,
   GLOVES_SPRITE_2,
@@ -212,6 +212,41 @@ export const BOOTS_SPRITES = [
 ];
 
 export const SHIELD_SPRITE_1 = new Sprite(688, 144, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_2 = new Sprite(608, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_3 = new Sprite(624, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_4 = new Sprite(640, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_5 = new Sprite(656, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_6 = new Sprite(672, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_7 = new Sprite(688, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_8 = new Sprite(704, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_9 = new Sprite(720, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_10 = new Sprite(736, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_11 = new Sprite(752, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_12 = new Sprite(768, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_13 = new Sprite(784, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_14 = new Sprite(800, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_15 = new Sprite(816, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_16 = new Sprite(832, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITE_17 = new Sprite(848, 216, W, H, 1, false, undefined, C);
+export const SHIELD_SPRITES = [
+  SHIELD_SPRITE_1,
+  SHIELD_SPRITE_2,
+  SHIELD_SPRITE_3,
+  SHIELD_SPRITE_4,
+  SHIELD_SPRITE_5,
+  SHIELD_SPRITE_6,
+  SHIELD_SPRITE_7,
+  SHIELD_SPRITE_8,
+  SHIELD_SPRITE_9,
+  SHIELD_SPRITE_10,
+  SHIELD_SPRITE_11,
+  SHIELD_SPRITE_12,
+  SHIELD_SPRITE_13,
+  SHIELD_SPRITE_14,
+  SHIELD_SPRITE_15,
+  SHIELD_SPRITE_16,
+  SHIELD_SPRITE_17,
+];
 
 export const NECKLACE_SPRITE_1 = new Sprite(768, 144, W, H, 1, false, undefined, C);
 
@@ -238,3 +273,8 @@ export const CLOAK_SPRITES = [
   CLOAK_SPRITE_6,
   CLOAK_SPRITE_7,
 ];
+
+export const LANTERN_SPRITE = new Sprite(880, 168, W, H, 1, false, undefined, C);
+export const ORB_SPRITE = new Sprite(848, 168, W, H, 1, false, undefined, C);
+export const CLOCK_SPRITE = new Sprite(880, 144, W, H, 1, false, undefined, C);
+export const BOOK_SPRITE = new Sprite(816, 168, W, H, 1, false, undefined, C);

@@ -564,7 +564,7 @@ export class MapGenerator {
       this.createVTunnel(map, prev.y, center.y, center.x);
 
       // Create boss
-      const bossLevel = dungeon.level * 3 + 5;
+      const bossLevel = dungeon.level * 3 + 2;
       const dice = rng.nextRange(0, 3);
       let boss = undefined;
       if (dice === 0) {

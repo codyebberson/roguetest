@@ -63,24 +63,16 @@ export class Equipment extends Item {
     }
   }
 
+  isStackable() {
+    return false;
+  }
+
   onPickup(player: Player) {
     this.game.log(player.name + ' picked up a ' + this.name, this.getColor(this.quality));
   }
 
   onUse(player: Player) {
-    const equipped = player.getEquipment(this.slot);
-
-    if (equipped) {
-      player.equipment.remove(equipped);
-    }
-
-    player.inventory.remove(this);
-    player.equipment.add(this);
-
-    if (equipped) {
-      player.inventory.add(equipped);
-    }
-
+    player.equipItem(this);
     return false;
   }
 

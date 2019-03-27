@@ -91,7 +91,9 @@ export abstract class Monster extends StatsActor {
     if (this.game.rng.nextRange(0, 6) <= 2) {
       result.push(new HealthPotion(game, this.x, this.y));
     }
-    result.push(new EquipmentBuilder(game).withRandomDrop(this.level).build());
+    if (this.game.rng.nextRange(0, 6) <= 2) {
+      result.push(new EquipmentBuilder(game).withRandomDrop(this.level).build());
+    }
     return result;
   }
 }

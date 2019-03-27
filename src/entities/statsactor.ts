@@ -145,6 +145,27 @@ export class StatsActor extends Actor {
     }
   }
 
+  equipItem(item: Equipment) {
+    const equipped = this.getEquipment(item.slot);
+    const oldHp = this.hp;
+
+    if (equipped) {
+      this.equipment.remove(equipped);
+    }
+
+    this.inventory.remove(item);
+    this.equipment.add(item);
+
+    if (equipped) {
+      this.inventory.add(equipped);
+    }
+
+    // Have to manually restore HP
+    // When removing equipment, constitution can drop, which can drop max HP
+    // Make sure the player keeps their HP
+    this.hp = Math.min(oldHp, this.maxHp);
+  }
+
   private addItem(item: Equipment) {
     this.armor += item.armor;
     this.constitution += item.constitution;

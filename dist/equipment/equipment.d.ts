@@ -20,6 +20,7 @@ export declare class Equipment extends Item {
     readonly finesse: boolean;
     constructor(builder: EquipmentBuilder);
     private getColor;
+    isStackable(): boolean;
     onPickup(player: Player): void;
     onUse(player: Player): boolean;
     onUpdateTooltip(): void;
