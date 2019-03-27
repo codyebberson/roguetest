@@ -62,9 +62,8 @@ export class RedDragon extends Monster {
   cooldown = 0;
 
   constructor(game: Game, x: number, y: number, level: number, room: Rect) {
-    super(game, x, y, 'Dragon', SPRITE);
+    super(game, x, y, 'Dragon', SPRITE, level);
     this.room = room;
-    this.level = level;
     this.maxHp = 10 * level;
     this.hp = this.maxHp;
     this.ai = new RedDragonAI(this);

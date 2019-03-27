@@ -23,7 +23,7 @@ class SharkAI extends AI {
 
 export class Shark extends Monster {
   constructor(game: Game, x: number, y: number) {
-    super(game, x, y, 'Shark', SPRITE);
+    super(game, x, y, 'Shark', SPRITE, 1);
     this.ai = new SharkAI(this);
   }
 }

@@ -1,5 +1,5 @@
 import * as wglt from 'wglt';
-import {Actor, App, Button, Colors, Entity, FadeInAnimation, FadeOutAnimation, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog, Vec2} from 'wglt';
+import {Actor, App, Button, Colors, Entity, FadeInAnimation, FadeOutAnimation, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog, Vec2, Dialog} from 'wglt';
 
 import {CatEscapeAnimation} from './animations/catescapeanimation';
 import {Cat} from './entities/cat';
@@ -13,6 +13,8 @@ import { LevelUpDialog } from './gui/levelupdialog';
 import { EntityFrames } from './gui/entityframes';
 import { Hearthstone } from './items/hearthstone';
 import { Gold } from './items/gold';
+import { HealthPotion } from './items/healthpotion';
+import { Scroll } from './items/scroll';
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;
@@ -22,6 +24,9 @@ const TARGET_SPRITE = new Sprite(16, 40, SPRITE_WIDTH, SPRITE_HEIGHT);
 export class Game extends wglt.Game {
   private readonly mapGen: MapGenerator;
   cat?: Cat;
+  inventoryDialog: ItemContainerDialog;
+  talentsDialog: TalentsDialog;
+  characterDialog: CharacterDialog;
   levelUpDialog: LevelUpDialog;
 
   constructor(app: App) {
@@ -60,9 +65,8 @@ export class Game extends wglt.Game {
         new Sprite(832, 168, 16, 24, 1, true, 30, 0xe08020ff),
         undefined,
         () => {
-          inventoryDialog.visible = !inventoryDialog.visible;
-          talentsDialog.visible = false;
-          characterDialog.visible = false;
+          this.hideAllDialogs();
+          this.inventoryDialog.visible = true;
         });
     inventoryButton.tooltipMessages = [
       new Message('Traveler\'s Backpack', Colors.GREEN),
@@ -77,9 +81,8 @@ export class Game extends wglt.Game {
         new Sprite(640, 240, 16, 24, undefined, undefined, undefined, 0xffcf5cff),
         undefined,
         () => {
-          characterDialog.visible = !characterDialog.visible;
-          inventoryDialog.visible = false;
-          talentsDialog.visible = false;
+          this.hideAllDialogs();
+          this.characterDialog.visible = true;
         });
     characterButton.tooltipMessages = [
       new Message('Character', Colors.WHITE),
@@ -92,9 +95,8 @@ export class Game extends wglt.Game {
         new Rect(0, 0, 20, 28),
         new Sprite(656, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE),
         undefined, () => {
-          talentsDialog.visible = !talentsDialog.visible;
-          inventoryDialog.visible = false;
-          characterDialog.visible = false;
+          this.hideAllDialogs();
+          this.talentsDialog.visible = true;
         });
     talentsButton.tooltipMessages = [
       new Message('Talents', Colors.WHITE),
@@ -113,7 +115,7 @@ export class Game extends wglt.Game {
     menuButton.tooltipMessages = [new Message('Main Menu', Colors.WHITE)];
     topPanel.menuSlot.add(menuButton);
 
-    const inventoryDialog = new ItemContainerDialog(
+    this.inventoryDialog = new ItemContainerDialog(
         new Rect(4, 38, 94, 126),
         [
           new Message('Traveler\'s Backpack', Colors.GREEN),
@@ -122,14 +124,14 @@ export class Game extends wglt.Game {
         ],
         16,
         player.inventory);
-    inventoryDialog.visible = false;
-    this.gui.add(inventoryDialog);
+    this.inventoryDialog.visible = false;
+    this.gui.add(this.inventoryDialog);
 
-    const characterDialog = new CharacterDialog(new Rect(4, 38, 120, 126), player);
-    characterDialog.visible = false;
-    this.gui.add(characterDialog);
+    this.characterDialog = new CharacterDialog(new Rect(4, 38, 120, 126), player);
+    this.characterDialog.visible = false;
+    this.gui.add(this.characterDialog);
 
-    const talentsDialog = new TalentsDialog(
+    this.talentsDialog = new TalentsDialog(
         new Rect(4, 38, 94, 126),
         [
           new Message('Talents', Colors.GREEN),
@@ -138,8 +140,8 @@ export class Game extends wglt.Game {
         ],
         16,
         player.talents);
-    talentsDialog.visible = false;
-    this.gui.add(talentsDialog);
+    this.talentsDialog.visible = false;
+    this.gui.add(this.talentsDialog);
 
     const levelUpDialog = new LevelUpDialog(new Rect(4, 38, 140, 126), player);
     levelUpDialog.visible = false;
@@ -148,8 +150,8 @@ export class Game extends wglt.Game {
 
     player.inventory.addListener({
       onAdd: (_, item) => {
-        if (item instanceof Hearthstone || item instanceof Gold) {
-          // Don't add hearthstone to shortcut bar
+        if (!(item instanceof HealthPotion) && !(item instanceof Scroll)) {
+          // Only add health potions and scrolls
           return;
         }
         bottomPanel.shortcutBar.addItem(player.inventory, item, true);
@@ -166,6 +168,12 @@ export class Game extends wglt.Game {
 
     // Generate the map
     this.mapGen.createMap();
+  }
+
+  hideAllDialogs() {
+    this.inventoryDialog.visible = false;
+    this.characterDialog.visible = false;
+    this.talentsDialog.visible = false;
   }
 
   warpToPoint(point: Vec2) {

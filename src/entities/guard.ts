@@ -77,13 +77,9 @@ class GuardAI extends AI {
 export class Guard extends Monster {
 
   constructor(game: Game, x: number, y: number, waypoints: Vec2[]) {
-    super(game, x, y, 'Guard', SPRITE);
+    super(game, x, y, 'Guard', SPRITE, 10);
     this.ai = new GuardAI(this, waypoints);
     this.seen = true;
-    this.level = 10;
-    this.strength = 10 + 2 * this.level;
-    this.maxHp = 10 + 2 * this.level;
-    this.hp = this.maxHp;
     this.sentiment = Sentiment.FRIENDLY;
   }
 }

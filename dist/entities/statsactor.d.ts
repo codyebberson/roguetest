@@ -39,5 +39,6 @@ export declare class StatsActor extends Actor {
     startTurn(): void;
     private addItem;
     private removeItem;
+    recalculateMaxHp(): void;
     draw(): void;
 }

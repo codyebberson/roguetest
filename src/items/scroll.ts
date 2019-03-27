@@ -1,4 +1,5 @@
-import {Ability, Actor, Colors, Game, Item, Sprite, TargetType} from 'wglt';
+import {Ability, Actor, Colors, Item, Sprite, TargetType} from 'wglt';
+import { Game } from '../game';
 
 const SPRITE = new Sprite(736, 168, 16, 24, 1, true, undefined, 0xF0F0E0FF);
 
@@ -16,6 +17,8 @@ export class Scroll extends Item {
   }
 
   onUse(user: Actor) {
+    (this.game as Game).hideAllDialogs();
+
     const ability = this.ability;
     if (ability.targetType === TargetType.SELF) {
       if (ability.cast(user)) {

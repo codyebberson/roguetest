@@ -1,6 +1,6 @@
-import {ButtonSlot, Colors, Keys, Panel, Rect} from 'wglt';
+import { ButtonSlot, Colors, Keys, Panel, Rect } from 'wglt';
 
-import {Player} from '../entities/player';
+import { Player } from '../entities/player';
 
 export class TopPanel extends Panel {
   readonly player: Player;
@@ -43,27 +43,37 @@ export class TopPanel extends Panel {
       return;
     }
 
+    const bo = this.player.game.blackoutRect;
+    if (!bo) {
+      return;
+    }
+
     const app = this.gui.app;
 
+    // Draw the overall top panel frame
     app.drawImage(0, 0, 32, 22, 16, 42, undefined, app.size.width, 42);
-    app.drawString('Oryx the Brave'.toUpperCase(), 1, 1, Colors.WHITE);
 
-    // Health
-    app.drawImage(2, 12, 128, 16, 12, 12);
-    app.drawString(this.player.hp.toString(), 16, 15);
+    // Draw the frame
+    const x = 2;
+    const y = 2;
+    const actor = this.player;
+    app.drawImage(x, y, 64, 48, 54, 18);
 
-    // Mana
-    app.drawImage(38, 12, 144, 16, 12, 12);
-    app.drawString('88', 52, 15);
+    // Draw the name
+    app.drawCenteredString('ORYX', x + 20, y + 1, Colors.WHITE);
 
-    // Energy
-    app.drawImage(74, 12, 160, 16, 12, 12);
-    app.drawString('88', 88, 15);
+    // Draw the health
+    const healthWidth = Math.round(38.0 * actor.hp / actor.maxHp);
+    app.drawImage(x + 1, y + 9, bo.x, bo.y, bo.width, bo.height, Colors.DARK_GREEN, healthWidth, 7);
+    app.drawCenteredString(actor.hp + '/' + actor.maxHp, x + 20, y + 9, Colors.WHITE);
+
+    // Draw the level
+    app.drawCenteredString(actor.level.toString(), x + 47, y + 5, Colors.WHITE);
 
     // Update button x-positions to right align
     // This will normally be a no-op
     for (let i = 0; i < this.children.length; i++) {
-      this.children.get(i).rect.x = app.size.width - 24 * (4 - i);
+      this.children.get(i).rect.x = app.size.width - 22 * (4 - i);
     }
 
     this.drawChildren();

@@ -36,6 +36,8 @@ export class StatsActor extends Actor {
     this.dexterity = 10;
     this.constitution = 10;
     this.intelligence = 10;
+    this.recalculateMaxHp();
+    this.hp = this.maxHp;
     this.showFrame = true;
     this.sentiment = Sentiment.NEUTRAL;
     this.equipment = new ArrayList<Equipment>();
@@ -144,19 +146,26 @@ export class StatsActor extends Actor {
   }
 
   private addItem(item: Equipment) {
-    this.armor += item.bonusArmor;
-    this.constitution += item.bonusConstitution;
-    this.dexterity += item.bonusDexterity;
-    this.strength += item.bonusStrength;
-    this.intelligence += item.bonusIntelligence;
+    this.armor += item.armor;
+    this.constitution += item.constitution;
+    this.dexterity += item.dexterity;
+    this.strength += item.strength;
+    this.intelligence += item.intelligence;
+    this.recalculateMaxHp();
   }
 
   private removeItem(item: Equipment) {
-    this.armor -= item.bonusArmor;
-    this.constitution -= item.bonusConstitution;
-    this.dexterity -= item.bonusDexterity;
-    this.strength -= item.bonusStrength;
-    this.intelligence -= item.bonusIntelligence;
+    this.armor -= item.armor;
+    this.constitution -= item.constitution;
+    this.dexterity -= item.dexterity;
+    this.strength -= item.strength;
+    this.intelligence -= item.intelligence;
+    this.recalculateMaxHp();
+  }
+
+  recalculateMaxHp() {
+    this.maxHp = 8 + 2 * this.level + this.constitutionModifier;
+    this.hp = Math.min(this.hp, this.maxHp);
   }
 
   draw() {

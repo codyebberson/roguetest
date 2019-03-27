@@ -26,12 +26,7 @@ class BatAI extends AI {
 
 export class Bat extends Monster {
   constructor(game: Game, x: number, y: number, level: number) {
-    super(game, x, y, 'Bat', SPRITE);
+    super(game, x, y, 'Bat', SPRITE, level);
     this.ai = new BatAI(this);
-    this.level = level;
-    this.strength = 10 + 2 * level;
-    this.maxHp = 10 + 2 * level;
-    this.hp = this.maxHp;
-    this.armor = 2 * level;
   }
 }

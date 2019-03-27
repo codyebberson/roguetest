@@ -38,7 +38,7 @@ export class EntityFrames extends Panel {
       }
 
       // Draw the frame
-      app.drawImage(2, y, 64, 48, 54, 18);
+      app.drawImage(x, y, 64, 48, 54, 18);
 
       // Draw the name
       let nameColor = Colors.YELLOW;

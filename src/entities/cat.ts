@@ -23,7 +23,7 @@ export class Cat extends Monster {
   destination?: Vec2;
 
   constructor(game: Game, x: number, y: number) {
-    super(game, x, y, 'Cat', SPRITE);
+    super(game, x, y, 'Cat', SPRITE, 1);
     this.ai = new CatAI(this);
   }
 }

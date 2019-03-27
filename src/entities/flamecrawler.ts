@@ -49,9 +49,8 @@ export class FlameCrawler extends Monster {
   readonly dy: number;
 
   constructor(game: Game, x: number, y: number, dx: number, dy: number) {
-    super(game, x, y, 'Flame Crawler', SPRITE);
+    super(game, x, y, 'Flame Crawler', SPRITE, 1);
     this.ai = new FlameCrawlerAI(this);
-    this.hp = this.maxHp = 5;
     this.dx = dx;
     this.dy = dy;
     this.showFrame = false;

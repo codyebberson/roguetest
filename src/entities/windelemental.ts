@@ -32,8 +32,7 @@ class WindElementalAI extends AI {
 export class WindElemental extends Monster {
 
   constructor(game: Game, x: number, y: number, level: number) {
-    super(game, x, y, 'Wind', SPRITE);
-    this.level = level;
+    super(game, x, y, 'Wind', SPRITE, level);
     this.maxHp = 10 * this.level;
     this.hp = this.maxHp;
     this.ai = new WindElementalAI(this);
