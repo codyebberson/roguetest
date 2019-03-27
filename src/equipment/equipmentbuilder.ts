@@ -4,7 +4,7 @@ import { EquipmentSlot } from "./equipmentslot";
 import { EquipmentMaterial } from "./equipmentmaterial";
 import { EquipmentQuality } from "./equipmentquality";
 import { Equipment } from "./equipment";
-import { HELM_SPRITE_1, SHIRT_SPRITE_1, GLOVES_SPRITE_1, PANTS_SPRITE_1, BOOTS_SPRITE_1, HELM_SPRITE_12, HELM_SPRITES, CLOTH_HELM_SPRITES, LEATHER_HELM_SPRITES, PLATE_HELM_SPRITES, ROBE_SPRITES, SHIRT_SPRITES, GLOVES_SPRITES, PANTS_SPRITES, BOOTS_SPRITES } from "./equipmentsprites";
+import { HELM_SPRITE_1, CLOTH_HELM_SPRITES, LEATHER_HELM_SPRITES, PLATE_HELM_SPRITES, ROBE_SPRITES, SHIRT_SPRITES, GLOVES_SPRITES, PANTS_SPRITES, BOOTS_SPRITES, NECKLACE_SPRITE_1, CLOAK_SPRITES, RING_SPRITES, SWORD_SPRITES, AXE_SPRITE_1, MACE_SPRITES, DAGGER_SPRITE_1, BOW_SPRITE_1, CROSSBOW_SPRITE_1, STAFF_SPRITES } from "./equipmentsprites";
 
 const DEFAULT_SPRITE = new Sprite(160, 240, 16, 24, 1, false, undefined, 0x808080FF);
 
@@ -27,6 +27,7 @@ export class EquipmentBuilder {
   maxDamage: number = 2;
   ranged: boolean = false;
   finesse: boolean = false;
+  statValue: number = 0;
 
   constructor(game: Game) {
     this.game = game;
@@ -39,6 +40,11 @@ export class EquipmentBuilder {
 
   withSprite(s: Sprite, c: Color) {
     this.sprite = new Sprite(s.x, s.y, s.width, s.height, s.frames, s.loop, s.ticksPerFrame, c);
+    return this;
+  }
+
+  withColor(color: Color) {
+    this.withSprite(this.sprite, color);
     return this;
   }
 
@@ -97,192 +103,376 @@ export class EquipmentBuilder {
 
   withRandomDrop(itemLevel: number) {
     this.itemLevel = itemLevel;
+    this.statValue = itemLevel;
+    this.chooseQuality();
+    this.chooseSlot();
+    this.chooseFlair();
+    return this;
+  }
 
+  private chooseQuality() {
     const rng = this.game.rng;
     const quality = rng.nextRange(0, 100);
-    let statValue = itemLevel;
-
     if (quality === 99) {
       this.quality = EquipmentQuality.LEGENDARY;
-      statValue += 5;
+      this.statValue += 5;
     } else if (quality > 95) {
       this.quality = EquipmentQuality.EPIC;
-      statValue += 4;
+      this.statValue += 4;
     } else if (quality > 90) {
       this.quality = EquipmentQuality.RARE;
-      statValue += 3;
-    } else if (quality > 75) {
+      this.statValue += 3;
+    } else if (quality > 60) {
       this.quality = EquipmentQuality.UNCOMMON;
-      statValue += 2;
-    } else if (quality > 50) {
+      this.statValue += 2;
+    } else if (quality > 30) {
       this.quality = EquipmentQuality.COMMON;
-      statValue += 1;
+      this.statValue += 1;
     } else {
       this.quality = EquipmentQuality.POOR;
     }
+  }
 
-    let sprite: Sprite = HELM_SPRITE_1;
-    let color: Color = Colors.WHITE;
-
-    switch (rng.nextRange(0, 5)) {
+  private chooseSlot() {
+    switch (this.game.rng.nextRange(0, 10)) {
       case 0:
-        this.slot = EquipmentSlot.HEAD;
-        switch (rng.nextRange(0, 3)) {
-          case 0:
-            this.material = EquipmentMaterial.CLOTH;
-            this.name = this.chooseValue('Cowl', 'Crown', 'Hood', 'Wizard Hat');
-            this.armor = statValue;
-            sprite = this.chooseArrayValue(CLOTH_HELM_SPRITES);
-            break;
-          case 1:
-            this.material = EquipmentMaterial.LEATHER;
-            this.name = this.chooseValue('Hood', 'Cover', 'Facemask', 'Mask');
-            this.armor = statValue * 2;
-            sprite = this.chooseArrayValue(LEATHER_HELM_SPRITES);
-            break;
-          case 2:
-            this.material = EquipmentMaterial.PLATE;
-            this.name = this.chooseValue('Helm', 'Helmet', 'Headguard', 'Faceguard', 'Greathelm');
-            this.armor = statValue * 3;
-            sprite = this.chooseArrayValue(PLATE_HELM_SPRITES);
-            break;
-        }
+        this.chooseHead();
         break;
       case 1:
-        this.slot = EquipmentSlot.CHEST;
-        switch (rng.nextRange(0, 3)) {
-          case 0:
-            this.material = EquipmentMaterial.CLOTH;
-            this.name = this.chooseValue('Robe', 'Tunic');
-            this.armor = statValue;
-            sprite = this.chooseArrayValue(ROBE_SPRITES);
-            break;
-          case 1:
-            this.material = EquipmentMaterial.LEATHER;
-            this.name = this.chooseValue('Vest', 'Chestpiece', 'Tunic');
-            this.armor = statValue * 2;
-            sprite = this.chooseArrayValue(SHIRT_SPRITES);
-            break;
-          case 2:
-            this.material = EquipmentMaterial.PLATE;
-            this.name = this.chooseValue('Breastplate', 'Chestguard');
-            this.armor = statValue * 3;
-            sprite = this.chooseArrayValue(SHIRT_SPRITES);
-            break;
-        }
+        this.chooseNeck();
         break;
       case 2:
-        this.slot = EquipmentSlot.HANDS;
-        switch (rng.nextRange(0, 3)) {
-          case 0:
-            this.material = EquipmentMaterial.CLOTH;
-            this.name = this.chooseValue('Gloves', 'Wraps');
-            this.armor = statValue;
-            sprite = this.chooseArrayValue(GLOVES_SPRITES);
-            break;
-          case 1:
-            this.material = EquipmentMaterial.LEATHER;
-            this.name = this.chooseValue('Gloves', 'Gauntlets');
-            this.armor = statValue * 2;
-            sprite = this.chooseArrayValue(GLOVES_SPRITES);
-            break;
-          case 2:
-            this.material = EquipmentMaterial.PLATE;
-            this.name = this.chooseValue('Gloves', 'Gauntlets');
-            this.armor = statValue * 3;
-            sprite = this.chooseArrayValue(GLOVES_SPRITES);
-            break;
-        }
+        this.chooseBack();
         break;
       case 3:
-        this.slot = EquipmentSlot.LEGS;
-        switch (rng.nextRange(0, 3)) {
-          case 0:
-            this.material = EquipmentMaterial.CLOTH;
-            this.name = this.chooseValue('Leggings', 'Pants');
-            this.armor = statValue;
-            sprite = this.chooseArrayValue(PANTS_SPRITES);
-            break;
-          case 1:
-            this.material = EquipmentMaterial.LEATHER;
-            this.name = this.chooseValue('Legguards', 'Pants');
-            this.armor = statValue * 2;
-            sprite = this.chooseArrayValue(PANTS_SPRITES);
-            break;
-          case 2:
-            this.material = EquipmentMaterial.PLATE;
-            this.name = this.chooseValue('Legplates', 'Legguards');
-            this.armor = statValue * 3;
-            sprite = this.chooseArrayValue(PANTS_SPRITES);
-            break;
-        }
+        this.chooseChest();
         break;
       case 4:
-        this.slot = EquipmentSlot.FEET;
-        switch (rng.nextRange(0, 3)) {
-          case 0:
-            this.material = EquipmentMaterial.CLOTH;
-            this.name = this.chooseValue('Boots', 'Sandals', 'Shoes', 'Slippers', 'Footpads');
-            this.armor = statValue;
-            sprite = this.chooseArrayValue(BOOTS_SPRITES);
-            break;
-          case 1:
-            this.material = EquipmentMaterial.LEATHER;
-            this.name = this.chooseValue('Boots', 'Shoes', 'Treads');
-            this.armor = statValue * 2;
-            sprite = this.chooseArrayValue(BOOTS_SPRITES);
-            break;
-          case 2:
-            this.material = EquipmentMaterial.PLATE;
-            this.name = this.chooseValue('Boots', 'Greaves', 'Sabatons');
-            this.armor = statValue * 3;
-            sprite = this.chooseArrayValue(BOOTS_SPRITES);
-            break;
-        }
+        this.chooseHands();
+        break;
+      case 5:
+        this.chooseLegs();
+        break;
+      case 6:
+        this.chooseFeet();
+        break;
+      case 7:
+        this.chooseRing();
+        break;
+      case 8:
+        this.chooseMainHand();
+        break;
+      case 9:
+        this.chooseOffHand();
         break;
     }
+  }
 
-    switch (rng.nextRange(0, 6)) {
+  private chooseHead() {
+    this.slot = EquipmentSlot.HEAD;
+    switch (this.game.rng.nextRange(0, 3)) {
+      case 0:
+        this.material = EquipmentMaterial.CLOTH;
+        this.name = this.chooseValue('Cowl', 'Crown', 'Hood', 'Wizard Hat');
+        this.armor = this.statValue;
+        this.sprite = this.chooseArrayValue(CLOTH_HELM_SPRITES);
+        break;
+      case 1:
+        this.material = EquipmentMaterial.LEATHER;
+        this.name = this.chooseValue('Hood', 'Cover', 'Facemask', 'Mask');
+        this.armor = this.statValue * 2;
+        this.sprite = this.chooseArrayValue(LEATHER_HELM_SPRITES);
+        break;
+      case 2:
+        this.material = EquipmentMaterial.PLATE;
+        this.name = this.chooseValue('Helm', 'Helmet', 'Headguard', 'Faceguard', 'Greathelm');
+        this.armor = this.statValue * 3;
+        this.sprite = this.chooseArrayValue(PLATE_HELM_SPRITES);
+        break;
+    }
+  }
+
+  private chooseNeck() {
+    this.slot = EquipmentSlot.NECK;
+    this.name = this.chooseValue('Necklace');
+    this.sprite = NECKLACE_SPRITE_1;
+  }
+
+  private chooseBack() {
+    this.slot = EquipmentSlot.BACK;
+    this.name = this.chooseValue('Cloak');
+    this.sprite = this.chooseArrayValue(CLOAK_SPRITES);
+    this.armor = this.statValue;
+  }
+
+  private chooseChest() {
+    this.slot = EquipmentSlot.CHEST;
+    switch (this.game.rng.nextRange(0, 3)) {
+      case 0:
+        this.material = EquipmentMaterial.CLOTH;
+        this.name = this.chooseValue('Robe', 'Tunic');
+        this.armor = this.statValue;
+        this.sprite = this.chooseArrayValue(ROBE_SPRITES);
+        break;
+      case 1:
+        this.material = EquipmentMaterial.LEATHER;
+        this.name = this.chooseValue('Vest', 'Chestpiece', 'Tunic');
+        this.armor = this.statValue * 2;
+        this.sprite = this.chooseArrayValue(SHIRT_SPRITES);
+        break;
+      case 2:
+        this.material = EquipmentMaterial.PLATE;
+        this.name = this.chooseValue('Breastplate', 'Chestguard');
+        this.armor = this.statValue * 3;
+        this.sprite = this.chooseArrayValue(SHIRT_SPRITES);
+        break;
+    }
+  }
+
+  private chooseHands() {
+    this.slot = EquipmentSlot.HANDS;
+    switch (this.game.rng.nextRange(0, 3)) {
+      case 0:
+        this.material = EquipmentMaterial.CLOTH;
+        this.name = this.chooseValue('Gloves', 'Wraps');
+        this.armor = this.statValue;
+        this.sprite = this.chooseArrayValue(GLOVES_SPRITES);
+        break;
+      case 1:
+        this.material = EquipmentMaterial.LEATHER;
+        this.name = this.chooseValue('Gloves', 'Gauntlets');
+        this.armor = this.statValue * 2;
+        this.sprite = this.chooseArrayValue(GLOVES_SPRITES);
+        break;
+      case 2:
+        this.material = EquipmentMaterial.PLATE;
+        this.name = this.chooseValue('Gloves', 'Gauntlets');
+        this.armor = this.statValue * 3;
+        this.sprite = this.chooseArrayValue(GLOVES_SPRITES);
+        break;
+    }
+  }
+
+  private chooseLegs() {
+    this.slot = EquipmentSlot.LEGS;
+    switch (this.game.rng.nextRange(0, 3)) {
+      case 0:
+        this.material = EquipmentMaterial.CLOTH;
+        this.name = this.chooseValue('Leggings', 'Pants');
+        this.armor = this.statValue;
+        this.sprite = this.chooseArrayValue(PANTS_SPRITES);
+        break;
+      case 1:
+        this.material = EquipmentMaterial.LEATHER;
+        this.name = this.chooseValue('Legguards', 'Pants');
+        this.armor = this.statValue * 2;
+        this.sprite = this.chooseArrayValue(PANTS_SPRITES);
+        break;
+      case 2:
+        this.material = EquipmentMaterial.PLATE;
+        this.name = this.chooseValue('Legplates', 'Legguards');
+        this.armor = this.statValue * 3;
+        this.sprite = this.chooseArrayValue(PANTS_SPRITES);
+        break;
+    }
+  }
+
+  private chooseFeet() {
+    this.slot = EquipmentSlot.FEET;
+    switch (this.game.rng.nextRange(0, 3)) {
+      case 0:
+        this.material = EquipmentMaterial.CLOTH;
+        this.name = this.chooseValue('Boots', 'Sandals', 'Shoes', 'Slippers', 'Footpads');
+        this.armor = this.statValue;
+        this.sprite = this.chooseArrayValue(BOOTS_SPRITES);
+        break;
+      case 1:
+        this.material = EquipmentMaterial.LEATHER;
+        this.name = this.chooseValue('Boots', 'Shoes', 'Treads');
+        this.armor = this.statValue * 2;
+        this.sprite = this.chooseArrayValue(BOOTS_SPRITES);
+        break;
+      case 2:
+        this.material = EquipmentMaterial.PLATE;
+        this.name = this.chooseValue('Boots', 'Greaves', 'Sabatons');
+        this.armor = this.statValue * 3;
+        this.sprite = this.chooseArrayValue(BOOTS_SPRITES);
+        break;
+    }
+  }
+
+  private chooseRing() {
+    this.slot = EquipmentSlot.RING;
+    this.name = this.chooseValue('Ring', 'Band', 'Signet', 'Circle', 'Loop');
+    this.sprite = this.chooseArrayValue(RING_SPRITES);
+  }
+
+  private chooseMainHand() {
+    this.slot = EquipmentSlot.MAINHAND;
+    switch (this.game.rng.nextRange(0, 7)) {
+      case 0:
+        this.name = this.chooseValue('Sword', 'Blade', 'Slicer', 'Sabre');
+        this.sprite = this.chooseArrayValue(SWORD_SPRITES);
+        break;
+      case 1:
+        this.name = this.chooseValue('Axe', 'Ripper', 'Slicer');
+        this.sprite = AXE_SPRITE_1;
+        break;
+      case 2:
+        this.name = this.chooseValue('Mace', 'Hammer', 'Gavel', 'Club');
+        this.sprite = this.chooseArrayValue(MACE_SPRITES);
+        break;
+      case 3:
+        this.name = this.chooseValue('Dagger', 'Knife', 'Edge');
+        this.sprite = DAGGER_SPRITE_1;
+        break;
+      case 4:
+        this.name = this.chooseValue('Bow', 'Shortbow', 'Longbow', 'Recurve', 'Greatbow');
+        this.sprite = BOW_SPRITE_1;
+        break;
+      case 5:
+        this.name = this.chooseValue('Crossbow', 'Bolt-Thrower', 'Speargun', 'Repeater');
+        this.sprite = CROSSBOW_SPRITE_1;
+        break;
+      case 6:
+        this.name = this.chooseValue('Staff', 'Spellstaff');
+        this.sprite = this.chooseArrayValue(STAFF_SPRITES);
+        break;
+    }
+  }
+
+  private chooseOffHand() {
+    this.slot = EquipmentSlot.OFFHAND;
+    switch (this.game.rng.nextRange(0, 2)) {
+      case 0:
+        this.name = this.chooseValue('Shield', 'Shield Wall', 'Bulwark', 'Barrier');
+        break;
+      case 1:
+        this.name = this.chooseValue('Lantern', 'Globe');
+        break;
+    }
+  }
+
+  private chooseFlair() {
+    switch (this.quality) {
+      case EquipmentQuality.POOR:
+        this.choosePoorFlair();
+        break;
+      case EquipmentQuality.COMMON:
+        this.chooseCommonFlair();
+        break;
+      case EquipmentQuality.UNCOMMON:
+        this.chooseUncommonFlair();
+        break;
+      case EquipmentQuality.RARE:
+        this.chooseRareFlair();
+        break;
+      case EquipmentQuality.EPIC:
+        this.chooseEpicFlair();
+        break;
+      case EquipmentQuality.LEGENDARY:
+        this.chooseLegendaryFlair();
+        break;
+    }
+  }
+
+  private choosePoorFlair() {
+    this.name = this.chooseValue('Patched', 'Ragged', 'Chewed', 'Worn', 'Loose') + ' ' + this.name;
+    this.withColor(Colors.LIGHT_GRAY);
+  }
+
+  private chooseCommonFlair() {
+    this.name = this.chooseValue('Hunting', 'Cadet', 'Veteran', 'Simple', 'Pioneer') + ' ' + this.name;
+    this.withColor(0xC0A080FF);
+  }
+
+  private chooseUncommonFlair() {
+    switch (this.game.rng.nextRange(0, 6)) {
       case 0:
         this.name += ' of the Tiger';
-        this.strength += statValue;
-        this.dexterity += statValue;
-        color = Colors.ORANGE;
+        this.strength += this.statValue;
+        this.dexterity += this.statValue;
+        this.withColor(Colors.ORANGE);
         break;
       case 1:
         this.name += ' of the Bear';
-        this.strength += statValue;
-        this.constitution += statValue;
-        color = Colors.BROWN;
+        this.strength += this.statValue;
+        this.constitution += this.statValue;
+        this.withColor(Colors.BROWN);
         break;
       case 2:
         this.name += ' of the Gorilla';
-        this.strength += statValue;
-        this.intelligence += statValue;
-        color = Colors.LIGHT_CYAN;
+        this.strength += this.statValue;
+        this.intelligence += this.statValue;
+        this.withColor(Colors.LIGHT_CYAN);
         break;
       case 3:
         this.name += ' of the Monkey';
-        this.dexterity += statValue;
-        this.constitution += statValue;
-        color = Colors.LIGHT_GREEN;
+        this.dexterity += this.statValue;
+        this.constitution += this.statValue;
+        this.withColor(Colors.LIGHT_GREEN);
         break;
       case 4:
         this.name += ' of the Falcon';
-        this.dexterity += statValue;
-        this.intelligence += statValue;
-        color = Colors.LIGHT_RED;
+        this.dexterity += this.statValue;
+        this.intelligence += this.statValue;
+        this.withColor(Colors.LIGHT_RED);
         break;
       case 5:
         this.name += ' of the Eagle';
-        this.constitution += statValue;
-        this.intelligence += statValue;
-        color = Colors.LIGHT_BLUE;
+        this.constitution += this.statValue;
+        this.intelligence += this.statValue;
+        this.withColor(Colors.LIGHT_BLUE);
         break;
     }
+  }
 
-    this.withSprite(sprite as Sprite, color as Color);
-    return this;
+  private chooseRareFlair() {
+    switch (this.game.rng.nextRange(0, 4)) {
+      case 0:
+        this.name = 'Elven ' + this.name;
+        this.dexterity += this.statValue;
+        this.constitution += this.statValue;
+        this.intelligence += this.statValue;
+        this.withColor(Colors.LIGHT_MAGENTA);
+        break;
+      case 1:
+        this.name = 'Obsidian ' + this.name;
+        this.strength += 2 * this.statValue;
+        this.constitution += 2 * this.statValue;
+        this.withColor(Colors.DARK_MAGENTA);
+        break;
+      case 2:
+        this.name = 'Saphiron ' + this.name;
+        this.dexterity += 2 * this.statValue;
+        this.constitution += 2 * this.statValue;
+        this.withColor(Colors.DARK_BLUE);
+        break;
+      case 3:
+        this.name = 'Scarlet ' + this.name;
+        this.intelligence += 2 * this.statValue;
+        this.constitution += 2 * this.statValue;
+        this.withColor(Colors.DARK_RED);
+        break;
+    }
+  }
+
+  private chooseEpicFlair() {
+    this.name = 'Cody\'s ' + this.name;
+    this.dexterity += 3 * this.statValue;
+    this.strength += 3 * this.statValue;
+    this.intelligence += 3 * this.statValue;
+    this.constitution += 3 * this.statValue;
+    this.withColor(Colors.LIGHT_BLUE);
+  }
+
+  private chooseLegendaryFlair() {
+    this.name = 'Cody\'s ' + this.name;
+    this.dexterity += 4 * this.statValue;
+    this.strength += 4 * this.statValue;
+    this.intelligence += 4 * this.statValue;
+    this.constitution += 4 * this.statValue;
+    this.withColor(Colors.LIGHT_BLUE);
   }
 
   private chooseValue<T>(...values: T[]): T {
