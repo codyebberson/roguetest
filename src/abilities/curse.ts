@@ -1,4 +1,4 @@
-import {Ability, Colors, Message, Sprite, TargetType} from 'wglt';
+import {Ability, Colors, Message, Sprite, TargetType, Serializable} from 'wglt';
 
 import {Curse} from '../buffs/curse';
 import {StatsActor} from '../entities/statsactor';
@@ -13,6 +13,7 @@ const TOOLTIP_MESSAGES = [
   new Message('damage per turn for 8 turns.', Colors.YELLOW),
 ];
 
+@Serializable('CurseAbility')
 export class CurseAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

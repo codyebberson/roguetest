@@ -1,4 +1,4 @@
-import {AI, Sprite, Rect, Dialog} from 'wglt';
+import {AI, Sprite, Rect, Dialog, Serializable} from 'wglt';
 
 import {Game} from '../game';
 
@@ -9,6 +9,7 @@ import { Quest } from '../quests/quest';
 
 const SPRITE = new Sprite(320, 358, 16, 24, 2, true, undefined, 0xA040A0ff);
 
+@Serializable('KingAI')
 class KingAI extends AI {
   doAi() {
     const king = this.actor as King;
@@ -33,6 +34,7 @@ class KingAI extends AI {
   }
 }
 
+@Serializable('King')
 export class King extends StatsActor {
   dialog?: Dialog;
 

@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, fromRgb, Message, SlideAnimation, Sprite, TargetType, TileMapCell} from 'wglt';
+import {Ability, Actor, Colors, fromRgb, Message, SlideAnimation, Sprite, TargetType, TileMapCell, Serializable} from 'wglt';
 import {Stunned} from '../ai/stunned';
 
 const LEAP_RANGE = 3;
@@ -11,6 +11,7 @@ const TOOLTIP_MESSAGES = [
   new Message('Stun all enemies within 1 tile.', Colors.YELLOW)
 ];
 
+@Serializable('LeapAbility')
 export class LeapAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, Message, ProjectileAnimation, Sprite, TargetType, TileMapCell, Vec2} from 'wglt';
+import {Ability, Actor, Colors, Message, ProjectileAnimation, Sprite, TargetType, TileMapCell, Vec2, Serializable} from 'wglt';
 
 import {ExplosionAnimation} from '../animations/explosionanimation';
 import { StatsActor } from '../entities/statsactor';
@@ -18,6 +18,7 @@ const TOOLTIP_MESSAGES = [
   new Message('to all enemies within 3 tiles.', Colors.YELLOW),
 ];
 
+@Serializable('FireballAbility')
 export class FireballAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

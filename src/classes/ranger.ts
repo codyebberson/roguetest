@@ -1,4 +1,4 @@
-import { Colors, Message, Sprite, Talent } from 'wglt';
+import { Colors, Message, Sprite, Talent, Serializable } from 'wglt';
 
 import { LeapAbility } from '../abilities/leap';
 import { Player } from '../entities/player';
@@ -21,6 +21,7 @@ const DETAILS = [
   new Message('Heroic Leap - jump up to 3 tiles and stun enemies', Colors.YELLOW)
 ];
 
+@Serializable('Ranger')
 export class Ranger extends CharacterClass {
   constructor() {
     super(NAME, ICON, DESC, DETAILS);

@@ -1,4 +1,4 @@
-import {Colors, Message, Sprite, Talent} from 'wglt';
+import {Colors, Message, Sprite, Talent, Serializable} from 'wglt';
 
 import {CurseAbility} from '../abilities/curse';
 import {DemonicGatewayAbility} from '../abilities/demonicgateway';
@@ -22,6 +22,7 @@ const DETAILS = [
   new Message('Demonic Gateway - teleport by dark magic', Colors.YELLOW)
 ];
 
+@Serializable('Warlock')
 export class Warlock extends CharacterClass {
   constructor() {
     super(NAME, ICON, DESC, DETAILS);

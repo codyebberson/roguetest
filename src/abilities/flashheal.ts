@@ -1,4 +1,4 @@
-import {Ability, Colors, Message, Sprite, TargetType} from 'wglt';
+import {Ability, Colors, Message, Sprite, TargetType, Serializable} from 'wglt';
 import {StatsActor} from '../entities/statsactor';
 
 const SPRITE = new Sprite(672, 144, 16, 24, 1, false, undefined, 0xFFD0D0FF);
@@ -9,6 +9,7 @@ const TOOLTIP_MESSAGES = [
   new Message('for 1d8 + INT points.', Colors.YELLOW),
 ];
 
+@Serializable('FlashHealAbility')
 export class FlashHealAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

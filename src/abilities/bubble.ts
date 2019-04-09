@@ -1,4 +1,4 @@
-import {Ability, Colors, Message, Sprite, TargetType} from 'wglt';
+import {Ability, Colors, Message, Sprite, TargetType, Serializable} from 'wglt';
 
 import {StatsActor} from '../entities/statsactor';
 import { Bubble } from '../buffs/bubble';
@@ -12,6 +12,7 @@ const TOOLTIP_MESSAGES = [
   new Message('damage.', Colors.YELLOW),
 ];
 
+@Serializable('BubbleAbility')
 export class BubbleAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

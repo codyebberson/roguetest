@@ -1,4 +1,4 @@
-import {Ability, Colors, Message, SlideAnimation, Sprite, TargetType, Vec2} from 'wglt';
+import {Ability, Colors, Message, SlideAnimation, Sprite, TargetType, Vec2, Serializable} from 'wglt';
 import { StatsActor } from '../entities/statsactor';
 
 const RANGE = 10;
@@ -10,6 +10,7 @@ const TOOLTIP_MESSAGES = [
   new Message('dealing double damage.', Colors.YELLOW)
 ];
 
+@Serializable('ShadowStrikeAbility')
 export class ShadowStrikeAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

@@ -1,11 +1,12 @@
 import {StatsActor} from '../entities/statsactor';
 
 import {Buff} from './buff';
-import { Sprite, Color } from 'wglt';
+import { Sprite, Color, Serializable } from 'wglt';
 
 const COLOR = 0xAADDFFFF as Color;
 const SPRITE = new Sprite(608, 408, 16, 24, 2, true, undefined, COLOR);
 
+@Serializable('Bubble')
 export class Bubble extends Buff {
   remaining: number;
 

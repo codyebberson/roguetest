@@ -1,8 +1,9 @@
-import { Game, Item, Sprite } from 'wglt';
+import { Game, Item, Sprite, Serializable } from 'wglt';
 import { Player } from '../entities/player';
 
 const SPRITE = new Sprite(688, 168, 16, 24, 1, true, undefined, 0xFFFF00FF);
 
+@Serializable('Key')
 export class Key extends Item {
   readonly keyId: number;
 

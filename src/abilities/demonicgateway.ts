@@ -1,4 +1,4 @@
-import {Ability, Colors, Message, Sprite, TargetType, TileMapCell} from 'wglt';
+import {Ability, Colors, Message, Sprite, TargetType, TileMapCell, Serializable} from 'wglt';
 
 import {StatsActor} from '../entities/statsactor';
 import {Gateway} from '../items/gateway';
@@ -13,6 +13,7 @@ const TOOLTIP_MESSAGES = [
   new Message('locations. User can transport to the other gateway.', Colors.YELLOW),
 ];
 
+@Serializable('DemonicGatewayAbility')
 export class DemonicGatewayAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

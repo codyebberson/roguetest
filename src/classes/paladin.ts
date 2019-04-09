@@ -1,4 +1,4 @@
-import {Colors, Message, Sprite, Talent} from 'wglt';
+import {Colors, Message, Sprite, Talent, Serializable} from 'wglt';
 
 import {FlashHealAbility} from '../abilities/flashheal';
 import {LeapAbility} from '../abilities/leap';
@@ -22,6 +22,7 @@ const DETAILS = [
   new Message('Heroic Leap - jump up to 3 tiles and stun enemies', Colors.YELLOW)
 ];
 
+@Serializable('Paladin')
 export class Paladin extends CharacterClass {
   constructor() {
     super(NAME, ICON, DESC, DETAILS);

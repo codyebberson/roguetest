@@ -1,4 +1,4 @@
-import {Actor, Colors, Game, Item, Message, Sprite} from 'wglt';
+import {Actor, Colors, Game, Item, Message, Sprite, Serializable} from 'wglt';
 
 const HEAL_AMOUNT = 4;
 
@@ -10,6 +10,7 @@ const TOOLTIPS = [
   new Message('Use: Restore 10 health', Colors.LIGHT_GREEN),
 ];
 
+@Serializable('HealthPotion')
 export class HealthPotion extends Item {
   constructor(game: Game, x?: number, y?: number) {
     super(game, x || 0, y || 0, 'health potion', SPRITE, false);

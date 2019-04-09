@@ -1,4 +1,4 @@
-import {Colors, Message, Sprite} from 'wglt';
+import {Colors, Message, Sprite, Serializable} from 'wglt';
 
 import {Player} from '../entities/player';
 
@@ -12,6 +12,7 @@ const DETAILS = [
   new Message('Shadowmeld - slip into the shadows', Colors.YELLOW)
 ];
 
+@Serializable('Elf')
 export class Elf extends CharacterRace {
   constructor() {
     super(NAME, ICON, DESC, DETAILS);

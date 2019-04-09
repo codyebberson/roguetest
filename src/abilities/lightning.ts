@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, Entity, Game, Message, ProjectileAnimation, Sprite, TargetType, Vec2} from 'wglt';
+import {Ability, Actor, Colors, Entity, Game, Message, ProjectileAnimation, Sprite, TargetType, Vec2, Serializable} from 'wglt';
 import { StatsActor } from '../entities/statsactor';
 
 const LIGHTNING_RANGE = 5;
@@ -11,6 +11,7 @@ const TOOLTIP_MESSAGES = [
   new Message('dealing 4 + INT damage.', Colors.YELLOW),
 ];
 
+@Serializable('LightningAbility')
 export class LightningAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

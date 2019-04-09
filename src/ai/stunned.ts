@@ -1,5 +1,6 @@
-import {Actor, AI, Colors} from 'wglt';
+import { Actor, AI, Serializable } from 'wglt';
 
+@Serializable('Stunned')
 export class Stunned extends AI {
   numTurns: number;
   oldAi?: AI;

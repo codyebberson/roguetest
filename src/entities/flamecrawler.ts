@@ -1,4 +1,4 @@
-import {AI, Sprite, Vec2} from 'wglt';
+import {AI, Sprite, Vec2, Serializable} from 'wglt';
 
 import {Game} from '../game';
 
@@ -7,6 +7,7 @@ import {Monster} from './monster';
 const SPRITE = new Sprite(256, 312, 16, 24, 2, true, undefined, 0xd51111ff);
 const DAMAGE = 8;
 
+@Serializable('FlameCrawlerAI')
 class FlameCrawlerAI extends AI {
   aliveCount: number;
 
@@ -44,6 +45,7 @@ class FlameCrawlerAI extends AI {
   }
 }
 
+@Serializable('FlameCrawler')
 export class FlameCrawler extends Monster {
   readonly dx: number;
   readonly dy: number;

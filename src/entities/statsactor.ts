@@ -12,7 +12,7 @@ export enum Sentiment {
   FRIENDLY = 1
 }
 
-export class StatsActor extends Actor {
+export abstract class StatsActor extends Actor {
   level: number;
   mp: number;
   maxMp: number;

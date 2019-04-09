@@ -1,4 +1,4 @@
-import {AI, Sprite, Talent} from 'wglt';
+import {AI, Sprite, Talent, Serializable} from 'wglt';
 
 import {LeapAbility} from '../abilities/leap';
 import {Game} from '../game';
@@ -10,6 +10,7 @@ import { Sentiment } from './statsactor';
 const SPRITE = new Sprite(448, 144, 16, 24, 2, true, undefined, 0xf2f261ff);
 const DAMAGE = 10;
 
+@Serializable('GriffonAI')
 class GriffonAI extends AI {
   doAi() {
     const griffon = this.actor as Griffon;
@@ -61,6 +62,7 @@ class GriffonAI extends AI {
   }
 }
 
+@Serializable('Griffon')
 export class Griffon extends Monster {
 
   constructor(game: Game, x: number, y: number, level: number) {

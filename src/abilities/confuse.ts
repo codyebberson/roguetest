@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, ConfusedMonster, Message, Sprite, TargetType} from 'wglt';
+import {Ability, Actor, Colors, ConfusedMonster, Message, Sprite, TargetType, Serializable} from 'wglt';
 
 const CONFUSE_RANGE = 8;
 const CONFUSE_SPRITE = new Sprite(128, 32, 16, 24, 3, false);
@@ -9,6 +9,7 @@ const TOOLTIP_MESSAGES = [
   new Message('stupor for 10 turns.', Colors.YELLOW),
 ];
 
+@Serializable('ConfuseAbility')
 export class ConfuseAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

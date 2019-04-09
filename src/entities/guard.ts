@@ -1,4 +1,4 @@
-import { AI, Sprite, Vec2, Colors } from 'wglt';
+import { AI, Sprite, Vec2, Colors, Serializable } from 'wglt';
 
 import { Game } from '../game';
 
@@ -8,6 +8,7 @@ import { Sentiment } from './statsactor';
 
 const SPRITE = new Sprite(320, 96, 16, 24, 2, true, undefined, 0x5790b7FF);
 
+@Serializable('GuardAI')
 class GuardAI extends AI {
   readonly waypoints: Vec2[];
   waypointIndex: number;
@@ -74,6 +75,7 @@ class GuardAI extends AI {
   }
 }
 
+@Serializable('Guard')
 export class Guard extends Monster {
 
   constructor(game: Game, x: number, y: number, waypoints: Vec2[]) {

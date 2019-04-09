@@ -1,4 +1,4 @@
-import {AI, Sprite} from 'wglt';
+import {AI, Sprite, Serializable} from 'wglt';
 
 import {Game} from '../game';
 
@@ -7,6 +7,7 @@ import { Player } from './player';
 
 const SPRITE = new Sprite(192, 144, 16, 24, 2, true, undefined, 0x6757d9FF);
 
+@Serializable('BatAI')
 class BatAI extends AI {
   doAi() {
     const bat = this.actor as Bat;
@@ -24,6 +25,7 @@ class BatAI extends AI {
   }
 }
 
+@Serializable('Bat')
 export class Bat extends Monster {
   constructor(game: Game, x: number, y: number, level: number) {
     super(game, x, y, 'Bat', SPRITE, level);

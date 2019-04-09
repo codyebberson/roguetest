@@ -1,18 +1,14 @@
 import * as wglt from 'wglt';
-import {Actor, App, Button, Colors, Entity, FadeInAnimation, FadeOutAnimation, Item, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog, Vec2, Dialog} from 'wglt';
+import { App, Button, Colors, FadeInAnimation, FadeOutAnimation, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog, Vec2, Serializer } from 'wglt';
 
-import {CatEscapeAnimation} from './animations/catescapeanimation';
-import {Cat} from './entities/cat';
-import {Player} from './entities/player';
-import {BottomPanel} from './gui/bottompanel';
-import {CharacterDialog} from './gui/characterdialog';
-import {TopPanel} from './gui/toppanel';
-import {MapGenerator} from './mapgen';
-import {Gateway} from './items/gateway';
+import { Cat } from './entities/cat';
+import { Player } from './entities/player';
+import { BottomPanel } from './gui/bottompanel';
+import { CharacterDialog } from './gui/characterdialog';
+import { TopPanel } from './gui/toppanel';
+import { MapGenerator } from './mapgen';
 import { LevelUpDialog } from './gui/levelupdialog';
 import { EntityFrames } from './gui/entityframes';
-import { Hearthstone } from './items/hearthstone';
-import { Gold } from './items/gold';
 import { HealthPotion } from './items/healthpotion';
 import { Scroll } from './items/scroll';
 
@@ -61,13 +57,13 @@ export class Game extends wglt.Game {
     this.gui.add(new EntityFrames(this));
 
     const inventoryButton = new Button(
-        new Rect(0, 0, 20, 28),
-        new Sprite(832, 168, 16, 24, 1, true, 30, 0xe08020ff),
-        undefined,
-        () => {
-          this.hideAllDialogs();
-          this.inventoryDialog.visible = true;
-        });
+      new Rect(0, 0, 20, 28),
+      new Sprite(832, 168, 16, 24, 1, true, 30, 0xe08020ff),
+      undefined,
+      () => {
+        this.hideAllDialogs();
+        this.inventoryDialog.visible = true;
+      });
     inventoryButton.tooltipMessages = [
       new Message('Traveler\'s Backpack', Colors.GREEN),
       new Message('Item Level 55', Colors.YELLOW),
@@ -77,13 +73,13 @@ export class Game extends wglt.Game {
     bottomPanel.inventorySlot.add(inventoryButton);
 
     const characterButton = new Button(
-        new Rect(0, 0, 20, 28),
-        new Sprite(640, 240, 16, 24, undefined, undefined, undefined, 0xffcf5cff),
-        undefined,
-        () => {
-          this.hideAllDialogs();
-          this.characterDialog.visible = true;
-        });
+      new Rect(0, 0, 20, 28),
+      new Sprite(640, 240, 16, 24, undefined, undefined, undefined, 0xffcf5cff),
+      undefined,
+      () => {
+        this.hideAllDialogs();
+        this.characterDialog.visible = true;
+      });
     characterButton.tooltipMessages = [
       new Message('Character', Colors.WHITE),
       new Message('Currently equipped items,', Colors.YELLOW),
@@ -92,12 +88,12 @@ export class Game extends wglt.Game {
     topPanel.characterSlot.add(characterButton);
 
     const talentsButton = new Button(
-        new Rect(0, 0, 20, 28),
-        new Sprite(656, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE),
-        undefined, () => {
-          this.hideAllDialogs();
-          this.talentsDialog.visible = true;
-        });
+      new Rect(0, 0, 20, 28),
+      new Sprite(656, 360, 16, 24, undefined, undefined, undefined, Colors.LIGHT_BLUE),
+      undefined, () => {
+        this.hideAllDialogs();
+        this.talentsDialog.visible = true;
+      });
     talentsButton.tooltipMessages = [
       new Message('Talents', Colors.WHITE),
       new Message('A list of all of your', Colors.YELLOW),
@@ -106,24 +102,24 @@ export class Game extends wglt.Game {
     topPanel.talentsSlot.add(talentsButton);
 
     const menuButton = new Button(
-        new Rect(0, 0, 20, 28),
-        new Sprite(352, 672, 16, 24, undefined, undefined, undefined, Colors.LIGHT_GRAY),
-        undefined,
-        () => {
-          window.location.hash = 'menu';
-        });
+      new Rect(0, 0, 20, 28),
+      new Sprite(352, 672, 16, 24, undefined, undefined, undefined, Colors.LIGHT_GRAY),
+      undefined,
+      () => {
+        window.location.hash = 'menu';
+      });
     menuButton.tooltipMessages = [new Message('Main Menu', Colors.WHITE)];
     topPanel.menuSlot.add(menuButton);
 
     this.inventoryDialog = new ItemContainerDialog(
-        new Rect(4, 38, 94, 126),
-        [
-          new Message('Traveler\'s Backpack', Colors.GREEN),
-          new Message('Click an item to use', Colors.LIGHT_GRAY),
-          new Message('Drag for shortcut', Colors.LIGHT_GRAY)
-        ],
-        16,
-        player.inventory);
+      new Rect(4, 38, 94, 126),
+      [
+        new Message('Traveler\'s Backpack', Colors.GREEN),
+        new Message('Click an item to use', Colors.LIGHT_GRAY),
+        new Message('Drag for shortcut', Colors.LIGHT_GRAY)
+      ],
+      16,
+      player.inventory);
     this.inventoryDialog.visible = false;
     this.gui.add(this.inventoryDialog);
 
@@ -132,14 +128,14 @@ export class Game extends wglt.Game {
     this.gui.add(this.characterDialog);
 
     this.talentsDialog = new TalentsDialog(
-        new Rect(4, 38, 94, 126),
-        [
-          new Message('Talents', Colors.GREEN),
-          new Message('Click an ability to use', Colors.LIGHT_GRAY),
-          new Message('Drag for shortcut', Colors.LIGHT_GRAY)
-        ],
-        16,
-        player.talents);
+      new Rect(4, 38, 94, 126),
+      [
+        new Message('Talents', Colors.GREEN),
+        new Message('Click an ability to use', Colors.LIGHT_GRAY),
+        new Message('Drag for shortcut', Colors.LIGHT_GRAY)
+      ],
+      16,
+      player.talents);
     this.talentsDialog.visible = false;
     this.gui.add(this.talentsDialog);
 
@@ -156,14 +152,14 @@ export class Game extends wglt.Game {
         }
         bottomPanel.shortcutBar.addItem(player.inventory, item, true);
       },
-      onRemove: () => {}
+      onRemove: () => { }
     });
 
     player.talents.addListener({
       onAdd: (_, talent) => {
         bottomPanel.shortcutBar.addTalent(talent);
       },
-      onRemove: () => {}
+      onRemove: () => { }
     });
 
     // Generate the map
@@ -187,5 +183,11 @@ export class Game extends wglt.Game {
       this.recomputeFov();
       this.addAnimation(new FadeInAnimation(30));
     });
+  }
+
+  save() {
+    const serializer = new Serializer();
+    const result = serializer.serialize(this);
+    console.log('result', result);
   }
 }

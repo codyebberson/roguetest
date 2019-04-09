@@ -1,4 +1,4 @@
-import {AI, Sprite, Rect} from 'wglt';
+import {AI, Sprite, Rect, Serializable} from 'wglt';
 
 import {Game} from '../game';
 
@@ -11,6 +11,7 @@ import { Key } from '../items/key';
 const SPRITE = new Sprite(576, 312, 16, 24, 2, true, undefined, 0xd51111ff);
 const DAMAGE = 10;
 
+@Serializable('RedDragonAI')
 class RedDragonAI extends AI {
   doAi() {
     const dragon = this.actor as RedDragon;
@@ -57,6 +58,7 @@ class RedDragonAI extends AI {
   }
 }
 
+@Serializable('RedDragon')
 export class RedDragon extends Monster {
   readonly room: Rect;
   cooldown = 0;

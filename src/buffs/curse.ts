@@ -1,7 +1,9 @@
 import {StatsActor} from '../entities/statsactor';
 
 import {Buff} from './buff';
+import { Serializable } from 'wglt';
 
+@Serializable('Curse')
 export class Curse extends Buff {
   caster: StatsActor;
   damage: number;

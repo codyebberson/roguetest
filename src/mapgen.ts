@@ -142,8 +142,6 @@ export class MapGenerator {
     const portal2 = dungeons[0].entrance as Portal;
     portal1.other = portal2;
     portal2.other = portal1;
-    game.entities.add(portal1);
-    game.entities.add(portal2);
 
     // Connect all of the dungeon floors to each other
     for (let i = 1; i < 10; i++) {

@@ -1,4 +1,4 @@
-import { Colors, Item, Message, Sprite } from 'wglt';
+import { Colors, Item, Message, Sprite, Serializable } from 'wglt';
 import { Player } from '../entities/player';
 import { Game } from '../game';
 
@@ -12,6 +12,7 @@ const TOOLTIPS = [
   new Message('place to change your home location.', Colors.LIGHT_GREEN),
 ];
 
+@Serializable('Hearthstone')
 export class Hearthstone extends Item {
   constructor(game: Game, x?: number, y?: number) {
     super(game, x || 0, y || 0, 'Hearthstone', SPRITE, false);

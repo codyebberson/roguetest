@@ -1,4 +1,4 @@
-import {Ability, Colors, Message, Sprite, TargetType} from 'wglt';
+import {Ability, Colors, Message, Sprite, TargetType, Serializable} from 'wglt';
 
 import {StatsActor} from '../entities/statsactor';
 import { Rage } from '../buffs/rage';
@@ -11,6 +11,7 @@ const TOOLTIP_MESSAGES = [
   new Message('100% for 8 turns.', Colors.YELLOW),
 ];
 
+@Serializable('RageAbility')
 export class RageAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

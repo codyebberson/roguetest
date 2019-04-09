@@ -1,4 +1,4 @@
-import {Colors, Message, Sprite} from 'wglt';
+import {Colors, Message, Sprite, Serializable} from 'wglt';
 
 import {Player} from '../entities/player';
 
@@ -12,6 +12,7 @@ const DETAILS = [
   new Message('Stoneform - Removes all curses', Colors.YELLOW)
 ];
 
+@Serializable('Dwarf')
 export class Dwarf extends CharacterRace {
   constructor() {
     super(NAME, ICON, DESC, DETAILS);

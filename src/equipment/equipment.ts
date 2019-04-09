@@ -1,4 +1,4 @@
-import { Item, Colors, Message } from 'wglt';
+import { Item, Colors, Message, Serializable } from 'wglt';
 import { Player } from '../entities/player';
 import { EquipmentBuilder } from './equipmentbuilder';
 import { EquipmentSlot } from './equipmentslot';
@@ -13,6 +13,7 @@ const COLOR_RARE = 0x0070DDFF;
 const COLOR_EPIC = 0xA335EEFF;
 const COLOR_LEGENDARY = 0xFF8000FF;
 
+@Serializable('Equipment')
 export class Equipment extends Item {
   readonly itemLevel: number;
   readonly slot: EquipmentSlot;

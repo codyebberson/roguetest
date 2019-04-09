@@ -1,4 +1,4 @@
-import { Colors, Message, Sprite, Talent } from 'wglt';
+import { Colors, Message, Sprite, Talent, Serializable } from 'wglt';
 
 import { LeapAbility } from '../abilities/leap';
 import { ShadowStrikeAbility } from '../abilities/shadowstrike';
@@ -22,6 +22,7 @@ const DETAILS = [
   new Message('Shadow Strike - sneak attack from a distance', Colors.YELLOW)
 ];
 
+@Serializable('Rogue')
 export class Rogue extends CharacterClass {
   constructor() {
     super(NAME, ICON, DESC, DETAILS);

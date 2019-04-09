@@ -1,4 +1,4 @@
-import {Colors, Message, Sprite} from 'wglt';
+import {Colors, Message, Sprite, Serializable} from 'wglt';
 
 import {Player} from '../entities/player';
 
@@ -12,6 +12,7 @@ const DETAILS = [
   new Message('War Shout - Boost all stats by +1 for 5 turns', Colors.YELLOW)
 ];
 
+@Serializable('Orc')
 export class Orc extends CharacterRace {
   constructor() {
     super(NAME, ICON, DESC, DETAILS);

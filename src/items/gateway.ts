@@ -1,9 +1,10 @@
-import { Game, Item, Sprite } from 'wglt';
+import { Game, Item, Sprite, Serializable } from 'wglt';
 import { StatsActor } from '../entities/statsactor';
 import { Player } from '../entities/player';
 
 const SPRITE = new Sprite(432, 408, 16, 24, 1, true, undefined, 0xc3d012FF);
 
+@Serializable('Gateway')
 export class Gateway extends Item {
   readonly owner: StatsActor;
   other?: Gateway;

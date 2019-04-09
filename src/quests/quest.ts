@@ -1,4 +1,6 @@
+import { Serializable } from "wglt";
 
+@Serializable('Quest')
 export class Quest {
   description: string[];
   xpGain: number;

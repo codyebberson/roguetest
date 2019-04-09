@@ -1,8 +1,9 @@
-import {Ability, Actor, Colors, Item, Sprite, TargetType} from 'wglt';
+import {Ability, Actor, Colors, Item, Sprite, TargetType, Serializable} from 'wglt';
 import { Game } from '../game';
 
 const SPRITE = new Sprite(736, 168, 16, 24, 1, true, undefined, 0xF0F0E0FF);
 
+@Serializable('Scroll')
 export class Scroll extends Item {
   readonly ability: Ability;
 

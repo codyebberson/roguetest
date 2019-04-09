@@ -1,7 +1,8 @@
-import { Game } from 'wglt';
+import { Game, Serializable } from 'wglt';
 import { Player } from '../entities/player';
 import { Door } from './door';
 
+@Serializable('LockedDoor')
 export class LockedDoor extends Door {
   readonly keyId: number;
 

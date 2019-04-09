@@ -1,4 +1,4 @@
-import { Ability, Colors, Message, Sprite, TargetType } from 'wglt';
+import { Ability, Colors, Message, Sprite, TargetType, Serializable } from 'wglt';
 import { StatsActor } from '../entities/statsactor';
 
 const RANGE = 8;
@@ -9,6 +9,7 @@ const TOOLTIP_MESSAGES = [
   new Message('Requires a ranged weapon.', Colors.WHITE)
 ];
 
+@Serializable('ShootAbility')
 export class ShootAbility implements Ability {
   readonly sprite: Sprite;
   readonly name: string;

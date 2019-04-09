@@ -1,4 +1,4 @@
-import { Colors, Sprite, Vec2 } from 'wglt';
+import { Colors, Sprite, Vec2, Serializable } from 'wglt';
 
 import { CharacterClass } from '../classes/characterclass';
 import { Paladin } from '../classes/paladin';
@@ -10,6 +10,7 @@ import { StatsActor } from './statsactor';
 
 const PLAYER_SPRITE = new Sprite(0, 96, 16, 24, 2, true, undefined, 0xffcf5cff);
 
+@Serializable('Player')
 export class Player extends StatsActor {
   xp: number;
   maxXp: number;
