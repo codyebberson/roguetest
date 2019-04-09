@@ -25,12 +25,14 @@ export class Game extends wglt.Game {
   characterDialog: CharacterDialog;
   levelUpDialog: LevelUpDialog;
 
-  constructor(app: App) {
+  constructor(app: App, seed: number) {
     super(app, {
       tileSize: new Rect(0, 0, 16, 24),
       horizontalViewDistance: 8,
       verticalViewDistance: 6
     });
+
+    this.rng.setSeed(seed);
 
     this.targetSprite = TARGET_SPRITE;
     this.cooldownSprite = new Sprite(192, 16, 16, 24, 24);

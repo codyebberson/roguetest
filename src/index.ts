@@ -14,8 +14,14 @@ window.addEventListener('hashchange', handleHashChange);
 function handleHashChange() {
   const hash = window.location.hash;
 
-  if (hash === '#game') {
+  if (hash === '#startgame') {
     app.startGame();
+
+  } else if (hash === '#game') {
+    app.playGame();
+
+  } else if (hash === '#chooseseed') {
+    app.chooseSeed();
 
   } else if (hash === '#chooserace') {
     app.chooseRace();
