@@ -25,7 +25,7 @@ export class ClassMenu extends AppState {
 
     selectDialog.onSelect = (choice: CharacterClass) => {
       (this.app as App).playerClass = choice;
-      window.location.hash = 'game';
+      window.location.hash = 'startgame';
     };
 
     selectDialog.onCancel = () => {

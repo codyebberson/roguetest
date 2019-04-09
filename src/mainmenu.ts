@@ -1,9 +1,9 @@
-import {App, AppState, Colors, fromHsv, Keys, Sprite} from 'wglt';
+import {AppState, Colors, fromHsv, Keys, Sprite} from 'wglt';
+import { App } from './app';
 
 const OPTIONS = [
-  {display: 'NEW GAME', hash: 'chooserace', enabled: true},
+  {display: 'NEW GAME', hash: 'chooseseed', enabled: true},
   {display: 'CONTINUE', hash: 'game', enabled: false},
-  {display: 'ENTER SEED', hash: 'seed', enabled: true},
   {display: 'TUTORIAL', hash: 'tutorial', enabled: true},
   {display: 'HIGH SCORES', hash: 'highscores', enabled: true},
   {display: 'CREDITS', hash: 'credits', enabled: true},
@@ -34,6 +34,10 @@ export class MainMenu extends AppState {
 
   update() {
     Sprite.updateGlobalAnimations();
+
+    // "Continue" is only enabled if there is an active game
+    const app = this.app as App;
+    OPTIONS[1].enabled = !!app.game;
 
     const time2 = this.time % 300;
     if (time2 < 80 && time2 % 8 === 0) {
