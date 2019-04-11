@@ -115,11 +115,6 @@ export class MapGenerator {
 
   constructor(game: Game) {
     this.game = game;
-
-    // const map = new TileMap(game.app.gl, MAP_WIDTH, MAP_HEIGHT, 4);
-    // map.tileWidth = 16;
-    // map.tileHeight = 24;
-    // game.tileMap = map;
   }
 
   createMap() {
@@ -198,7 +193,7 @@ export class MapGenerator {
 
     // Create graveyards
     const graveyards = [];
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 5; i++) {
       const w = rng.nextRange(14, 18);
       const h = rng.nextRange(8, 12);
       const x = rng.nextRange(overworld.x1, overworld.x2 - w);
@@ -268,14 +263,16 @@ export class MapGenerator {
       map.setBlocked(center.x, graveyard.y2 - 1, false);
 
       // Create a ghost
-      const ghost = new Ghost(game, center.x, center.y, 15);
+      const distance = Math.hypot(center.x - player.x, center.y - player.y);
+      const level = Math.round(distance / 5);
+      const ghost = new Ghost(game, center.x, center.y, level);
       game.entities.add(ghost);
 
       graveyards.push(graveyard);
     }
 
     // Create trees
-    for (let i = 0; i < 2000; i++) {
+    for (let i = 0; i < 5000; i++) {
       const treeX = rng.nextRange(overworld.x1, overworld.x2);
       const treeY = rng.nextRange(overworld.y1, overworld.y2);
       if ((treeX !== player.x || treeY !== player.y) &&
@@ -325,13 +322,13 @@ export class MapGenerator {
       }
 
       const distance = Math.hypot(x - player.x, y - player.y);
-      if (distance < 20) {
+      if (distance < 10) {
         // Too close to start location
         continue;
       }
 
       const roll = rng.nextRange(0, 100);
-      const level = Math.round((distance - 20) / 10) + rng.nextRange(1, 3);
+      const level = Math.round((distance - 10) / 10) + rng.nextRange(1, 3);
       let monster = null;
 
       if (roll < 40) {

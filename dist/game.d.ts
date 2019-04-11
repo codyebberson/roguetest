@@ -10,7 +10,7 @@ export declare class Game extends wglt.Game {
     talentsDialog: TalentsDialog;
     characterDialog: CharacterDialog;
     levelUpDialog: LevelUpDialog;
-    constructor(app: App);
+    constructor(app: App, seed: number);
     hideAllDialogs(): void;
     warpToPoint(point: Vec2): void;
 }

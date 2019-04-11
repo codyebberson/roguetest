@@ -1,4 +1,5 @@
-import { App, AppState } from 'wglt';
+import { AppState } from 'wglt';
+import { App } from './app';
 export declare class MainMenu extends AppState {
     private time;
     private sprites;
