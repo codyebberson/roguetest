@@ -116,10 +116,10 @@ export class MapGenerator {
   constructor(game: Game) {
     this.game = game;
 
-    const map = new TileMap(game.app.gl, MAP_WIDTH, MAP_HEIGHT, 4);
-    map.tileWidth = 16;
-    map.tileHeight = 24;
-    game.tileMap = map;
+    // const map = new TileMap(game.app.gl, MAP_WIDTH, MAP_HEIGHT, 4);
+    // map.tileWidth = 16;
+    // map.tileHeight = 24;
+    // game.tileMap = map;
   }
 
   createMap() {
@@ -190,8 +190,9 @@ export class MapGenerator {
     // Make sure the player starts on ground
     for (let y = player.y - 4; y <= player.y + 4; y++) {
       for (let x = player.x - 4; x <= player.x + 4; x++) {
-        map.setTile(0, x, y, TILE_GRASS, false);
+        map.setTile(x, y, 0, TILE_GRASS);
         map.setAnimated(x, y, 0, false);
+        map.setBlocked(x, y, false);
       }
     }
 
@@ -208,52 +209,63 @@ export class MapGenerator {
         for (let x = graveyard.x1; x < graveyard.x2; x++) {
           if (x === graveyard.x1 && y === graveyard.y1) {
             // Top-left corner
-            map.setTile(0, x, y, TILE_GRASS, true, false);
-            map.setTile(1, x, y, TILE_FENCE8);
+            map.setTile(x, y, 0, TILE_GRASS);
+            map.setTile(x, y, 1, TILE_FENCE8);
+            map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x2 - 1 && y === graveyard.y1) {
             // Top-right corner
-            map.setTile(0, x, y, TILE_GRASS, true, false);
-            map.setTile(1, x, y, TILE_FENCE7);
+            map.setTile(x, y, 0, TILE_GRASS);
+            map.setTile(x, y, 1, TILE_FENCE7);
+            map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x1 && y === graveyard.y2 - 1) {
             // Bottom-left corner
-            map.setTile(0, x, y, TILE_GRASS, true, false);
-            map.setTile(1, x, y, TILE_FENCE6);
+            map.setTile(x, y, 0, TILE_GRASS);
+            map.setTile(x, y, 1, TILE_FENCE6);
+            map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x2 - 1 && y === graveyard.y2 - 1) {
             // Bottom-right corner
-            map.setTile(0, x, y, TILE_GRASS, true, false);
-            map.setTile(1, x, y, TILE_FENCE5);
+            map.setTile(x, y, 0, TILE_GRASS);
+            map.setTile(x, y, 1, TILE_FENCE5);
+            map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x1) {
             // Vertical-left fence
-            map.setTile(0, x, y, TILE_GRASS, true, false);
-            map.setTile(1, x, y, TILE_FENCE10);
+            map.setTile(x, y, 0, TILE_GRASS);
+            map.setTile(x, y, 1, TILE_FENCE10);
+            map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x2 - 1) {
             // Vertical-right fence
-            map.setTile(0, x, y, TILE_GRASS, true, false);
-            map.setTile(1, x, y, TILE_FENCE9);
+            map.setTile(x, y, 0, TILE_GRASS);
+            map.setTile(x, y, 1, TILE_FENCE9);
+            map.setBlocked(x, y, true, false);
 
           } else if (y === graveyard.y1 || y === graveyard.y2 - 1) {
             // Horizontal fence
-            map.setTile(0, x, y, TILE_GRASS, true, false);
-            map.setTile(1, x, y, TILE_FENCE1);
+            map.setTile(x, y, 0, TILE_GRASS);
+            map.setTile(x, y, 1, TILE_FENCE1);
+            map.setBlocked(x, y, true, false);
 
           } else {
             // Middle space
-            map.setTile(0, x, y, TILE_GRASS, false);
+            map.setTile(x, y, 0, TILE_GRASS);
             map.setAnimated(x, y, 0, false);
+            map.setBlocked(x, y, false);
           }
         }
       }
 
       // Create entrances
-      map.setTile(0, center.x, graveyard.y1, TILE_GRASS, false);
-      map.setTile(1, center.x, graveyard.y1, TILE_EMPTY);
-      map.setTile(0, center.x, graveyard.y2 - 1, TILE_GRASS, false);
-      map.setTile(1, center.x, graveyard.y2 - 1, TILE_EMPTY);
+      map.setTile(center.x, graveyard.y1, 0, TILE_GRASS);
+      map.setTile(center.x, graveyard.y1, 1, TILE_EMPTY);
+      map.setBlocked(center.x, graveyard.y1, false);
+
+      map.setTile(center.x, graveyard.y2 - 1, 0, TILE_GRASS);
+      map.setTile(center.x, graveyard.y2 - 1, 1, TILE_EMPTY);
+      map.setBlocked(center.x, graveyard.y2 - 1, false);
 
       // Create a ghost
       const ghost = new Ghost(game, center.x, center.y, 15);
@@ -267,15 +279,16 @@ export class MapGenerator {
       const treeX = rng.nextRange(overworld.x1, overworld.x2);
       const treeY = rng.nextRange(overworld.y1, overworld.y2);
       if ((treeX !== player.x || treeY !== player.y) &&
-          map.getTile(treeX, treeY) === TILE_GRASS &&
+          map.getTile(treeX, treeY, 0) === TILE_GRASS &&
           !map.isBlocked(treeX, treeY)) {
 
-        map.setTile(0, treeX, treeY, TILE_GRASS, true);
+        map.setTile(treeX, treeY, 0, TILE_GRASS);
+        map.setBlocked(treeX, treeY, true);
         const treeType = rng.nextRange(0, 2);
         if (treeType === 0) {
-          map.setTile(1, treeX, treeY, TILE_TREE1);
+          map.setTile(treeX, treeY, 1, TILE_TREE1);
         } else {
-          map.setTile(1, treeX, treeY, TILE_TREE2);
+          map.setTile(treeX, treeY, 1, TILE_TREE2);
         }
       }
     }
@@ -287,8 +300,8 @@ export class MapGenerator {
     const path = computePath(map, player, castle.getCenter(), 10000);
     if (path) {
       for (let i = 0; i < path.length; i++) {
-        if (map.getTile(path[i].x, path[i].y) === TILE_GRASS) {
-          map.setTile(1, path[i].x, path[i].y, TILE_PATH);
+        if (map.getTile(path[i].x, path[i].y, 0) === TILE_GRASS) {
+          map.setTile(path[i].x, path[i].y, 1, TILE_PATH);
         }
       }
     } else {
@@ -301,7 +314,7 @@ export class MapGenerator {
       const x = rng.nextRange(overworld.x1 + 1, overworld.x2 - 2);
       const y = rng.nextRange(overworld.y1 + 1, overworld.y2 - 2);
 
-      if (map.getTile(x, y) !== TILE_GRASS || map.isBlocked(x, y)) {
+      if (map.getTile(x, y, 0) !== TILE_GRASS || map.isBlocked(x, y)) {
         // Not grass, ignore
         continue;
       }
@@ -366,57 +379,67 @@ export class MapGenerator {
     // Create moat
     for (let y = moat.y1; y < moat.y2; y++) {
       for (let x = moat.x1; x < moat.x2; x++) {
-        map.setTile(0, x, y, TILE_WATER, true, false);
-        map.setTile(1, x, y, TILE_EMPTY);
+        map.setTile(x, y, 0, TILE_WATER);
+        map.setTile(x, y, 1, TILE_EMPTY);
         map.setAnimated(x, y, 0, true);
+        map.setBlocked(x, y, true, false);
       }
     }
 
     // Create castle
     for (let y = walls.y1; y < walls.y2; y++) {
       for (let x = walls.x1; x < walls.x2; x++) {
-        map.setTile(0, x, y, TILE_FLOOR, false);
+        map.setTile(x, y, 0, TILE_FLOOR);
         map.setAnimated(x, y, 0, false);
+        map.setBlocked(x, y, false);
       }
     }
 
     // Create castle walls
     for (let x = walls.x1; x < walls.x2; x++) {
-      map.setTile(0, x, walls.y1, TILE_WALL, true);
-      map.setTile(0, x, walls.y2 - 1, TILE_WALL, true);
+      map.setTile(x, walls.y1, 0, TILE_WALL);
+      map.setBlocked(x, walls.y1, true);
+      map.setTile(x, walls.y2 - 1, 0, TILE_WALL);
+      map.setBlocked(x, walls.y2 - 1, true);
     }
     for (let y = walls.y1; y < walls.y2; y++) {
-      map.setTile(0, walls.x1, y, TILE_WALL, true);
-      map.setTile(0, walls.x2 - 1, y, TILE_WALL, true);
+      map.setTile(walls.x1, y, 0, TILE_WALL);
+      map.setBlocked(walls.x1, y, true);
+      map.setTile(walls.x2 - 1, y, 0, TILE_WALL);
+      map.setBlocked(walls.x2 - 1, y, true);
     }
 
     // Create draw bridges
     for (let y = moat.y1 - 1; y < moat.y1 + 3; y++) {
       for (let x = center.x - 1; x <= center.x; x++) {
-        map.setTile(0, x, y, TILE_BRIDGE, false);
-        map.setTile(1, x, y, TILE_EMPTY);
+        map.setTile(x, y, 0, TILE_BRIDGE);
+        map.setTile(x, y, 1, TILE_EMPTY);
         map.setAnimated(x, y, 0, false);
+        map.setBlocked(x, y, false);
       }
     }
     for (let y = moat.y2 - 3; y < moat.y2 + 1; y++) {
       for (let x = center.x - 1; x <= center.x; x++) {
-        map.setTile(0, x, y, TILE_BRIDGE, false);
-        map.setTile(1, x, y, TILE_EMPTY);
+        map.setTile(x, y, 0, TILE_BRIDGE);
+        map.setTile(x, y, 1, TILE_EMPTY);
         map.setAnimated(x, y, 0, false);
+        map.setBlocked(x, y, false);
       }
     }
     for (let y = center.y - 1; y <= center.y; y++) {
       for (let x = moat.x1 - 1; x < moat.x1 + 3; x++) {
-        map.setTile(0, x, y, TILE_BRIDGE, false);
-        map.setTile(1, x, y, TILE_EMPTY);
+        map.setTile(x, y, 0, TILE_BRIDGE);
+        map.setTile(x, y, 1, TILE_EMPTY);
         map.setAnimated(x, y, 0, false);
+        map.setBlocked(x, y, false);
       }
     }
     for (let y = center.y - 1; y <= center.y; y++) {
       for (let x = moat.x2 - 3; x < moat.x2 + 1; x++) {
-        map.setTile(0, x, y, TILE_BRIDGE, false);
-        map.setTile(1, x, y, TILE_EMPTY);
+        map.setTile(x, y, 0, TILE_BRIDGE);
+        map.setTile(x, y, 1, TILE_EMPTY);
         map.setAnimated(x, y, 0, false);
+        map.setBlocked(x, y, false);
       }
     }
 
@@ -452,18 +475,22 @@ export class MapGenerator {
 
     // Make sure there's a ring of "empty" all around
     for (let x = dungeon.rect.x1; x < dungeon.rect.x2; x++) {
-      map.setTile(0, x, dungeon.rect.y1, TILE_EMPTY, true);
+      map.setTile(x, dungeon.rect.y1, 0, TILE_EMPTY);
       map.setAnimated(x, dungeon.rect.y1, 0, false);
+      map.setBlocked(x, dungeon.rect.y1, true);
 
-      map.setTile(0, x, dungeon.rect.y2 - 1, TILE_EMPTY, true);
+      map.setTile(x, dungeon.rect.y2 - 1, 0, TILE_EMPTY);
       map.setAnimated(x, dungeon.rect.y2 - 1, 0, false);
+      map.setBlocked(x, dungeon.rect.y2 - 1, true);
     }
     for (let y = dungeon.rect.y1; y < dungeon.rect.y2; y++) {
-      map.setTile(0, dungeon.rect.x1, y, TILE_EMPTY, true);
+      map.setTile(dungeon.rect.x1, y, 0, TILE_EMPTY);
       map.setAnimated(dungeon.rect.x1, y, 0, false);
+      map.setBlocked(dungeon.rect.x1, y, true);
 
-      map.setTile(0, dungeon.rect.x2 - 1, y, TILE_EMPTY, true);
+      map.setTile(dungeon.rect.x2 - 1, y, 0, TILE_EMPTY);
       map.setAnimated(dungeon.rect.x2 - 1, y, 0, false);
+      map.setBlocked(dungeon.rect.x2 - 1, y, true);
     }
 
     const bossLayout = BOSS_LAYOUTS[rng.nextRange(0, BOSS_LAYOUTS.length)];
@@ -523,7 +550,7 @@ export class MapGenerator {
         // This is the first room, where the player starts at
         dungeon.entrance = new Portal(game, center.x, center.y, 'stairs', STAIRS_SPRITE);
         game.entities.add(dungeon.entrance);
-        map.setTile(0, center.x, center.y, TILE_STAIRS_UP);
+        map.setTile(center.x, center.y, 0, TILE_STAIRS_UP);
 
       } else {
         // All rooms after the first:
@@ -580,10 +607,12 @@ export class MapGenerator {
 
       // Create a door to boss room
       if (center.y > prev.y) {
-        map.setTile(0, center.x, bossRoom.y1, TILE_CLOSED_DOOR, true);
+        map.setTile(center.x, bossRoom.y1, 0, TILE_CLOSED_DOOR);
+        map.setBlocked(center.x, bossRoom.y1, true);
         game.entities.add(new BossDoor(game, center.x, bossRoom.y1, boss));
       } else {
-        map.setTile(0, center.x, bossRoom.y2, TILE_CLOSED_DOOR, true);
+        map.setTile(center.x, bossRoom.y2, 0, TILE_CLOSED_DOOR);
+        map.setBlocked(center.x, bossRoom.y2, true);
         game.entities.add(new BossDoor(game, center.x, bossRoom.y2, boss));
       }
 
@@ -593,16 +622,18 @@ export class MapGenerator {
       // Create stairs
       const stairsLoc = stairsRoom.getCenter();
       this.createHTunnel(map, center.x, stairsLoc.x, stairsLoc.y);
-      map.setTile(0, stairsLoc.x, stairsLoc.y, TILE_STAIRS_DOWN);
+      map.setTile(stairsLoc.x, stairsLoc.y, 0, TILE_STAIRS_DOWN);
       dungeon.exit = new Portal(game, stairsLoc.x, stairsLoc.y, 'stairs', STAIRS_SPRITE);
       game.entities.add(dungeon.exit);
 
       // Create door to stairs room
       if (center.x > stairsLoc.x) {
-        map.setTile(0, bossRoom.x1, center.y, TILE_CLOSED_DOOR, true);
+        map.setTile(bossRoom.x1, center.y, 0, TILE_CLOSED_DOOR);
+        map.setBlocked(bossRoom.x1, center.y, true);
         game.entities.add(new LockedDoor(game, bossRoom.x1, center.y, keyId));
       } else {
-        map.setTile(0, bossRoom.x2, center.y, TILE_CLOSED_DOOR, true);
+        map.setTile(bossRoom.x2, center.y, 0, TILE_CLOSED_DOOR);
+        map.setBlocked(bossRoom.x2, center.y, true);
         game.entities.add(new LockedDoor(game, bossRoom.x2, center.y, keyId));
       }
     }
@@ -620,8 +651,9 @@ export class MapGenerator {
   private clearMap(map: TileMap, rect: Rect, tile: number, blocked: boolean, blockedSight: boolean) {
     for (let y = rect.y1; y < rect.y2; y++) {
       for (let x = rect.x1; x < rect.x2; x++) {
-        map.setTile(0, x, y, tile, blocked, blockedSight);
+        map.setTile(x, y, 0, tile);
         map.setAnimated(x, y, 0, false);
+        map.setBlocked(x, y, blocked, blockedSight);
         for (let z = 1; z < 4; z++) {
           map.setTile(z, x, y, TILE_EMPTY);
           map.setAnimated(x, y, z, false);
@@ -633,39 +665,42 @@ export class MapGenerator {
   private createRoom(map: TileMap, room: Rect) {
     for (let y = room.y1 + 1; y < room.y2; y++) {
       for (let x = room.x1 + 1; x < room.x2; x++) {
-        map.setTile(0, x, y, TILE_FLOOR, false);
+        map.setTile(x, y, 0, TILE_FLOOR);
         map.setAnimated(x, y, 0, false);
+        map.setBlocked(x, y, false);
       }
     }
   }
 
   private createHTunnel(map: TileMap, x1: number, x2: number, y: number) {
     for (let x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
-      const existing = map.getTile(x, y);
+      const existing = map.getTile(x, y, 0);
       if (existing === TILE_STAIRS_UP || existing === TILE_STAIRS_DOWN) {
         continue;
       }
       if (existing === TILE_WATER) {
-        map.setTile(0, x, y, TILE_BRIDGE, false);
+        map.setTile(x, y, 0, TILE_BRIDGE);
       } else {
-        map.setTile(0, x, y, TILE_FLOOR, false);
+        map.setTile(x, y, 0, TILE_FLOOR);
       }
       map.setAnimated(x, y, 0, false);
+      map.setBlocked(x, y, false);
     }
   }
 
   private createVTunnel(map: TileMap, y1: number, y2: number, x: number) {
     for (let y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
-      const existing = map.getTile(x, y);
+      const existing = map.getTile(x, y, 0);
       if (existing === TILE_STAIRS_UP || existing === TILE_STAIRS_DOWN) {
         continue;
       }
       if (existing === TILE_WATER) {
-        map.setTile(0, x, y, TILE_BRIDGE, false);
+        map.setTile(x, y, 0, TILE_BRIDGE);
       } else {
-        map.setTile(0, x, y, TILE_FLOOR, false);
+        map.setTile(x, y, 0, TILE_FLOOR);
       }
       map.setAnimated(x, y, 0, false);
+      map.setBlocked(x, y, false);
     }
   }
 
@@ -765,13 +800,14 @@ export class MapGenerator {
 
       if (dice < 80) {
         // Create a barrel
-        map.setTile(0, x, y, TILE_FLOOR, true, false);
-        map.setTile(1, x, y, TILE_BARREL);
+        map.setTile(x, y, 0, TILE_FLOOR);
+        map.setTile(x, y, 1, TILE_BARREL);
       } else {
         // Create a statue
-        map.setTile(0, x, y, TILE_FLOOR, true, false);
-        map.setTile(1, x, y, TILE_STATUE);
+        map.setTile(x, y, 0, TILE_FLOOR);
+        map.setTile(x, y, 1, TILE_STATUE);
       }
+      map.setBlocked(x, y, true, false);
     }
   }
 
@@ -779,16 +815,21 @@ export class MapGenerator {
     const rng = this.game.rng;
     const water = bounds.getCenter();
     for (let i = 0; i < length; i++) {
-      map.setTile(0, water.x, water.y, TILE_WATER, true, false);
-      map.setTile(0, water.x - 1, water.y, TILE_WATER, true, false);
-      map.setTile(0, water.x + 1, water.y, TILE_WATER, true, false);
-      map.setTile(0, water.x, water.y - 1, TILE_WATER, true, false);
-      map.setTile(0, water.x, water.y + 1, TILE_WATER, true, false);
+      map.setTile(water.x, water.y, 0, TILE_WATER);
+      map.setTile(water.x - 1, water.y, 0, TILE_WATER);
+      map.setTile(water.x + 1, water.y, 0, TILE_WATER);
+      map.setTile(water.x, water.y - 1, 0, TILE_WATER);
+      map.setTile(water.x, water.y + 1, 0, TILE_WATER);
       map.setAnimated(water.x, water.y, 0, true);
       map.setAnimated(water.x - 1, water.y, 0, true);
       map.setAnimated(water.x + 1, water.y, 0, true);
       map.setAnimated(water.x, water.y - 1, 0, true);
       map.setAnimated(water.x, water.y + 1, 0, true);
+      map.setBlocked(water.x, water.y, true, false);
+      map.setBlocked(water.x - 1, water.y, true, false);
+      map.setBlocked(water.x + 1, water.y, true, false);
+      map.setBlocked(water.x, water.y - 1, true, false);
+      map.setBlocked(water.x, water.y + 1, true, false);
       water.x += rng.nextRange(-1, 2);
       water.y += rng.nextRange(-1, 2);
       if (!bounds.contains(water)) {
@@ -804,46 +845,46 @@ export class MapGenerator {
     // Touch up walls / half walls
     for (let y = 0; y < MAP_HEIGHT; y++) {
       for (let x = 0; x < MAP_WIDTH; x++) {
-        const t1 = map.getTile(x, y);
-        const t2 = map.getTile(x, y + 1);
-        const t3 = map.getTile(x - 1, y);
-        const t4 = map.getTile(x + 1, y);
-        const t5 = map.getTile(x, y - 1);
+        const t1 = map.getTile(x, y, 0);
+        const t2 = map.getTile(x, y + 1, 0);
+        const t3 = map.getTile(x - 1, y, 0);
+        const t4 = map.getTile(x + 1, y, 0);
+        const t5 = map.getTile(x, y - 1, 0);
 
         if (t1 === TILE_FLOOR && t3 === TILE_WALL && t5 === TILE_HALF_WALL && rng.nextRange(0, 4) === 0) {
-          map.setTile(1, x, y, TILE_COBWEB_NORTHWEST);
+          map.setTile(x, y, 1, TILE_COBWEB_NORTHWEST);
         }
 
         if (t1 === TILE_FLOOR && t4 === TILE_WALL && t5 === TILE_HALF_WALL && rng.nextRange(0, 4) === 0) {
-          map.setTile(1, x, y, TILE_COBWEB_NORTHEAST);
+          map.setTile(x, y, 1, TILE_COBWEB_NORTHEAST);
         }
 
         if (t1 === TILE_FLOOR && t3 === TILE_WALL && t2 === TILE_WALL && rng.nextRange(0, 4) === 0) {
-          map.setTile(1, x, y, TILE_COBWEB_SOUTHWEST);
+          map.setTile(x, y, 1, TILE_COBWEB_SOUTHWEST);
         }
 
         if (t1 === TILE_FLOOR && t4 === TILE_WALL && t2 === TILE_WALL && rng.nextRange(0, 4) === 0) {
-          map.setTile(1, x, y, TILE_COBWEB_SOUTHEAST);
+          map.setTile(x, y, 1, TILE_COBWEB_SOUTHEAST);
         }
 
         if (t1 === TILE_CLOSED_DOOR && t2 !== TILE_WALL) {
-          map.setTile(2, x, y + 1, TILE_SHADOW);
+          map.setTile(x, y + 1, 2, TILE_SHADOW);
         }
 
         if (t1 === TILE_WALL && t2 !== TILE_WALL && t2 !== TILE_CLOSED_DOOR) {
           const r = rng.nextRange(0, 20);
           if (r === 0) {
-            map.setTile(0, x, y, TILE_HALF_WALL2, true);
+            map.setTile(x, y, 0, TILE_HALF_WALL2);
           } else if (r === 1) {
-            map.setTile(0, x, y, TILE_HALF_WALL3, true);
+            map.setTile(x, y, 0, TILE_HALF_WALL3);
           } else {
-            map.setTile(0, x, y, TILE_HALF_WALL, true);
+            map.setTile(x, y, 0, TILE_HALF_WALL);
           }
-          map.setTile(2, x, y + 1, TILE_SHADOW);
+          map.setTile(x, y + 1, 2, TILE_SHADOW);
         }
 
         if (t1 !== TILE_WATER && t2 === TILE_WATER) {
-          map.setTile(2, x, y + 1, TILE_SHADOW);
+          map.setTile(x, y + 1, 2, TILE_SHADOW);
         }
 
         const nearBridge = t2 === TILE_BRIDGE || t3 === TILE_BRIDGE || t4 === TILE_BRIDGE || t5 === TILE_BRIDGE;

@@ -11,8 +11,6 @@ import {MapGenerator} from './mapgen';
 import {Gateway} from './items/gateway';
 import { LevelUpDialog } from './gui/levelupdialog';
 import { EntityFrames } from './gui/entityframes';
-import { Hearthstone } from './items/hearthstone';
-import { Gold } from './items/gold';
 import { HealthPotion } from './items/healthpotion';
 import { Scroll } from './items/scroll';
 
@@ -31,9 +29,11 @@ export class Game extends wglt.Game {
 
   constructor(app: App, seed: number) {
     super(app, {
+      mapSize: new Rect(0, 0, 512, 512),
+      mapLayers: 4,
       tileSize: new Rect(0, 0, 16, 24),
-      horizontalViewDistance: 8,
-      verticalViewDistance: 6
+      horizontalViewDistance: 6,
+      verticalViewDistance: 4
     });
 
     this.rng.setSeed(seed);

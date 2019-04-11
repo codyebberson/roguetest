@@ -14,6 +14,7 @@ export abstract class Door extends Item {
     const game = this.game;
     const map = game.tileMap as TileMap;
     game.entities.remove(this);
-    map.setTile(0, this.x, this.y, TILE_OPEN_DOOR, false);
+    map.setTile(this.x, this.y, 0, TILE_OPEN_DOOR);
+    map.setBlocked(this.x, this.y, false);
   }
 }
