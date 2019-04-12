@@ -13,7 +13,7 @@ export class TopPanel extends Panel {
     this.add(new ButtonSlot(new Rect(0, 3, 20, 28), Keys.VK_C));
 
     // Talents / abilities
-    this.add(new ButtonSlot(new Rect(0, 3, 20, 28), Keys.VK_N));
+    this.add(new ButtonSlot(new Rect(0, 3, 20, 28), Keys.VK_T));
 
     // Inspect
     this.add(new ButtonSlot(new Rect(0, 3, 20, 28), Keys.VK_QUESTION_MARK));

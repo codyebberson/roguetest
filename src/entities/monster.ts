@@ -9,7 +9,7 @@ import { EquipmentBuilder } from '../equipment/equipmentbuilder';
 import { HealthPotion } from '../items/healthpotion';
 
 const START_BLOOD = 1367;
-const END_BLOOD = 1371;
+const END_BLOOD = 1370;
 
 export abstract class Monster extends StatsActor {
   loot: Item[];
@@ -46,7 +46,7 @@ export abstract class Monster extends StatsActor {
 
     // Add blood to the map
     const map = this.game.tileMap as TileMap;
-    map.setTile(3, this.x, this.y, this.game.rng.nextRange(START_BLOOD, END_BLOOD));
+    map.setTile(this.x, this.y, 3, this.game.rng.nextRange(START_BLOOD, END_BLOOD));
 
     // Drop loot
     for (let i = 0; i < this.loot.length; i++) {

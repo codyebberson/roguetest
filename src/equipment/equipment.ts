@@ -1,4 +1,4 @@
-import { Item, Colors, Message, Serializable } from 'wglt';
+import { Item, Colors, Message, CompoundMessage, Serializable } from 'wglt';
 import { Player } from '../entities/player';
 import { EquipmentBuilder } from './equipmentbuilder';
 import { EquipmentSlot } from './equipmentslot';
@@ -69,7 +69,10 @@ export class Equipment extends Item {
   }
 
   onPickup(player: Player) {
-    this.game.log(player.name + ' picked up a ' + this.name, this.getColor(this.quality));
+    this.game.log(new CompoundMessage(
+      new Message(player.name + ' picked up ', Colors.WHITE),
+      new Message('[' + this.name + ']', this.getColor(this.quality))
+    ));
   }
 
   onUse(player: Player) {

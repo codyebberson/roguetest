@@ -27,9 +27,12 @@ export class Game extends wglt.Game {
 
   constructor(app: App, seed: number) {
     super(app, {
+      mapSize: new Rect(0, 0, 512, 512),
+      mapLayers: 4,
       tileSize: new Rect(0, 0, 16, 24),
-      horizontalViewDistance: 8,
-      verticalViewDistance: 6
+      horizontalViewDistance: 6,
+      verticalViewDistance: 4,
+      focusMargins: new Vec2(0, 40)
     });
 
     this.rng.setSeed(seed);
