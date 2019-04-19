@@ -190,6 +190,22 @@ export class Game extends wglt.Game {
     });
   }
 
+  findFreeTile(x0: number, y0: number, maxDistance: number) {
+    for (let r = 0; r <= maxDistance; r += 0.5) {
+      const r2 = Math.ceil(r);
+      for (let y = y0 - r2; y <= y0 + r2; y++) {
+        for (let x = x0 - r2; x <= x0 + r2; x++) {
+          if (Math.hypot(x - x0, y - y0) <= r) {
+            if (!this.isBlocked(x, y) && !this.getEntityAt(x, y)) {
+              return new Vec2(x, y);
+            }
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+
   save() {
     const serializer = new Serializer();
     const result = serializer.serialize(this);

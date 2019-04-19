@@ -137,6 +137,7 @@ export class MapGenerator {
     const portal2 = dungeons[0].entrance as Portal;
     portal1.other = portal2;
     portal2.other = portal1;
+    game.entities.add(portal1);
 
     // Connect all of the dungeon floors to each other
     for (let i = 1; i < 10; i++) {
@@ -269,30 +270,37 @@ export class MapGenerator {
       graveyards.push(graveyard);
     }
 
-    // Create trees
-    for (let i = 0; i < 5000; i++) {
-      const treeX = rng.nextRange(overworld.x1, overworld.x2);
-      const treeY = rng.nextRange(overworld.y1, overworld.y2);
-      if ((treeX !== player.x || treeY !== player.y) &&
-          map.getTile(treeX, treeY, 0) === TILE_GRASS &&
-          !map.isBlocked(treeX, treeY)) {
-
-        map.setTile(treeX, treeY, 0, TILE_GRASS);
-        map.setBlocked(treeX, treeY, true);
-        const treeType = rng.nextRange(0, 2);
-        if (treeType === 0) {
-          map.setTile(treeX, treeY, 1, TILE_TREE1);
-        } else {
-          map.setTile(treeX, treeY, 1, TILE_TREE2);
-        }
-      }
-    }
-
     // Create the main castle
     const castle = this.createCastle(map);
+    const castleCenter = castle.getCenter();
 
     // Create a road from the player to the castle
-    const path = computePath(map, player, castle.getCenter(), 10000);
+    let path = computePath(map, player, castleCenter, 10000);
+    if (!path) {
+      // Step 1: Create bridges necessary along vertical axis
+      let x = player.x;
+      for (let y = Math.min(player.y, castleCenter.y); y <= Math.max(player.y, castleCenter.y); y++) {
+        if (map.isBlocked(x, y)) {
+          map.setTile(x, y, 0, TILE_BRIDGE);
+          map.setAnimated(x, y, 0, false);
+          map.setBlocked(x, y, false);
+        }
+      }
+
+      // Step 2: Create bridges necessary along horizontal axis
+      let y = player.y;
+      for (let x = Math.min(player.x, castleCenter.x); x <= Math.max(player.x, castleCenter.x); x++) {
+        if (map.isBlocked(x, y)) {
+          map.setTile(x, y, 0, TILE_BRIDGE);
+          map.setAnimated(x, y, 0, false);
+          map.setBlocked(x, y, false);
+        }
+      }
+
+      // Step 3: Recompute the path
+      path = computePath(map, player, castleCenter, 10000);
+    }
+
     if (path) {
       for (let i = 0; i < path.length; i++) {
         if (map.getTile(path[i].x, path[i].y, 0) === TILE_GRASS) {
@@ -303,22 +311,37 @@ export class MapGenerator {
       console.log('eek! no path!');
     }
 
+    // Create trees
+    for (let i = 0; i < 5000; i++) {
+      const treeX = rng.nextRange(overworld.x1, overworld.x2);
+      const treeY = rng.nextRange(overworld.y1, overworld.y2);
+      const distance = Math.hypot(treeX - player.x, treeY - player.y);
+      if (distance < 6) {
+        // Too close to start location
+        continue;
+      }
+      if (map.getTile(treeX, treeY, 0) !== TILE_GRASS ||
+          map.getTile(treeX, treeY, 1) === TILE_PATH ||
+          map.isBlocked(treeX, treeY)) {
+        // Already occupied
+        continue;
+      }
+      // Create a tree
+      map.setTile(treeX, treeY, 0, TILE_GRASS);
+      map.setBlocked(treeX, treeY, true);
+      const treeType = rng.nextRange(0, 2);
+      if (treeType === 0) {
+        map.setTile(treeX, treeY, 1, TILE_TREE1);
+      } else {
+        map.setTile(treeX, treeY, 1, TILE_TREE2);
+      }
+    }
+
     // Create baddies
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 600; i++) {
       // Choose random spot for this monster
       const x = rng.nextRange(overworld.x1 + 1, overworld.x2 - 2);
       const y = rng.nextRange(overworld.y1 + 1, overworld.y2 - 2);
-
-      if (map.getTile(x, y, 0) !== TILE_GRASS || map.isBlocked(x, y)) {
-        // Not grass, ignore
-        continue;
-      }
-
-      if (game.getEntityAt(x, y)) {
-        // Something already at this location
-        continue;
-      }
-
       const distance = Math.hypot(x - player.x, y - player.y);
       if (distance < 10) {
         // Too close to start location
@@ -326,18 +349,32 @@ export class MapGenerator {
       }
 
       const roll = rng.nextRange(0, 100);
-      const level = Math.round((distance - 10) / 10) + rng.nextRange(1, 3);
-      let monster = null;
 
-      if (roll < 40) {
-        monster = new Spider(game, x, y, level);
-      } else if (roll < 80) {
-        monster = new Bat(game, x, y, level);
-      } else {
-        monster = new Troll(game, x, y, level);
+      for (let j = 0; j < 3; j++) {
+        const pos = game.findFreeTile(x, y, 3);
+        if (!pos) {
+          // No more free tiles
+          break;
+        }
+
+        if (map.getTile(pos.x, pos.y, 0) !== TILE_GRASS) {
+          // Not grass, ignore
+          continue;
+        }
+
+        const level = Math.round((distance - 10) / 10) + rng.nextRange(1, 3);
+        let monster = null;
+
+        if (roll < 40) {
+          monster = new Spider(game, pos.x, pos.y, level);
+        } else if (roll < 80) {
+          monster = new Bat(game, pos.x, pos.y, level);
+        } else {
+          monster = new Troll(game, pos.x, pos.y, level);
+        }
+
+        game.entities.add(monster);
       }
-
-      game.entities.add(monster);
     }
 
     // Create portal entrance

@@ -1,4 +1,4 @@
-import {Actor, BasicMonster, Sprite, TileMap, Item, Vec2} from 'wglt';
+import {Actor, BasicMonster, Sprite, TileMap, Item} from 'wglt';
 
 import {Game} from '../game';
 
@@ -32,33 +32,32 @@ export abstract class Monster extends StatsActor {
   }
 
   onDeath(attacker: StatsActor) {
-    this.game.log(this.name + ' is dead');
-    this.blocks = false;
-    this.ai = undefined;
-    this.game.entities.remove(this);
+    const game = this.game as Game;
+    game.log(this.name + ' is dead');
+    game.entities.remove(this);
 
     if (attacker instanceof Player) {
       // Based on DnD xp rules
-      const player = this.game.player as Player;
+      const player = game.player as Player;
       const xpGain = Math.round(10 * player.level * Math.pow(2.0, (this.level - player.level) * 0.5));
       player.addXp(xpGain);
     }
 
     // Add blood to the map
-    const map = this.game.tileMap as TileMap;
-    map.setTile(this.x, this.y, 3, this.game.rng.nextRange(START_BLOOD, END_BLOOD));
+    const map = game.tileMap as TileMap;
+    map.setTile(this.x, this.y, 3, game.rng.nextRange(START_BLOOD, END_BLOOD));
 
     // Drop loot
     for (let i = 0; i < this.loot.length; i++) {
       // TODO: Spread loot around multiple tiles
-      const location = this.findNearestDropLocation();
+      const location = game.findFreeTile(this.x, this.y, 5);
       if (!location) {
         break;
       }
       const loot = this.loot[i];
       loot.x = location.x;
       loot.y = location.y;
-      this.game.entities.add(loot);
+      game.entities.add(loot);
     }
   }
 
@@ -66,25 +65,10 @@ export abstract class Monster extends StatsActor {
     return (attacker as StatsActor).getDamage();
   }
 
-  private findNearestDropLocation() {
-    for (let r = 0; r < 10; r += 0.5) {
-      const r2 = Math.ceil(r);
-      for (let y = this.y - r2; y <= this.y + r2; y++) {
-        for (let x = this.x - r2; x <= this.x + r2; x++) {
-          if (Math.hypot(x - this.x, y - this.y) <= r) {
-            if (!this.game.isBlocked(x, y) && !this.game.getEntityAt(x, y)) {
-              return new Vec2(x, y);
-            }
-          }
-        }
-      }
-    }
-    return undefined;
-  }
-
   getLoot() {
     const game = this.game as Game;
     const result: Item[] = [];
+
     if (this.game.rng.nextRange(0, 6) <= 2) {
       result.push(new Gold(game, this.x, this.y));
     }
