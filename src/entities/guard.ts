@@ -1,4 +1,4 @@
-import { AI, Sprite, Vec2, Colors, Serializable } from 'wglt';
+import { AI, Sprite, Vec2, Colors, Serializable, Actor } from 'wglt';
 
 import { Game } from '../game';
 
@@ -13,6 +13,7 @@ class GuardAI extends AI {
   readonly waypoints: Vec2[];
   waypointIndex: number;
   waitCount: number;
+  aggroTarget?: Actor;
   aggroCount: number;
 
   constructor(actor: Guard, waypoints: Vec2[]) {
@@ -28,7 +29,14 @@ class GuardAI extends AI {
     const game = guard.game as Game;
     const player = game.player as Player;
 
-    if (guard.sentiment === Sentiment.HOSTILE) {
+    if (this.aggroTarget) {
+      if (this.aggroTarget.hp <= 0) {
+        // Target is dead, so go back to normal
+        this.aggroTarget = undefined;
+        this.aggroCount = 0;
+        return;
+      }
+
       this.aggroCount++;
 
       if (this.aggroCount === 1) {
@@ -40,23 +48,43 @@ class GuardAI extends AI {
           if (entity instanceof Guard) {
             const otherGuard = entity as Guard;
             if (guard.distanceTo(otherGuard) < 6) {
-              otherGuard.sentiment = Sentiment.HOSTILE;
+              otherGuard.sentiment = guard.sentiment;
+              (otherGuard.ai as GuardAI).aggroTarget = this.aggroTarget;
             }
           }
         }
       } else {
-        if (guard.distanceTo(player) > 1.0) {
-          // Move towards player if far away
-          guard.moveToward(player.x, player.y);
-
-        } else if (player.hp > 0) {
-          // Close enough, attack! (if the player is still alive.)
+        if (guard.distanceTo(this.aggroTarget) > 1.0) {
+          // Move towards target if far away
+          guard.moveToward(this.aggroTarget.x, this.aggroTarget.y);
+        } else {
+          // Close enough, attack!
           const damage = 10;
-          guard.attack(player, damage);
+          guard.attack(this.aggroTarget, damage);
         }
       }
 
       return;
+    }
+
+    // Not currently targeting anything
+    this.aggroCount = 0;
+
+    // If hostile against player, then target the player
+    if (guard.sentiment === Sentiment.HOSTILE) {
+      this.aggroTarget = player;
+      return;
+    }
+
+    // If an enemy is visible, then target that enemy
+    for (let i = 0; i < game.entities.length; i++) {
+      const entity = game.entities.get(i);
+      if (entity instanceof Monster &&
+          !(entity instanceof Guard) &&
+          game.tileMap.isVisible(entity.x, entity.y)) {
+        this.aggroTarget = entity;
+        return;
+      }
     }
 
     if (this.waitCount > 0) {
