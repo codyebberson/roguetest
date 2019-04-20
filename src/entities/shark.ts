@@ -5,27 +5,26 @@ import {Game} from '../game';
 import {Monster} from './monster';
 
 const SPRITE = new Sprite(0, 168, 16, 24, 2, true, undefined, 0x5790b7FF);
-const DAMAGE = 10;
 
 @Serializable('SharkAI')
 class SharkAI extends AI {
   doAi() {
-    const monster = this.actor;
-    const player = monster.game.player;
+    const shark = this.actor as Shark;
+    const player = shark.game.player;
     if (!player) {
       return;
     }
 
-    if (monster.distanceTo(player) < 2) {
-      monster.attack(player, DAMAGE);
+    if (shark.distanceTo(player) < 2) {
+      shark.attack(player, shark.getDamage());
     }
   }
 }
 
 @Serializable('Shark')
 export class Shark extends Monster {
-  constructor(game: Game, x: number, y: number) {
-    super(game, x, y, 'Shark', SPRITE, 1);
+  constructor(game: Game, x: number, y: number, level: number) {
+    super(game, x, y, 'Shark', SPRITE, level);
     this.ai = new SharkAI(this);
   }
 }

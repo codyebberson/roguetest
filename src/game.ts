@@ -6,7 +6,7 @@ import { Player } from './entities/player';
 import { BottomPanel } from './gui/bottompanel';
 import { CharacterDialog } from './gui/characterdialog';
 import { TopPanel } from './gui/toppanel';
-import { MapGenerator } from './mapgen';
+import { MapGenerator } from './mapgen/mapgen';
 import { LevelUpDialog } from './gui/levelupdialog';
 import { EntityFrames } from './gui/entityframes';
 import { HealthPotion } from './items/healthpotion';

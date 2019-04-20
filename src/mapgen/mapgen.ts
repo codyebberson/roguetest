@@ -1,27 +1,28 @@
 import { Rect, Sprite, TileMap, Vec2, computePath, getTileId } from 'wglt';
 
-import { ConfuseAbility } from './abilities/confuse';
-import { FireballAbility } from './abilities/fireball';
-import { LightningAbility } from './abilities/lightning';
-import { Bat } from './entities/bat';
-import { Griffon } from './entities/griffon';
-import { Player } from './entities/player';
-import { Shark } from './entities/shark';
-import { Spider } from './entities/spider';
-import { Troll } from './entities/troll';
-import { Game } from './game';
-import { HealthPotion } from './items/healthpotion';
-import { Scroll } from './items/scroll';
-import { RedDragon } from './entities/reddragon';
-import { Guard } from './entities/guard';
-import { Portal } from './items/portal';
-import { Dungeon } from './dungeon';
-import { LockedDoor } from './items/lockeddoor';
-import { Key } from './items/key';
-import { BossDoor } from './items/bossdoor';
-import { King } from './entities/king';
-import { Ghost } from './entities/ghost';
-import { WindElemental } from './entities/windelemental';
+import { ConfuseAbility } from '../abilities/confuse';
+import { FireballAbility } from '../abilities/fireball';
+import { LightningAbility } from '../abilities/lightning';
+import { Bat } from '../entities/bat';
+import { Griffon } from '../entities/griffon';
+import { Player } from '../entities/player';
+import { Shark } from '../entities/shark';
+import { Spider } from '../entities/spider';
+import { Troll } from '../entities/troll';
+import { Game } from '../game';
+import { HealthPotion } from '../items/healthpotion';
+import { Scroll } from '../items/scroll';
+import { RedDragon } from '../entities/reddragon';
+import { Guard } from '../entities/guard';
+import { Portal } from '../items/portal';
+import { Dungeon } from '../dungeon';
+import { LockedDoor } from '../items/lockeddoor';
+import { Key } from '../items/key';
+import { BossDoor } from '../items/bossdoor';
+import { King } from '../entities/king';
+import { Ghost } from '../entities/ghost';
+import { WindElemental } from '../entities/windelemental';
+import { Snake } from '../entities/snake';
 
 // Size of the map
 const MAP_WIDTH = 512;
@@ -365,9 +366,11 @@ export class MapGenerator {
         const level = Math.round((distance - 10) / 10) + rng.nextRange(1, 3);
         let monster = null;
 
-        if (roll < 40) {
+        if (roll < 25) {
           monster = new Spider(game, pos.x, pos.y, level);
-        } else if (roll < 80) {
+        } else if (roll < 50) {
+          monster = new Snake(game, pos.x, pos.y, level);
+        } else if (roll < 75) {
           monster = new Bat(game, pos.x, pos.y, level);
         } else {
           monster = new Troll(game, pos.x, pos.y, level);
@@ -921,7 +924,7 @@ export class MapGenerator {
 
         const nearBridge = t2 === TILE_BRIDGE || t3 === TILE_BRIDGE || t4 === TILE_BRIDGE || t5 === TILE_BRIDGE;
         if (t1 === TILE_WATER && nearBridge && rng.nextRange(0, 20) === 1) {
-          game.entities.add(new Shark(game, x, y));
+          game.entities.add(new Shark(game, x, y, 3));
         }
       }
     }
