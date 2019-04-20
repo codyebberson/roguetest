@@ -8,7 +8,6 @@ import {Player} from './player';
 import { Sentiment } from './statsactor';
 
 const SPRITE = new Sprite(288, 312, 16, 24, 2, true, undefined, 0xAADDFFFF);
-const DAMAGE = 10;
 
 @Serializable('WindElementalAI')
 class WindElementalAI extends AI {
@@ -22,7 +21,7 @@ class WindElementalAI extends AI {
 
     const dist = actor.distanceTo(player);
     if (dist <= 2) {
-      actor.attack(player, DAMAGE);
+      actor.attack(player, actor.getDamage());
     } else {
       const rng = player.game.rng;
       actor.move(rng.nextRange(-1, 2), rng.nextRange(-1, 2));

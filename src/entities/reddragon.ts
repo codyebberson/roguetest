@@ -6,10 +6,8 @@ import {Monster} from './monster';
 import {Player} from './player';
 import { FlameCrawler } from './flamecrawler';
 import { Sentiment } from './statsactor';
-import { Key } from '../items/key';
 
 const SPRITE = new Sprite(576, 312, 16, 24, 2, true, undefined, 0xd51111ff);
-const DAMAGE = 10;
 
 @Serializable('RedDragonAI')
 class RedDragonAI extends AI {
@@ -53,7 +51,7 @@ class RedDragonAI extends AI {
 
     const dist = dragon.distanceTo(player);
     if (dist <= 2) {
-      dragon.attack(player, DAMAGE);
+      dragon.attack(player, dragon.getDamage());
     }
   }
 }
@@ -70,11 +68,5 @@ export class RedDragon extends Monster {
     this.hp = this.maxHp;
     this.ai = new RedDragonAI(this);
     this.sentiment = Sentiment.NEUTRAL;
-  }
-
-  getLoot() {
-    return [
-      new Key(this.game, this.x, this.y, 0)
-    ];
   }
 }

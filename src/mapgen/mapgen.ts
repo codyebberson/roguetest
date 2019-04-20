@@ -23,6 +23,8 @@ import { King } from '../entities/king';
 import { Ghost } from '../entities/ghost';
 import { WindElemental } from '../entities/windelemental';
 import { Snake } from '../entities/snake';
+import { EquipmentBuilder } from '../equipment/equipmentbuilder';
+import { EquipmentQuality } from '../equipment/equipmentquality';
 
 // Size of the map
 const MAP_WIDTH = 512;
@@ -637,7 +639,8 @@ export class MapGenerator {
         boss = new Griffon(game, center.x, center.y, bossLevel);
       }
 
-      boss.loot = [new Key(game, boss.x, boss.y, keyId)];
+      boss.loot.push(new Key(game, boss.x, boss.y, keyId));
+      boss.loot.push(new EquipmentBuilder(game).withRandomDrop(bossLevel, EquipmentQuality.EPIC).build());
       game.entities.add(boss);
 
       // Create a door to boss room

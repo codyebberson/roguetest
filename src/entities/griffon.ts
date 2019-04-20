@@ -8,7 +8,6 @@ import {Player} from './player';
 import { Sentiment } from './statsactor';
 
 const SPRITE = new Sprite(448, 144, 16, 24, 2, true, undefined, 0xf2f261ff);
-const DAMAGE = 10;
 
 @Serializable('GriffonAI')
 class GriffonAI extends AI {
@@ -30,7 +29,7 @@ class GriffonAI extends AI {
 
     const dist = griffon.distanceTo(player);
     if (dist <= 2) {
-      griffon.attack(player, DAMAGE);
+      griffon.attack(player, griffon.getDamage());
     } else if (griffon.sentiment === Sentiment.HOSTILE) {
       griffon.moveToward(player.x, player.y);
     } else {

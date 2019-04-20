@@ -19,10 +19,10 @@ export abstract class Monster extends StatsActor {
     this.ai = new BasicMonster(this, this.calculateDamage);
     this.sentiment = Sentiment.HOSTILE;
     this.level = level;
-    this.strength = 10 + 4 * level;
+    this.strength = 10 + 5 * level;
     this.maxHp = 10 + 3 * level;
     this.hp = this.maxHp;
-    this.armor = 2 * level;
+    this.armor = 4 * level;
     this.loot = this.getLoot();
   }
 
@@ -75,8 +75,8 @@ export abstract class Monster extends StatsActor {
     if (this.game.rng.nextRange(0, 6) <= 2) {
       result.push(new HealthPotion(game, this.x, this.y));
     }
-    if (this.game.rng.nextRange(0, 6) <= 2) {
-      result.push(new EquipmentBuilder(game).withRandomDrop(this.level).build());
+    if (this.game.rng.nextRange(0, 6) <= 1) {
+      result.push(new EquipmentBuilder(game).withRandomDrop(Math.round(this.level / 2)).build());
     }
     return result;
   }

@@ -101,9 +101,13 @@ export class EquipmentBuilder {
     return this;
   }
 
-  withRandomDrop(itemLevel: number) {
+  withRandomDrop(itemLevel: number, quality?: EquipmentQuality) {
     this.itemLevel = itemLevel;
-    this.chooseQuality();
+    if (quality !== undefined) {
+      this.quality = quality;
+    } else {
+      this.chooseQuality();
+    }
     this.chooseSlot();
     this.chooseFlair();
     return this;
@@ -112,15 +116,12 @@ export class EquipmentBuilder {
   private chooseQuality() {
     const rng = this.game.rng;
     const quality = rng.nextRange(0, 100);
-    if (quality === 99) {
-      this.quality = EquipmentQuality.LEGENDARY;
-      this.statMultiplier = 1.75;
-    } else if (quality > 97) {
+    if (quality > 99) {
       this.quality = EquipmentQuality.EPIC;
-      this.statMultiplier = 1.5;
+      this.statMultiplier = 1.3;
     } else if (quality > 90) {
       this.quality = EquipmentQuality.RARE;
-      this.statMultiplier = 1.25;
+      this.statMultiplier = 1.2;
     } else if (quality > 75) {
       this.quality = EquipmentQuality.UNCOMMON;
       this.statMultiplier = 1.1;
