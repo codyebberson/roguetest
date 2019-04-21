@@ -38,7 +38,7 @@ export declare class EquipmentBuilder {
     withConstitution(constitution: number): this;
     withIntelligence(intelligence: number): this;
     withDamage(minDamage: number, maxDamage: number, ranged?: boolean, finesse?: boolean): this;
-    withRandomDrop(itemLevel: number): this;
+    withRandomDrop(itemLevel: number, quality?: EquipmentQuality): this;
     private chooseQuality;
     private chooseSlot;
     private chooseHead;

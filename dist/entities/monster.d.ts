@@ -7,6 +7,5 @@ export declare abstract class Monster extends StatsActor {
     takeDamage(attacker: StatsActor, damage: number): void;
     onDeath(attacker: StatsActor): void;
     private calculateDamage;
-    private findNearestDropLocation;
     getLoot(): Item[];
 }

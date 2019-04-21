@@ -13,4 +13,6 @@ export declare class Game extends wglt.Game {
     constructor(app: App, seed: number);
     hideAllDialogs(): void;
     warpToPoint(point: Vec2): void;
+    findFreeTile(x0: number, y0: number, maxDistance: number): wglt.Vec2 | undefined;
+    save(): void;
 }

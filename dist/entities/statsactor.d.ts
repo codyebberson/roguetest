@@ -9,7 +9,7 @@ export declare enum Sentiment {
     NEUTRAL = 0,
     FRIENDLY = 1
 }
-export declare class StatsActor extends Actor {
+export declare abstract class StatsActor extends Actor {
     level: number;
     mp: number;
     maxMp: number;
