@@ -118,19 +118,19 @@ export class EquipmentBuilder {
     const quality = rng.nextRange(0, 100);
     if (quality > 99) {
       this.quality = EquipmentQuality.EPIC;
-      this.statMultiplier = 1.3;
+      this.statMultiplier = 1.15;
     } else if (quality > 90) {
       this.quality = EquipmentQuality.RARE;
-      this.statMultiplier = 1.2;
+      this.statMultiplier = 1.10;
     } else if (quality > 75) {
       this.quality = EquipmentQuality.UNCOMMON;
-      this.statMultiplier = 1.1;
+      this.statMultiplier = 1.05;
     } else if (quality > 40) {
       this.quality = EquipmentQuality.COMMON;
-      this.statMultiplier = 1.0;
+      this.statMultiplier = 1.00;
     } else {
       this.quality = EquipmentQuality.POOR;
-      this.statMultiplier = 0.75;
+      this.statMultiplier = 0.50;
     }
   }
 
