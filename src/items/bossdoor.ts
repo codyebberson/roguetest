@@ -30,6 +30,7 @@ export class BossDoor extends Door {
       const dx = this.x - player.x;
       const dy = this.y - player.y;
       player.move(dx * 2, dy * 2);
+      player.game.log('The door slams shut behind you.');
       return true;
     }
 

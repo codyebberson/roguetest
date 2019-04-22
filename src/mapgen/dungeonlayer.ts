@@ -18,6 +18,7 @@ import { Scroll } from "../items/scroll";
 import { LightningAbility } from "../abilities/lightning";
 import { FireballAbility } from "../abilities/fireball";
 import { ConfuseAbility } from "../abilities/confuse";
+import { StoneGolem } from "../entities/stonegolem";
 
 const DUNGEON_WIDTH = 64;
 const DUNGEON_HEIGHT = 48;
@@ -206,14 +207,16 @@ export class DungeonLayer {
 
       // Create boss
       const bossLevel = this.level * 3 + 2;
-      const dice = rng.nextRange(0, 3);
+      const dice = rng.nextRange(0, 4);
       let boss = undefined;
       if (dice === 0) {
         boss = new RedDragon(game, center.x, center.y, bossLevel, bossRoom);
       } else if (dice === 1) {
         boss = new WindElemental(game, center.x, center.y, bossLevel, bossRoom);
-      } else {
+      } else if (dice === 2) {
         boss = new Griffon(game, center.x, center.y, bossLevel);
+      } else {
+        boss = new StoneGolem(game, center.x, center.y, bossLevel);
       }
 
       boss.loot.push(new Key(game, boss.x, boss.y, keyId));
