@@ -20,28 +20,13 @@ class RedDragonAI extends AI {
     }
 
     if (dragon.sentiment === Sentiment.HOSTILE && dragon.cooldown === 0) {
-      const room = dragon.room;
-      const rng = game.rng;
-
-      // Top and bottom edges
-      for (let x = room.x1 + 1; x < room.x2 - 1; x++) {
-        if (rng.nextRange(0, 2) === 0) {
-          game.entities.add(new FlameCrawler(game, x, room.y1 + 1, 0, 1));
-        } else {
-          game.entities.add(new FlameCrawler(game, x, room.y2 - 1, 0, -1));
+      for (let y = dragon.y - 1; y <= dragon.y + 1; y++) {
+        for (let x = dragon.x - 1; x <= dragon.x + 1; x++) {
+          this.createCrawler(x, y, x - dragon.x, y - dragon.y);
         }
       }
 
-      // Left and right edges
-      for (let y = room.y1 + 1; y < room.y2 - 1; y++) {
-        if (rng.nextRange(0, 2) === 0) {
-          game.entities.add(new FlameCrawler(game, room.x1 + 1, y, 1, 0));
-        } else {
-          game.entities.add(new FlameCrawler(game, room.x2 - 1, y, -1, 0));
-        }
-      }
-
-      dragon.cooldown = 10;
+      dragon.cooldown = 5;
       return;
     }
 
@@ -49,10 +34,29 @@ class RedDragonAI extends AI {
       dragon.cooldown--;
     }
 
+    // Otherwise, normal AI
     const dist = dragon.distanceTo(player);
-    if (dist <= 2) {
+    if (dist < 2) {
       dragon.attack(player, dragon.getDamage());
+    } else {
+      dragon.moveToward(player.x, player.y);
     }
+  }
+
+  private createCrawler(x: number, y: number, dx: number, dy: number) {
+    const dragon = this.actor as RedDragon;
+    const game = dragon.game as Game;
+    if (game.isBlocked(x, y)) {
+      // Ignore blocked
+      return;
+    }
+
+    const player = game.player as Player;
+    if (player && player.x === x && player.y === y) {
+      // Ignore player's current location
+      return;
+    }
+    game.entities.add(new FlameCrawler(game, x, y, dx, dy, dragon.level));
   }
 }
 

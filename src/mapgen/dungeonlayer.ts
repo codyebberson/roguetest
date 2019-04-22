@@ -211,7 +211,7 @@ export class DungeonLayer {
       if (dice === 0) {
         boss = new RedDragon(game, center.x, center.y, bossLevel, bossRoom);
       } else if (dice === 1) {
-        boss = new WindElemental(game, center.x, center.y, bossLevel);
+        boss = new WindElemental(game, center.x, center.y, bossLevel, bossRoom);
       } else {
         boss = new Griffon(game, center.x, center.y, bossLevel);
       }

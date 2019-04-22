@@ -1,7 +1,7 @@
 import { Game, Item, Sprite, TileMap, getTileId } from 'wglt';
 
 const TILE_OPEN_DOOR = getTileId(7, 20);
-const SPRITE = new Sprite(256, 432, 16, 24, 1, true, undefined, 0x804020FF);
+const SPRITE = new Sprite(256, 432, 16, 24, 1, true, undefined, 0xAB8730FF);
 
 export abstract class Door extends Item {
 

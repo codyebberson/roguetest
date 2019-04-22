@@ -52,10 +52,6 @@ export class ShadowStrikeAbility implements Ability {
 
     for (let y = target.y - 1; y <= target.y + 1; y++) {
       for (let x = target.x - 1; x <= target.x + 1; x++) {
-        if (Math.hypot(x - target.x, y - target.y) > 1.001) {
-          // Too far away from the target
-          continue;
-        }
         if (game.isBlocked(x, y)) {
           // Blocked or occupied
           continue;
