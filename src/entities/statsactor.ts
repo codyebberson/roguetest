@@ -5,6 +5,7 @@ import {Game} from '../game';
 import { Player } from './player';
 import { Equipment } from '../equipment/equipment';
 import { EquipmentSlot } from '../equipment/equipmentslot';
+import { Gold } from '../items/gold';
 
 export enum Sentiment {
   HOSTILE = -1,
@@ -43,7 +44,10 @@ export abstract class StatsActor extends Actor {
     this.equipment = new ArrayList<Equipment>();
     this.buffs = [];
 
-    this.equipment.addListener({onAdd: (_, item) => this.addItem(item), onRemove: (_, item) => this.removeItem(item)});
+    this.equipment.addListener({
+      onAdd: (_, item) => this.addItem(item),
+      onRemove: (_, item) => this.removeItem(item)
+    });
   }
 
   get strengthModifier() {
@@ -64,6 +68,31 @@ export abstract class StatsActor extends Actor {
 
   private calculateModifier(abilityScore: number) {
     return Math.floor((abilityScore - 10) / 2);
+  }
+
+  countGold() {
+    let count = 0;
+    for (let i = 0; i < this.inventory.length; i++) {
+      if (this.inventory.get(i) instanceof Gold) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  moveGold(dest: Actor, count: number) {
+    let check = 0;
+    for (let i = this.inventory.length - 1; i >= 0; i--) {
+      const item = this.inventory.get(i);
+      if (item instanceof Gold) {
+        this.inventory.remove(item);
+        dest.inventory.add(item);
+        check++;
+        if (check === count) {
+          return;
+        }
+      }
+    }
   }
 
   getEquipment(slot: EquipmentSlot) {

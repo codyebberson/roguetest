@@ -11,6 +11,7 @@ import { RaceMenu } from './racemenu';
 import { CharacterRace } from './races/characterrace';
 import { Hearthstone } from './items/hearthstone';
 import { SeedMenu } from './seedmenu';
+import { Gold } from './items/gold';
 
 export class App extends wglt.App {
   readonly mainMenu: MainMenu;
@@ -62,7 +63,11 @@ export class App extends wglt.App {
     this.game = new Game(this, this.seed);
 
     // TODO: Where to put this logic?  Game constructor?
-    (this.game.player as Player).inventory.add(new Hearthstone(this.game));
+    const player = this.game.player as Player;
+    player.inventory.add(new Hearthstone(this.game));
+    for (let i = 0; i < 20; i++) {
+      player.inventory.add(new Gold(this.game));
+    }
 
     if (this.playerRace) {
       this.playerRace.initPlayer(this.game.player as Player);

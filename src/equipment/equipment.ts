@@ -21,7 +21,8 @@ export class Equipment extends BaseItem {
   readonly finesse: boolean;
 
   constructor(builder: EquipmentBuilder) {
-    super(builder.game, builder.name, builder.sprite, builder.quality, builder.itemLevel, 0, 0);
+    const sellPrice = 10 * builder.itemLevel;
+    super(builder.game, builder.name, builder.sprite, builder.quality, builder.itemLevel, 0, sellPrice);
     this.slot = builder.slot;
     this.material = builder.material;
     this.armor = builder.armor;

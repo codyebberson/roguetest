@@ -10,6 +10,11 @@ import { Troll } from "../entities/troll";
 import { Portal } from "../items/portal";
 import { King } from "../entities/king";
 import { Castle } from "./castle";
+import { Vendor } from "../entities/vendor";
+import { HealthPotion } from "../items/healthpotion";
+import { EquipmentBuilder } from "../equipment/equipmentbuilder";
+import { ItemQuality } from "../items/itemquality";
+import { Game } from "../game";
 
 const OVERWORLD_WIDTH = 256;
 const OVERWORLD_HEIGHT = 256;
@@ -256,6 +261,24 @@ export class Overworld {
     const king = new King(game, player.x - 2, player.y);
     game.entities.add(king);
 
+    // Create one vendor by the player
+    this.createVendor(game, player.x, player.y + 2, 1);
+
+    // Create random vendors
+
     this.rect = outerOverworld;
+  }
+
+  private createVendor(game: Game, x: number, y: number, level: number) {
+    const vendor = new Vendor(game, x, y);
+    for (let i = 0; i < 20; i++) {
+      vendor.inventory.add(new HealthPotion(game));
+    }
+    for (let i = 0; i < 4; i++) {
+      vendor.inventory.add(new EquipmentBuilder(game)
+          .withRandomDrop(level + i, ItemQuality.UNCOMMON)
+          .build());
+    }
+    game.entities.add(vendor);
   }
 }

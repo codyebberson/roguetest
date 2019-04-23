@@ -9,8 +9,8 @@ const TOOLTIPS = [
 
 @Serializable('Gold')
 export class Gold extends Item {
-  constructor(game: Game, x: number, y: number) {
-    super(game, x, y, 'gold', SPRITE, false);
+  constructor(game: Game, x?: number, y?: number) {
+    super(game, x || 0, y || 0, 'gold', SPRITE, false);
     this.tooltipMessages = TOOLTIPS;
   }
 

@@ -7,7 +7,7 @@ import { Player } from './player';
 import { QuestDialog } from '../gui/questdialog';
 import { Quest } from '../quests/quest';
 
-const SPRITE = new Sprite(320, 358, 16, 24, 2, true, undefined, 0xA040A0ff);
+const SPRITE = new Sprite(320, 360, 16, 24, 2, true, undefined, 0xa040a0ff);
 
 @Serializable('KingAI')
 class KingAI extends AI {
