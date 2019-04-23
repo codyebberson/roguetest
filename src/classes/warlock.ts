@@ -7,7 +7,7 @@ import {Player} from '../entities/player';
 import { PANTS_SPRITE_1, STAFF_SPRITE_1, ROBE_SPRITE_1, BOOTS_SPRITE_1 } from '../equipment/equipmentsprites';
 import { EquipmentBuilder } from '../equipment/equipmentbuilder';
 import { EquipmentSlot } from '../equipment/equipmentslot';
-import { EquipmentQuality } from '../equipment/equipmentquality';
+import { ItemQuality } from '../items/itemquality';
 import { EquipmentMaterial } from '../equipment/equipmentmaterial';
 
 import {CharacterClass} from './characterclass';
@@ -41,7 +41,7 @@ export class Warlock extends CharacterClass {
         .withName('Acolyte\'s Robe')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.CHEST)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withMaterial(EquipmentMaterial.CLOTH)
         .withSprite(ROBE_SPRITE_1, 0xC0A080FF)
         .withArmor(2)
@@ -51,7 +51,7 @@ export class Warlock extends CharacterClass {
         .withName('Acolyte\'s Pants')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.LEGS)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withMaterial(EquipmentMaterial.CLOTH)
         .withSprite(PANTS_SPRITE_1, 0xC0A080FF)
         .withArmor(2)
@@ -61,7 +61,7 @@ export class Warlock extends CharacterClass {
         .withName('Acolyte\'s Shoes')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.FEET)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withMaterial(EquipmentMaterial.CLOTH)
         .withSprite(BOOTS_SPRITE_1, 0xC0A080FF)
         .withArmor(1)
@@ -71,7 +71,7 @@ export class Warlock extends CharacterClass {
         .withName('Bent Staff')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.MAINHAND)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withDamage(1, 2)
         .withSprite(STAFF_SPRITE_1, 0xC0A080FF)
         .build());

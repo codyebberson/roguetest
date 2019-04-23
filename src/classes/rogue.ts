@@ -6,12 +6,12 @@ import { Player } from '../entities/player';
 
 import { CharacterClass } from './characterclass';
 import { EquipmentSlot } from '../equipment/equipmentslot';
-import { EquipmentQuality } from '../equipment/equipmentquality';
 import { EquipmentMaterial } from '../equipment/equipmentmaterial';
 import { SHIRT_SPRITE_1, PANTS_SPRITE_1, BOOTS_SPRITE_1, DAGGER_SPRITE_1 } from '../equipment/equipmentsprites';
 import { EquipmentBuilder } from '../equipment/equipmentbuilder';
 import { Game } from '../game';
 import { HealthPotion } from '../items/healthpotion';
+import { ItemQuality } from '../items/itemquality';
 
 const NAME = 'Rogue';
 const ICON = new Sprite(144, 700, 24, 26, undefined, undefined, undefined, 0xA00000FF);
@@ -44,7 +44,7 @@ export class Rogue extends CharacterClass {
       .withName('Footpad\'s Vest')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.CHEST)
-      .withQuality(EquipmentQuality.COMMON)
+      .withQuality(ItemQuality.COMMON)
       .withMaterial(EquipmentMaterial.LEATHER)
       .withSprite(SHIRT_SPRITE_1, 0xC0A080FF)
       .withArmor(7)
@@ -54,7 +54,7 @@ export class Rogue extends CharacterClass {
       .withName('Footpad\'s Pants')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.LEGS)
-      .withQuality(EquipmentQuality.COMMON)
+      .withQuality(ItemQuality.COMMON)
       .withMaterial(EquipmentMaterial.LEATHER)
       .withSprite(PANTS_SPRITE_1, 0xC0A080FF)
       .withArmor(6)
@@ -64,7 +64,7 @@ export class Rogue extends CharacterClass {
       .withName('Footpad\'s Boots')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.FEET)
-      .withQuality(EquipmentQuality.COMMON)
+      .withQuality(ItemQuality.COMMON)
       .withMaterial(EquipmentMaterial.LEATHER)
       .withSprite(BOOTS_SPRITE_1, 0xC0A080FF)
       .withArmor(5)
@@ -74,7 +74,7 @@ export class Rogue extends CharacterClass {
       .withName('Worn Dirk')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.MAINHAND)
-      .withQuality(EquipmentQuality.COMMON)
+      .withQuality(ItemQuality.COMMON)
       .withDamage(1, 2, false, true)
       .withSprite(DAGGER_SPRITE_1, 0xC0A080FF)
       .build());

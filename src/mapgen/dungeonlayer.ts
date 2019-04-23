@@ -7,7 +7,7 @@ import { WindElemental } from "../entities/windelemental";
 import { Griffon } from "../entities/griffon";
 import { Key } from "../items/key";
 import { EquipmentBuilder } from "../equipment/equipmentbuilder";
-import { EquipmentQuality } from "../equipment/equipmentquality";
+import { ItemQuality } from "../items/itemquality";
 import { BossDoor } from "../items/bossdoor";
 import { LockedDoor } from "../items/lockeddoor";
 import { Spider } from "../entities/spider";
@@ -222,7 +222,7 @@ export class DungeonLayer {
       boss.loot.push(new Key(game, boss.x, boss.y, keyId));
 
       const itemLevel = Math.round(bossLevel / 2);
-      const itemQuality = rng.nextRange(0, 3) === 0 ? EquipmentQuality.EPIC : EquipmentQuality.RARE;
+      const itemQuality = rng.nextRange(0, 3) === 0 ? ItemQuality.EPIC : ItemQuality.RARE;
       boss.loot.push(new EquipmentBuilder(game).withRandomDrop(itemLevel, itemQuality).build());
       game.entities.add(boss);
 
@@ -365,7 +365,7 @@ export class DungeonLayer {
 
       if (dice < 50) {
         // Create a healing potion (50% chance)
-        item = new HealthPotion(game, x, y);
+        item = new HealthPotion(game);
 
       } else if (dice < 50 + 20) {
         // Create a lightning bolt scroll (20% chance)
@@ -380,6 +380,8 @@ export class DungeonLayer {
         item = new Scroll(game, x, y, new ConfuseAbility());
       }
 
+      item.x = x;
+      item.y = y;
       game.entities.add(item);
     }
   }

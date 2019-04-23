@@ -7,9 +7,9 @@ import {CharacterClass} from './characterclass';
 import { RageAbility } from '../abilities/rage';
 import { EquipmentBuilder } from '../equipment/equipmentbuilder';
 import { Game } from '../game';
-import { SHIRT_SPRITE_1, PANTS_SPRITE_1, MACE_SPRITE_1, SWORD_SPRITE_1, BOOTS_SPRITE_1 } from '../equipment/equipmentsprites';
+import { SHIRT_SPRITE_1, PANTS_SPRITE_1, SWORD_SPRITE_1, BOOTS_SPRITE_1 } from '../equipment/equipmentsprites';
 import { EquipmentSlot } from '../equipment/equipmentslot';
-import { EquipmentQuality } from '../equipment/equipmentquality';
+import { ItemQuality } from '../items/itemquality';
 import { EquipmentMaterial } from '../equipment/equipmentmaterial';
 import { HealthPotion } from '../items/healthpotion';
 
@@ -44,7 +44,7 @@ export class Warrior extends CharacterClass {
         .withName('Squire\'s Vest')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.CHEST)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withMaterial(EquipmentMaterial.PLATE)
         .withSprite(SHIRT_SPRITE_1, 0xC0A080FF)
         .withArmor(7)
@@ -54,7 +54,7 @@ export class Warrior extends CharacterClass {
         .withName('Squire\'s Pants')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.LEGS)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withMaterial(EquipmentMaterial.PLATE)
         .withSprite(PANTS_SPRITE_1, 0xC0A080FF)
         .withArmor(6)
@@ -64,7 +64,7 @@ export class Warrior extends CharacterClass {
         .withName('Squire\'s Boots')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.FEET)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withMaterial(EquipmentMaterial.PLATE)
         .withSprite(BOOTS_SPRITE_1, 0xC0A080FF)
         .withArmor(5)
@@ -74,7 +74,7 @@ export class Warrior extends CharacterClass {
         .withName('Worn Greatsword')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.MAINHAND)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withDamage(1, 2)
         .withSprite(SWORD_SPRITE_1, 0xC0A080FF)
         .build());

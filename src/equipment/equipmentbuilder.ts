@@ -2,22 +2,20 @@ import { Sprite, Color, Colors } from "wglt";
 import { Game } from "../game";
 import { EquipmentSlot } from "./equipmentslot";
 import { EquipmentMaterial } from "./equipmentmaterial";
-import { EquipmentQuality } from "./equipmentquality";
 import { Equipment } from "./equipment";
-import { HELM_SPRITE_1, CLOTH_HELM_SPRITES, LEATHER_HELM_SPRITES, PLATE_HELM_SPRITES, ROBE_SPRITES, SHIRT_SPRITES, GLOVES_SPRITES, PANTS_SPRITES, BOOTS_SPRITES, NECKLACE_SPRITE_1, CLOAK_SPRITES, RING_SPRITES, SWORD_SPRITES, AXE_SPRITE_1, MACE_SPRITES, DAGGER_SPRITE_1, BOW_SPRITE_1, CROSSBOW_SPRITE_1, STAFF_SPRITES, SHIELD_SPRITES, BOOK_SPRITE, LANTERN_SPRITE, ORB_SPRITE } from "./equipmentsprites";
+import { CLOTH_HELM_SPRITES, LEATHER_HELM_SPRITES, PLATE_HELM_SPRITES, ROBE_SPRITES, SHIRT_SPRITES, GLOVES_SPRITES, PANTS_SPRITES, BOOTS_SPRITES, NECKLACE_SPRITE_1, CLOAK_SPRITES, RING_SPRITES, SWORD_SPRITES, AXE_SPRITE_1, MACE_SPRITES, DAGGER_SPRITE_1, BOW_SPRITE_1, CROSSBOW_SPRITE_1, STAFF_SPRITES, SHIELD_SPRITES, BOOK_SPRITE, LANTERN_SPRITE, ORB_SPRITE } from "./equipmentsprites";
+import { ItemQuality } from "../items/itemquality";
 
 const DEFAULT_SPRITE = new Sprite(160, 240, 16, 24, 1, false, undefined, 0x808080FF);
 
 export class EquipmentBuilder {
   game: Game;
-  x: number = 0;
-  y: number = 0;
   name: string = '';
   sprite: Sprite = DEFAULT_SPRITE;
   itemLevel: number = 1;
   slot: EquipmentSlot = EquipmentSlot.HEAD;
   material: EquipmentMaterial = EquipmentMaterial.NONE;
-  quality: EquipmentQuality = EquipmentQuality.POOR;
+  quality: ItemQuality = ItemQuality.POOR;
   armor: number = 0;
   strength: number = 0;
   dexterity: number = 0;
@@ -63,7 +61,7 @@ export class EquipmentBuilder {
     return this;
   }
 
-  withQuality(quality: EquipmentQuality) {
+  withQuality(quality: ItemQuality) {
     this.quality = quality;
     return this;
   }
@@ -101,7 +99,7 @@ export class EquipmentBuilder {
     return this;
   }
 
-  withRandomDrop(itemLevel: number, quality?: EquipmentQuality) {
+  withRandomDrop(itemLevel: number, quality?: ItemQuality) {
     this.itemLevel = itemLevel;
     if (quality !== undefined) {
       this.quality = quality;
@@ -117,19 +115,19 @@ export class EquipmentBuilder {
     const rng = this.game.rng;
     const quality = rng.nextRange(0, 100);
     if (quality > 99) {
-      this.quality = EquipmentQuality.EPIC;
+      this.quality = ItemQuality.EPIC;
       this.statMultiplier = 1.15;
     } else if (quality > 90) {
-      this.quality = EquipmentQuality.RARE;
+      this.quality = ItemQuality.RARE;
       this.statMultiplier = 1.10;
     } else if (quality > 75) {
-      this.quality = EquipmentQuality.UNCOMMON;
+      this.quality = ItemQuality.UNCOMMON;
       this.statMultiplier = 1.05;
     } else if (quality > 40) {
-      this.quality = EquipmentQuality.COMMON;
+      this.quality = ItemQuality.COMMON;
       this.statMultiplier = 1.00;
     } else {
-      this.quality = EquipmentQuality.POOR;
+      this.quality = ItemQuality.POOR;
       this.statMultiplier = 0.50;
     }
   }
@@ -377,22 +375,22 @@ export class EquipmentBuilder {
 
   private chooseFlair() {
     switch (this.quality) {
-      case EquipmentQuality.POOR:
+      case ItemQuality.POOR:
         this.choosePoorFlair();
         break;
-      case EquipmentQuality.COMMON:
+      case ItemQuality.COMMON:
         this.chooseCommonFlair();
         break;
-      case EquipmentQuality.UNCOMMON:
+      case ItemQuality.UNCOMMON:
         this.chooseUncommonFlair();
         break;
-      case EquipmentQuality.RARE:
+      case ItemQuality.RARE:
         this.chooseRareFlair();
         break;
-      case EquipmentQuality.EPIC:
+      case ItemQuality.EPIC:
         this.chooseEpicFlair();
         break;
-      case EquipmentQuality.LEGENDARY:
+      case ItemQuality.LEGENDARY:
         this.chooseLegendaryFlair();
         break;
     }

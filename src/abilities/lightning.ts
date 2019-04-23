@@ -7,8 +7,8 @@ const TOOLTIP_MESSAGES = [
   new Message('Lightning', Colors.WHITE),
   new Message(MANA_COST + ' mana', Colors.WHITE),
   new Message('Instant cast', Colors.WHITE),
-  new Message('Hurls a bolt of lightning at the nearest enemy', Colors.YELLOW),
-  new Message('dealing 4 + INT damage.', Colors.YELLOW),
+  new Message('Hurls a bolt of lightning at the nearest', Colors.YELLOW),
+  new Message('enemy dealing 4 + INT damage.', Colors.YELLOW),
 ];
 
 @Serializable('LightningAbility')

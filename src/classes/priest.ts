@@ -10,8 +10,8 @@ import { BubbleAbility } from '../abilities/bubble';
 import { PANTS_SPRITE_1, STAFF_SPRITE_1, BOOTS_SPRITE_1, ROBE_SPRITE_1 } from '../equipment/equipmentsprites';
 import { EquipmentBuilder } from '../equipment/equipmentbuilder';
 import { EquipmentSlot } from '../equipment/equipmentslot';
-import { EquipmentQuality } from '../equipment/equipmentquality';
 import { EquipmentMaterial } from '../equipment/equipmentmaterial';
+import { ItemQuality } from '../items/itemquality';
 
 const NAME = 'Priest';
 const ICON = new Sprite(0, 700, 24, 26, undefined, undefined, undefined, 0xFFFFFFFF);
@@ -42,7 +42,7 @@ export class Priest extends CharacterClass {
         .withName('Neophyte\'s Robe')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.CHEST)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withMaterial(EquipmentMaterial.CLOTH)
         .withSprite(ROBE_SPRITE_1, 0xC0A080FF)
         .withArmor(2)
@@ -52,7 +52,7 @@ export class Priest extends CharacterClass {
         .withName('Neophyte\'s Pants')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.LEGS)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withMaterial(EquipmentMaterial.CLOTH)
         .withSprite(PANTS_SPRITE_1, 0xC0A080FF)
         .withArmor(2)
@@ -62,7 +62,7 @@ export class Priest extends CharacterClass {
         .withName('Neophyte\'s Shoes')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.FEET)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withMaterial(EquipmentMaterial.CLOTH)
         .withSprite(BOOTS_SPRITE_1, 0xC0A080FF)
         .withArmor(1)
@@ -72,7 +72,7 @@ export class Priest extends CharacterClass {
         .withName('Bent Staff')
         .withItemLevel(1)
         .withSlot(EquipmentSlot.MAINHAND)
-        .withQuality(EquipmentQuality.COMMON)
+        .withQuality(ItemQuality.COMMON)
         .withDamage(1, 2)
         .withSprite(STAFF_SPRITE_1, 0xC0A080FF)
         .build());

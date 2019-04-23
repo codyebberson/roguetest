@@ -6,10 +6,10 @@ import { Player } from '../entities/player';
 import { CharacterClass } from './characterclass';
 import { ShootAbility } from '../abilities/shoot';
 import { Game } from '../game';
-import { SHIRT_SPRITE_1, PANTS_SPRITE_1, MACE_SPRITE_1, CROSSBOW_SPRITE_1, BOOTS_SPRITE_1 } from '../equipment/equipmentsprites';
+import { SHIRT_SPRITE_1, PANTS_SPRITE_1, CROSSBOW_SPRITE_1, BOOTS_SPRITE_1 } from '../equipment/equipmentsprites';
 import { EquipmentBuilder } from '../equipment/equipmentbuilder';
 import { EquipmentSlot } from '../equipment/equipmentslot';
-import { EquipmentQuality } from '../equipment/equipmentquality';
+import { ItemQuality } from '../items/itemquality';
 import { EquipmentMaterial } from '../equipment/equipmentmaterial';
 
 const NAME = 'Ranger';
@@ -39,7 +39,7 @@ export class Ranger extends CharacterClass {
       .withName('Trapper\'s Vest')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.CHEST)
-      .withQuality(EquipmentQuality.COMMON)
+      .withQuality(ItemQuality.COMMON)
       .withMaterial(EquipmentMaterial.LEATHER)
       .withSprite(SHIRT_SPRITE_1, 0xC0A080FF)
       .withArmor(7)
@@ -49,7 +49,7 @@ export class Ranger extends CharacterClass {
       .withName('Trapper\'s Pants')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.LEGS)
-      .withQuality(EquipmentQuality.COMMON)
+      .withQuality(ItemQuality.COMMON)
       .withMaterial(EquipmentMaterial.LEATHER)
       .withSprite(PANTS_SPRITE_1, 0xC0A080FF)
       .withArmor(6)
@@ -59,7 +59,7 @@ export class Ranger extends CharacterClass {
       .withName('Trapper\'s Boots')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.FEET)
-      .withQuality(EquipmentQuality.COMMON)
+      .withQuality(ItemQuality.COMMON)
       .withMaterial(EquipmentMaterial.LEATHER)
       .withSprite(BOOTS_SPRITE_1, 0xC0A080FF)
       .withArmor(5)
@@ -69,7 +69,7 @@ export class Ranger extends CharacterClass {
       .withName('Weathered Crossbow')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.MAINHAND)
-      .withQuality(EquipmentQuality.COMMON)
+      .withQuality(ItemQuality.COMMON)
       .withDamage(1, 2, true, true)
       .withSprite(CROSSBOW_SPRITE_1, 0xC0A080FF)
       .build());

@@ -1,24 +1,15 @@
-import { Item, Colors, Message, CompoundMessage, Serializable } from 'wglt';
+import { Colors, Message, CompoundMessage, Serializable } from 'wglt';
 import { Player } from '../entities/player';
 import { EquipmentBuilder } from './equipmentbuilder';
 import { EquipmentSlot } from './equipmentslot';
 import { EquipmentMaterial } from './equipmentmaterial';
-import { EquipmentQuality } from './equipmentquality';
 import { Game } from '../game';
-
-const COLOR_POOR = 0x9D9D9DFF;
-const COLOR_COMMON = 0xFFFFFFFF;
-const COLOR_UNCOMMON = 0x1EFF00FF;
-const COLOR_RARE = 0x0070DDFF;
-const COLOR_EPIC = 0xA335EEFF;
-const COLOR_LEGENDARY = 0xFF8000FF;
+import { BaseItem } from '../items/baseitem';
 
 @Serializable('Equipment')
-export class Equipment extends Item {
-  readonly itemLevel: number;
+export class Equipment extends BaseItem {
   readonly slot: EquipmentSlot;
   readonly material: EquipmentMaterial;
-  readonly quality: EquipmentQuality;
   readonly armor: number;
   readonly strength: number;
   readonly dexterity: number;
@@ -30,11 +21,9 @@ export class Equipment extends Item {
   readonly finesse: boolean;
 
   constructor(builder: EquipmentBuilder) {
-    super(builder.game, builder.x, builder.y, builder.name, builder.sprite, false);
-    this.itemLevel = builder.itemLevel;
+    super(builder.game, builder.name, builder.sprite, builder.quality, builder.itemLevel, 0, 0);
     this.slot = builder.slot;
     this.material = builder.material;
-    this.quality = builder.quality;
     this.armor = builder.armor;
     this.strength = builder.strength;
     this.dexterity = builder.dexterity;
@@ -45,23 +34,6 @@ export class Equipment extends Item {
     this.ranged = builder.ranged;
     this.finesse = builder.finesse;
     this.onUpdateTooltip();
-  }
-
-  private getColor(quality: EquipmentQuality) {
-    switch (quality) {
-      case EquipmentQuality.COMMON:
-        return COLOR_COMMON;
-      case EquipmentQuality.UNCOMMON:
-        return COLOR_UNCOMMON;
-      case EquipmentQuality.RARE:
-        return COLOR_RARE;
-      case EquipmentQuality.EPIC:
-        return COLOR_EPIC;
-      case EquipmentQuality.LEGENDARY:
-        return COLOR_LEGENDARY;
-      default:
-        return COLOR_POOR;
-    }
   }
 
   isStackable() {

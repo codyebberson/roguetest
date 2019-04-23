@@ -1,5 +1,5 @@
 
-export enum EquipmentQuality {
+export enum ItemQuality {
   POOR = 0,
   COMMON = 1,
   UNCOMMON = 2,

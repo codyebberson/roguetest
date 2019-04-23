@@ -1,20 +1,20 @@
-import {Actor, Colors, Game, Item, Message, Sprite, Serializable} from 'wglt';
+import {Actor, Colors, Game, Message, Sprite, Serializable} from 'wglt';
+import { BaseItem } from './baseitem';
+import { ItemQuality } from './itemquality';
 
 const HEAL_AMOUNT = 4;
 
+const NAME = 'Healing Potion';
 const SPRITE = new Sprite(656, 168, 16, 24, 1, true, undefined, 0xFF0000FF);
 
-const TOOLTIPS = [
-  new Message('Ancient Healing Potion', Colors.LIGHT_BLUE),
-  new Message('Item Level 5', Colors.YELLOW),
-  new Message('Use: Restore 10 health', Colors.LIGHT_GREEN),
-];
-
 @Serializable('HealthPotion')
-export class HealthPotion extends Item {
-  constructor(game: Game, x?: number, y?: number) {
-    super(game, x || 0, y || 0, 'health potion', SPRITE, false);
-    this.tooltipMessages = TOOLTIPS;
+export class HealthPotion extends BaseItem {
+  constructor(game: Game) {
+    super(game, NAME, SPRITE, ItemQuality.COMMON, 5, 20, 5);
+  }
+
+  addTooltipDescription(tooltipMessages: Message[]) {
+    tooltipMessages.push(new Message('Use: Restore 10 health', Colors.LIGHT_GREEN));
   }
 
   onPickup(entity: Actor) {

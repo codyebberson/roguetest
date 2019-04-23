@@ -10,8 +10,8 @@ import { EquipmentBuilder } from '../equipment/equipmentbuilder';
 import { Game } from '../game';
 import { SHIRT_SPRITE_1, PANTS_SPRITE_1, MACE_SPRITE_1, BOOTS_SPRITE_1 } from '../equipment/equipmentsprites';
 import { EquipmentSlot } from '../equipment/equipmentslot';
-import { EquipmentQuality } from '../equipment/equipmentquality';
 import { EquipmentMaterial } from '../equipment/equipmentmaterial';
+import { ItemQuality } from '../items/itemquality';
 
 const NAME = 'Paladin';
 const ICON = new Sprite(504, 700, 24, 26, undefined, undefined, undefined, 0xFF8080FF);
@@ -40,8 +40,8 @@ export class Paladin extends CharacterClass {
     player.equipment.add(new EquipmentBuilder(game)
         .withName('Squire\'s Vest')
         .withItemLevel(1)
+        .withQuality(ItemQuality.COMMON)
         .withSlot(EquipmentSlot.CHEST)
-        .withQuality(EquipmentQuality.COMMON)
         .withMaterial(EquipmentMaterial.PLATE)
         .withSprite(SHIRT_SPRITE_1, 0xC0A080FF)
         .withArmor(7)
@@ -50,8 +50,8 @@ export class Paladin extends CharacterClass {
     player.equipment.add(new EquipmentBuilder(game)
         .withName('Squire\'s Pants')
         .withItemLevel(1)
+        .withQuality(ItemQuality.COMMON)
         .withSlot(EquipmentSlot.LEGS)
-        .withQuality(EquipmentQuality.COMMON)
         .withMaterial(EquipmentMaterial.PLATE)
         .withSprite(PANTS_SPRITE_1, 0xC0A080FF)
         .withArmor(6)
@@ -60,8 +60,8 @@ export class Paladin extends CharacterClass {
     player.equipment.add(new EquipmentBuilder(game)
         .withName('Squire\'s Boots')
         .withItemLevel(1)
+        .withQuality(ItemQuality.COMMON)
         .withSlot(EquipmentSlot.FEET)
-        .withQuality(EquipmentQuality.COMMON)
         .withMaterial(EquipmentMaterial.PLATE)
         .withSprite(BOOTS_SPRITE_1, 0xC0A080FF)
         .withArmor(5)
@@ -70,8 +70,8 @@ export class Paladin extends CharacterClass {
     player.equipment.add(new EquipmentBuilder(game)
         .withName('Battleworn Hammer')
         .withItemLevel(1)
+        .withQuality(ItemQuality.COMMON)
         .withSlot(EquipmentSlot.MAINHAND)
-        .withQuality(EquipmentQuality.COMMON)
         .withDamage(1, 2)
         .withSprite(MACE_SPRITE_1, 0xC0A080FF)
         .build());
