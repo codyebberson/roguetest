@@ -28,6 +28,8 @@ export declare abstract class StatsActor extends Actor {
     readonly constitutionModifier: number;
     readonly intelligenceModifier: number;
     private calculateModifier;
+    countGold(): number;
+    moveGold(dest: Actor, count: number): void;
     getEquipment(slot: EquipmentSlot): Equipment | undefined;
     readonly mainHandWeapon: Equipment | undefined;
     getDamage(): number;

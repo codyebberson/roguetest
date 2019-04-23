@@ -1,6 +1,8 @@
-import { Actor, Game, Item } from 'wglt';
-export declare class HealthPotion extends Item {
-    constructor(game: Game, x?: number, y?: number);
+import { Actor, Game, Message } from 'wglt';
+import { BaseItem } from './baseitem';
+export declare class HealthPotion extends BaseItem {
+    constructor(game: Game);
+    addTooltipDescription(tooltipMessages: Message[]): void;
     onPickup(entity: Actor): void;
     onUse(user: Actor): boolean;
 }

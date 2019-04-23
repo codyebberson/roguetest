@@ -1,6 +1,7 @@
-import { Ability, Actor, Item } from 'wglt';
+import { Ability, Actor } from 'wglt';
 import { Game } from '../game';
-export declare class Scroll extends Item {
+import { BaseItem } from './baseitem';
+export declare class Scroll extends BaseItem {
     readonly ability: Ability;
     constructor(game: Game, x: number, y: number, ability: Ability);
     onPickup(entity: Actor): void;
