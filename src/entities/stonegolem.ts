@@ -17,6 +17,11 @@ class StoneGolemAI extends AI {
 
   doAi() {
     const golem = this.actor as StoneGolem;
+    if (golem.sentiment !== Sentiment.HOSTILE) {
+      // Do nothing until player attacks
+      return;
+    }
+
     const game = golem.game as Game;
     const player = game.player as Player;
     if (!player || player.hp <= 0) {

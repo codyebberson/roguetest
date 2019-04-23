@@ -1,4 +1,4 @@
-import {Actor, ArrayList, Sprite} from 'wglt';
+import {Actor, ArrayList, Sprite, TileMap} from 'wglt';
 
 import {Buff} from '../buffs/buff';
 import {Game} from '../game';
@@ -6,6 +6,9 @@ import { Player } from './player';
 import { Equipment } from '../equipment/equipment';
 import { EquipmentSlot } from '../equipment/equipmentslot';
 import { Gold } from '../items/gold';
+
+const START_BLOOD = 1367;
+const END_BLOOD = 1370;
 
 export enum Sentiment {
   HOSTILE = -1,
@@ -132,6 +135,11 @@ export abstract class StatsActor extends Actor {
   }
 
   takeDamage(attacker: StatsActor, damage: number) {
+    if (attacker === this.game.player) {
+      // If player is attacking, then the actor is now hostile
+      this.sentiment = Sentiment.HOSTILE;
+    }
+
     // Start by subtracting armor modifier
     let result = Math.max(0, damage - Math.round(0.1 * this.armor));
 
@@ -160,6 +168,35 @@ export abstract class StatsActor extends Actor {
       this.game.log(this.name + ' attacks ' + target.name + ' for ' + damage + ' hit points.', 0x808080FF);
     } else {
       this.game.log(this.name + ' attacks ' + target.name + ' but it has no effect!', 0x808080FF);
+    }
+  }
+
+  onDeath(attacker: StatsActor) {
+    const game = this.game as Game;
+    game.log(this.name + ' is dead');
+    game.entities.remove(this);
+
+    if (attacker === this.game.player) {
+      // Based on DnD xp rules
+      const player = game.player as Player;
+      const xpGain = Math.round(10 * player.level * Math.pow(2.0, (this.level - player.level) * 0.5));
+      player.addXp(xpGain);
+    }
+
+    // Add blood to the map
+    const map = game.tileMap as TileMap;
+    map.setTile(this.x, this.y, 3, game.rng.nextRange(START_BLOOD, END_BLOOD));
+
+    // Drop loot
+    for (let i = 0; i < this.inventory.length; i++) {
+      const location = game.findFreeTile(this.x, this.y, 5);
+      if (!location) {
+        break;
+      }
+      const loot = this.inventory.get(i);
+      loot.x = location.x;
+      loot.y = location.y;
+      game.entities.add(loot);
     }
   }
 

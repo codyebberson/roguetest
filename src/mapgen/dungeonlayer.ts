@@ -219,11 +219,11 @@ export class DungeonLayer {
         boss = new StoneGolem(game, center.x, center.y, bossLevel);
       }
 
-      boss.loot.push(new Key(game, boss.x, boss.y, keyId));
+      boss.inventory.add(new Key(game, boss.x, boss.y, keyId));
 
       const itemLevel = Math.round(bossLevel / 2);
       const itemQuality = rng.nextRange(0, 3) === 0 ? ItemQuality.EPIC : ItemQuality.RARE;
-      boss.loot.push(new EquipmentBuilder(game).withRandomDrop(itemLevel, itemQuality).build());
+      boss.inventory.add(new EquipmentBuilder(game).withRandomDrop(itemLevel, itemQuality).build());
       game.entities.add(boss);
 
       // Create a door to boss room

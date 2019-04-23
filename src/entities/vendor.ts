@@ -37,19 +37,22 @@ class VendorAI extends AI {
 export class Vendor extends StatsActor {
   dialog?: Dialog;
 
-  constructor(game: Game, x: number, y: number) {
+  constructor(game: Game, x: number, y: number, level: number) {
     super(game, x, y, 'Vendor', SPRITE);
     this.ai = new VendorAI(this);
-    this.level = 99;
+    this.level = level;
     this.maxHp = 10 + this.level * 2;
     this.hp = this.maxHp;
     this.strength = 10 + this.level * 2;
   }
 
   onBump(player: Player) {
+    if (this.sentiment === Sentiment.HOSTILE) {
+      return super.onBump(player);
+    }
+
     if (!this.dialog) {
       const dialog = new VendorDialog(new Rect(10, 40, 125, 175), this);
-      // dialog.vendor = this;
       this.game.gui.add(dialog);
       this.dialog = dialog;
     }

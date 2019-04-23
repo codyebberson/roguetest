@@ -13,13 +13,18 @@ const SPRITE = new Sprite(288, 312, 16, 24, 2, true, undefined, 0xaad4e2ff);
 class WindElementalAI extends AI {
   doAi() {
     const elemental = this.actor as WindElemental;
+    if (elemental.sentiment !== Sentiment.HOSTILE) {
+      // Do nothing until player attacks
+      return;
+    }
+
     const game = elemental.game as Game;
     const player = game.player as Player;
     if (!player || player.hp <= 0) {
       return;
     }
 
-    if (elemental.sentiment === Sentiment.HOSTILE && elemental.cooldown === 0) {
+    if (elemental.cooldown === 0) {
       const room = elemental.room;
       const rng = game.rng;
 

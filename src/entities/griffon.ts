@@ -17,6 +17,11 @@ class GriffonAI extends AI {
 
   doAi() {
     const griffon = this.actor as Griffon;
+    if (griffon.sentiment !== Sentiment.HOSTILE) {
+      // Do nothing until player attacks
+      return;
+    }
+
     const game = griffon.game as Game;
     const player = game.player as Player;
     if (!player || player.hp <= 0) {

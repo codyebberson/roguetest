@@ -72,52 +72,46 @@ export class Overworld {
       const center = graveyard.getCenter();
       for (let y = graveyard.y1; y < graveyard.y2; y++) {
         for (let x = graveyard.x1; x < graveyard.x2; x++) {
+          map.setTile(x, y, 0, Tiles.GRASS);
+          map.setAnimated(x, y, 0, false);
+
           if (x === graveyard.x1 && y === graveyard.y1) {
             // Top-left corner
-            map.setTile(x, y, 0, Tiles.GRASS);
             map.setTile(x, y, 1, Tiles.FENCE8);
             map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x2 - 1 && y === graveyard.y1) {
             // Top-right corner
-            map.setTile(x, y, 0, Tiles.GRASS);
             map.setTile(x, y, 1, Tiles.FENCE7);
             map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x1 && y === graveyard.y2 - 1) {
             // Bottom-left corner
-            map.setTile(x, y, 0, Tiles.GRASS);
             map.setTile(x, y, 1, Tiles.FENCE6);
             map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x2 - 1 && y === graveyard.y2 - 1) {
             // Bottom-right corner
-            map.setTile(x, y, 0, Tiles.GRASS);
             map.setTile(x, y, 1, Tiles.FENCE5);
             map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x1) {
             // Vertical-left fence
-            map.setTile(x, y, 0, Tiles.GRASS);
             map.setTile(x, y, 1, Tiles.FENCE10);
             map.setBlocked(x, y, true, false);
 
           } else if (x === graveyard.x2 - 1) {
             // Vertical-right fence
-            map.setTile(x, y, 0, Tiles.GRASS);
             map.setTile(x, y, 1, Tiles.FENCE9);
             map.setBlocked(x, y, true, false);
 
           } else if (y === graveyard.y1 || y === graveyard.y2 - 1) {
             // Horizontal fence
-            map.setTile(x, y, 0, Tiles.GRASS);
             map.setTile(x, y, 1, Tiles.FENCE1);
             map.setBlocked(x, y, true, false);
 
           } else {
             // Middle space
-            map.setTile(x, y, 0, Tiles.GRASS);
-            map.setAnimated(x, y, 0, false);
             map.setBlocked(x, y, false);
           }
         }
@@ -270,7 +264,7 @@ export class Overworld {
   }
 
   private createVendor(game: Game, x: number, y: number, level: number) {
-    const vendor = new Vendor(game, x, y);
+    const vendor = new Vendor(game, x, y, level);
     for (let i = 0; i < 20; i++) {
       vendor.inventory.add(new HealthPotion(game));
     }

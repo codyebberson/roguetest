@@ -48,6 +48,10 @@ export class King extends StatsActor {
   }
 
   onBump(player: Player) {
+    if (this.sentiment === Sentiment.HOSTILE) {
+      return super.onBump(player);
+    }
+
     if (!this.dialog) {
       const desc = [
         'A THREAT WITHIN',

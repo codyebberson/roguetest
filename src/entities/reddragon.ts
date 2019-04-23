@@ -13,6 +13,11 @@ const SPRITE = new Sprite(576, 312, 16, 24, 2, true, undefined, 0xd51111ff);
 class RedDragonAI extends AI {
   doAi() {
     const dragon = this.actor as RedDragon;
+    if (dragon.sentiment !== Sentiment.HOSTILE) {
+      // Do nothing until player attacks
+      return;
+    }
+
     const game = dragon.game as Game;
     const player = game.player as Player;
     if (!player || player.hp <= 0) {
