@@ -407,7 +407,7 @@ export class EquipmentBuilder {
   }
 
   private chooseUncommonFlair() {
-    switch (this.game.rng.nextRange(0, 6)) {
+    switch (this.game.rng.nextRange(0, 10)) {
       case 0:
         this.name += ' of the Tiger';
         this.strength += Math.ceil(this.itemLevel * this.statMultiplier);
@@ -443,6 +443,26 @@ export class EquipmentBuilder {
         this.constitution += Math.ceil(this.itemLevel * this.statMultiplier);
         this.intelligence += Math.ceil(this.itemLevel * this.statMultiplier);
         this.withColor(Colors.LIGHT_BLUE);
+        break;
+      case 6:
+        this.name += ' of Constitution';
+        this.constitution += Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
+        this.withColor(Colors.LIGHT_BLUE);
+        break;
+      case 7:
+        this.name += ' of Strength';
+        this.strength += Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
+        this.withColor(Colors.LIGHT_RED);
+        break;
+      case 8:
+        this.name += ' of Dexterity';
+        this.dexterity += Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
+        this.withColor(Colors.LIGHT_CYAN);
+        break;
+      case 9:
+        this.name += ' of Intelligence';
+        this.intelligence += Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
+        this.withColor(Colors.WHITE);
         break;
     }
   }
