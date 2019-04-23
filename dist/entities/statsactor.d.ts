@@ -38,6 +38,7 @@ export declare abstract class StatsActor extends Actor {
     onBump(player: Player): boolean;
     onTalk(player: Player): void;
     onAttack(target: Actor, damage: number): void;
+    onDeath(attacker: StatsActor): void;
     startTurn(): void;
     equipItem(item: Equipment): void;
     private addItem;
