@@ -47,8 +47,13 @@ export class ShadowStrikeAbility implements Ability {
       return false;
     }
 
-    let farthestTile: Vec2 | null = null;
-    let farthestDistance = 0.0;
+    // Find the tile that is closest to the opposite side.
+    // Note that this is different than "farthest" tile,
+    // which can result in moving at an angle.
+    const targetX = caster.x + 2 * (target.x - caster.x);
+    const targetY = caster.y + 2 * (target.y - caster.y);
+    let bestTile: Vec2 | null = null;
+    let bestDistance = 1000.0;
 
     for (let y = target.y - 1; y <= target.y + 1; y++) {
       for (let x = target.x - 1; x <= target.x + 1; x++) {
@@ -56,15 +61,15 @@ export class ShadowStrikeAbility implements Ability {
           // Blocked or occupied
           continue;
         }
-        const distance = caster.distance(x, y);
-        if (distance > farthestDistance) {
-          farthestTile = new Vec2(x, y);
-          farthestDistance = distance;
+        const distance = Math.hypot(x - targetX, y - targetY);
+        if (distance < bestDistance) {
+          bestTile = new Vec2(x, y);
+          bestDistance = distance;
         }
       }
     }
 
-    if (!farthestTile) {
+    if (!bestTile) {
       if (caster === game.player) {
         game.log('No free spaces available.', Colors.LIGHT_GRAY);
       }
@@ -72,11 +77,11 @@ export class ShadowStrikeAbility implements Ability {
     }
 
     const count = 4;
-    const xSpeed = (farthestTile.x - caster.x) * game.tileSize.width / count;
-    const ySpeed = (farthestTile.y - caster.y) * game.tileSize.height / count;
+    const xSpeed = (bestTile.x - caster.x) * game.tileSize.width / count;
+    const ySpeed = (bestTile.y - caster.y) * game.tileSize.height / count;
     game.addAnimation(new SlideAnimation(caster, xSpeed, ySpeed, count)).then(() => {
-      caster.x = (farthestTile as Vec2).x;
-      caster.y = (farthestTile as Vec2).y;
+      caster.x = (bestTile as Vec2).x;
+      caster.y = (bestTile as Vec2).y;
       caster.attack(target, caster.getDamage() * 2);
       caster.ap--;
     });
