@@ -17,10 +17,6 @@ export class HealthPotion extends BaseItem {
     tooltipMessages.push(new Message('Use: Restore 10 health', Colors.LIGHT_GREEN));
   }
 
-  onPickup(entity: Actor) {
-    this.game.log(entity.name + ' picked up a ' + this.name, Colors.LIGHT_GREEN);
-  }
-
   onUse(user: Actor) {
     if (user.hp === user.maxHp) {
       this.game.log('You are already at full health.', Colors.DARK_RED);

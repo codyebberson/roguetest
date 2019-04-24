@@ -41,13 +41,6 @@ export class Equipment extends BaseItem {
     return false;
   }
 
-  onPickup(player: Player) {
-    this.game.log(new CompoundMessage(
-      new Message(player.name + ' picked up ', Colors.WHITE),
-      new Message('[' + this.name + ']', this.getColor(this.quality))
-    ));
-  }
-
   onUse(player: Player) {
     player.equipItem(this);
     return false;

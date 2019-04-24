@@ -1,5 +1,6 @@
-import { Item, Message, Game, Sprite, Colors } from "wglt";
+import { Item, Message, Game, Sprite, Colors, Actor, Vec2, CompoundMessage } from "wglt";
 import { ItemQuality } from "./itemquality";
+import { GuiSlideAnimation } from "../animations/guislideanimation";
 
 const COLOR_POOR = 0x9D9D9DFF;
 const COLOR_COMMON = 0xFFFFFFFF;
@@ -28,6 +29,17 @@ export abstract class BaseItem extends Item {
     this.maxStack = maxStack;
     this.sellPrice = sellPrice;
     this.onUpdateTooltip();
+  }
+
+  onPickup(entity: Actor) {
+    this.game.log(new CompoundMessage(
+      new Message(entity.name + ' picked up ', Colors.WHITE),
+      new Message('[' + this.name + ']', this.getColor(this.quality))
+    ));
+
+    const start = new Vec2(this.pixelX - this.game.viewport.x, this.pixelY - this.game.viewport.y);
+    const end = new Vec2(this.game.app.size.width - 16, this.game.app.size.height - 24);
+    this.game.animations.push(new GuiSlideAnimation(this.sprite, start, end, 15));
   }
 
   getColor(quality: ItemQuality) {

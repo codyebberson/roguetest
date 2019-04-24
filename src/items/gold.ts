@@ -15,6 +15,6 @@ export class Gold extends Item {
   }
 
   onPickup(entity: Actor) {
-    this.game.log(entity.name + ' picked up gold coins', Colors.LIGHT_GREEN);
+    this.game.log(entity.name + ' picked up gold coins', Colors.WHITE);
   }
 }

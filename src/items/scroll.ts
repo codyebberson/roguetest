@@ -1,4 +1,4 @@
-import {Ability, Actor, Colors, Sprite, TargetType, Serializable} from 'wglt';
+import {Ability, Actor, Sprite, TargetType, Serializable} from 'wglt';
 import { Game } from '../game';
 import { BaseItem } from './baseitem';
 import { ItemQuality } from './itemquality';
@@ -13,10 +13,6 @@ export class Scroll extends BaseItem {
     super(game, 'scroll of ' + ability.name, SPRITE, ItemQuality.UNCOMMON, 1, 0, 0);
     this.ability = ability;
     this.tooltipMessages = ability.tooltipMessages;
-  }
-
-  onPickup(entity: Actor) {
-    this.game.log(entity.name + ' picked up a ' + this.name, Colors.LIGHT_GREEN);
   }
 
   onUse(user: Actor) {

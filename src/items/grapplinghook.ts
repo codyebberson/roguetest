@@ -111,10 +111,6 @@ export class GrapplingHook extends BaseItem {
     this.tooltipMessages = TOOLTIP_MESSAGES;
   }
 
-  onPickup(entity: Actor) {
-    this.game.log(entity.name + ' picked up a ' + this.name, Colors.LIGHT_GREEN);
-  }
-
   onUse(user: Actor) {
     (this.game as Game).hideAllDialogs();
     this.game.startTargeting(this.ability);
