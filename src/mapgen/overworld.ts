@@ -15,6 +15,7 @@ import { HealthPotion } from "../items/healthpotion";
 import { EquipmentBuilder } from "../equipment/equipmentbuilder";
 import { ItemQuality } from "../items/itemquality";
 import { Game } from "../game";
+import { GrapplingHook } from "../items/grapplinghook";
 
 const OVERWORLD_WIDTH = 256;
 const OVERWORLD_HEIGHT = 256;
@@ -259,6 +260,11 @@ export class Overworld {
     this.createVendor(game, player.x, player.y + 2, 1);
 
     // Create random vendors
+
+    const hook = new GrapplingHook(game);
+    hook.x = player.x + 2;
+    hook.y = player.y + 2;
+    game.entities.add(hook);
 
     this.rect = outerOverworld;
   }
