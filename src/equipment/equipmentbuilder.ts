@@ -375,6 +375,7 @@ export class EquipmentBuilder {
 
     } else {
       this.name = this.chooseValue('Shield', 'Shield Wall', 'Bulwark', 'Barrier');
+      this.type = EquipmentType.SHIELD;
       this.sprite = this.chooseArrayValue(SHIELD_SPRITES);
       this.armor = Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
       this.constitution = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
