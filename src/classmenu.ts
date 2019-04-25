@@ -1,4 +1,4 @@
-import {AppState, Colors, ComplexSelectDialog, Message, MessagePanel, Rect} from 'wglt';
+import {AppState, ComplexSelectDialog, Message, MessagePanel, Rect} from 'wglt';
 
 import {App} from './app';
 import {CharacterClass} from './classes/characterclass';
@@ -9,6 +9,7 @@ import {Rogue} from './classes/rogue';
 import {Warlock} from './classes/warlock';
 import {Warrior} from './classes/warrior';
 import {MenuItemRenderer} from './gui/menuitemrenderer';
+import { Colors } from './colors';
 
 const CLASSES = [new Paladin(), new Priest(), new Ranger(), new Rogue(), new Warlock(), new Warrior()];
 

@@ -1,4 +1,4 @@
-import {Actor, ArrayList, Sprite, TileMap} from 'wglt';
+import {Actor, ArrayList, Sprite, TileMap, CompoundMessage, Message} from 'wglt';
 
 import {Buff} from '../buffs/buff';
 import {Game} from '../game';
@@ -6,6 +6,8 @@ import { Player } from './player';
 import { Equipment } from '../equipment/equipment';
 import { EquipmentSlot } from '../equipment/equipmentslot';
 import { Gold } from '../items/gold';
+import { EquipmentType } from '../equipment/equipmenttype';
+import { Colors } from '../colors';
 
 const START_BLOOD = 1367;
 const END_BLOOD = 1370;
@@ -28,6 +30,7 @@ export abstract class StatsActor extends Actor {
   showFrame: boolean;
   sentiment: Sentiment;
   readonly equipment: ArrayList<Equipment>;
+  readonly proficiencies: EquipmentType[];
   readonly buffs: Buff[];
 
   constructor(game: Game, x: number, y: number, name: string, sprite: Sprite) {
@@ -45,11 +48,12 @@ export abstract class StatsActor extends Actor {
     this.showFrame = true;
     this.sentiment = Sentiment.NEUTRAL;
     this.equipment = new ArrayList<Equipment>();
+    this.proficiencies = [];
     this.buffs = [];
 
     this.equipment.addListener({
-      onAdd: (_, item) => this.addItem(item),
-      onRemove: (_, item) => this.removeItem(item)
+      onAdd: (_, item) => this.addEquipment(item),
+      onRemove: (_, item) => this.removeEquipment(item)
     });
   }
 
@@ -211,7 +215,22 @@ export abstract class StatsActor extends Actor {
     }
   }
 
+  canEquip(item: Equipment) {
+    return item.type === EquipmentType.NONE || this.proficiencies.indexOf(item.type) >= 0;
+  }
+
   equipItem(item: Equipment) {
+    if (!this.canEquip(item)) {
+      if (this === this.game.player) {
+        this.game.log(new CompoundMessage(
+          new Message('You do not have ', Colors.LIGHT_GRAY),
+          new Message('[' + item.type + ']', Colors.WHITE),
+          new Message(' proficiency', Colors.LIGHT_GRAY),
+        ));
+      }
+      return false;
+    }
+
     const equipped = this.getEquipment(item.slot);
     const oldHp = this.hp;
 
@@ -230,9 +249,10 @@ export abstract class StatsActor extends Actor {
     // When removing equipment, constitution can drop, which can drop max HP
     // Make sure the player keeps their HP
     this.hp = Math.min(oldHp, this.maxHp);
+    return true;
   }
 
-  private addItem(item: Equipment) {
+  private addEquipment(item: Equipment) {
     this.armor += item.armor;
     this.constitution += item.constitution;
     this.dexterity += item.dexterity;
@@ -241,7 +261,7 @@ export abstract class StatsActor extends Actor {
     this.recalculateMaxHp();
   }
 
-  private removeItem(item: Equipment) {
+  private removeEquipment(item: Equipment) {
     this.armor -= item.armor;
     this.constitution -= item.constitution;
     this.dexterity -= item.dexterity;

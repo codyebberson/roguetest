@@ -1,7 +1,8 @@
-import { Serializable, Dialog, Message, ArrayList, Item, Rect, ButtonSlot, Keys, Actor, Colors, Button } from "wglt";
+import { Serializable, Dialog, Message, ArrayList, Item, Rect, ButtonSlot, Keys, Actor } from "wglt";
 import { VendorButton } from "./vendorbutton";
 import { BaseItem } from "../items/baseitem";
 import { Gold } from "../items/gold";
+import { Colors } from "../colors";
 
 const MARGIN = 4;
 const BUTTON_SPACING = 2;

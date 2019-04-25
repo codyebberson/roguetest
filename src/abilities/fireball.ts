@@ -1,7 +1,8 @@
-import {Ability, Actor, Colors, Message, ProjectileAnimation, Sprite, TargetType, TileMapCell, Vec2, Serializable} from 'wglt';
+import {Ability, Actor, Message, ProjectileAnimation, Sprite, TargetType, TileMapCell, Vec2, Serializable} from 'wglt';
 
 import {ExplosionAnimation} from '../animations/explosionanimation';
 import { StatsActor } from '../entities/statsactor';
+import { Colors } from '../colors';
 
 const FIREBALL_RANGE = 10;
 const FIREBALL_RADIUS = 3;

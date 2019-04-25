@@ -4,6 +4,7 @@ import { Game } from '../game';
 import { Player } from './player';
 import { Equipment } from '../equipment/equipment';
 import { EquipmentSlot } from '../equipment/equipmentslot';
+import { EquipmentType } from '../equipment/equipmenttype';
 export declare enum Sentiment {
     HOSTILE = -1,
     NEUTRAL = 0,
@@ -21,6 +22,7 @@ export declare abstract class StatsActor extends Actor {
     showFrame: boolean;
     sentiment: Sentiment;
     readonly equipment: ArrayList<Equipment>;
+    readonly proficiencies: EquipmentType[];
     readonly buffs: Buff[];
     constructor(game: Game, x: number, y: number, name: string, sprite: Sprite);
     readonly strengthModifier: number;
@@ -40,9 +42,10 @@ export declare abstract class StatsActor extends Actor {
     onAttack(target: Actor, damage: number): void;
     onDeath(attacker: StatsActor): void;
     startTurn(): void;
-    equipItem(item: Equipment): void;
-    private addItem;
-    private removeItem;
+    canEquip(item: Equipment): boolean;
+    equipItem(item: Equipment): boolean;
+    private addEquipment;
+    private removeEquipment;
     recalculateMaxHp(): void;
     draw(): void;
 }

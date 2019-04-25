@@ -1,7 +1,8 @@
-import {Ability, Colors, Message, Sprite, TargetType, TileMapCell, Serializable} from 'wglt';
+import {Ability, Message, Sprite, TargetType, TileMapCell, Serializable} from 'wglt';
 
 import {StatsActor} from '../entities/statsactor';
 import {Gateway} from '../items/gateway';
+import { Colors } from '../colors';
 
 const RANGE = 10;
 const SPRITE = new Sprite(432, 408, 16, 24, 1, true, undefined, 0xc3d012FF);

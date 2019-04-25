@@ -1,5 +1,6 @@
-import { Ability, Colors, Message, Sprite, TargetType, Serializable } from 'wglt';
+import { Ability, Message, Sprite, TargetType, Serializable } from 'wglt';
 import { StatsActor } from '../entities/statsactor';
+import { Colors } from '../colors';
 
 const RANGE = 8;
 const SPRITE = new Sprite(896, 96, 16, 24, 1, false, undefined, 0x40D0D0FF);

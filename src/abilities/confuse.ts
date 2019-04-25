@@ -1,4 +1,5 @@
-import {Ability, Actor, Colors, ConfusedMonster, Message, Sprite, TargetType, Serializable} from 'wglt';
+import {Ability, Actor, ConfusedMonster, Message, Sprite, TargetType, Serializable} from 'wglt';
+import { Colors } from '../colors';
 
 const CONFUSE_RANGE = 8;
 const CONFUSE_SPRITE = new Sprite(128, 32, 16, 24, 3, false);

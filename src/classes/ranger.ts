@@ -1,4 +1,4 @@
-import { Colors, Message, Sprite, Talent, Serializable } from 'wglt';
+import { Message, Sprite, Talent, Serializable } from 'wglt';
 
 import { LeapAbility } from '../abilities/leap';
 import { Player } from '../entities/player';
@@ -10,7 +10,8 @@ import { SHIRT_SPRITE_1, PANTS_SPRITE_1, CROSSBOW_SPRITE_1, BOOTS_SPRITE_1 } fro
 import { EquipmentBuilder } from '../equipment/equipmentbuilder';
 import { EquipmentSlot } from '../equipment/equipmentslot';
 import { ItemQuality } from '../items/itemquality';
-import { EquipmentMaterial } from '../equipment/equipmentmaterial';
+import { EquipmentType } from '../equipment/equipmenttype';
+import { Colors } from '../colors';
 
 const NAME = 'Ranger';
 const ICON = new Sprite(168, 700, 24, 26, undefined, undefined, undefined, 0x80FF80FF);
@@ -32,44 +33,49 @@ export class Ranger extends CharacterClass {
 
     player.class = this;
     player.sprite = SPRITE;
+    player.proficiencies.push(EquipmentType.CLOTH);
+    player.proficiencies.push(EquipmentType.LEATHER);
+    player.proficiencies.push(EquipmentType.BOW);
+    player.proficiencies.push(EquipmentType.CROSSBOW);
     player.talents.add(new Talent(player, new ShootAbility()));
     player.talents.add(new Talent(player, new LeapAbility()));
 
-    player.equipment.add(new EquipmentBuilder(game)
+    player.equipItem(new EquipmentBuilder(game)
       .withName('Trapper\'s Vest')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.CHEST)
       .withQuality(ItemQuality.COMMON)
-      .withMaterial(EquipmentMaterial.LEATHER)
+      .withType(EquipmentType.LEATHER)
       .withSprite(SHIRT_SPRITE_1, 0xC0A080FF)
       .withArmor(7)
       .build());
 
-    player.equipment.add(new EquipmentBuilder(game)
+    player.equipItem(new EquipmentBuilder(game)
       .withName('Trapper\'s Pants')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.LEGS)
       .withQuality(ItemQuality.COMMON)
-      .withMaterial(EquipmentMaterial.LEATHER)
+      .withType(EquipmentType.LEATHER)
       .withSprite(PANTS_SPRITE_1, 0xC0A080FF)
       .withArmor(6)
       .build());
 
-    player.equipment.add(new EquipmentBuilder(game)
+    player.equipItem(new EquipmentBuilder(game)
       .withName('Trapper\'s Boots')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.FEET)
       .withQuality(ItemQuality.COMMON)
-      .withMaterial(EquipmentMaterial.LEATHER)
+      .withType(EquipmentType.LEATHER)
       .withSprite(BOOTS_SPRITE_1, 0xC0A080FF)
       .withArmor(5)
       .build());
 
-    player.equipment.add(new EquipmentBuilder(game)
+    player.equipItem(new EquipmentBuilder(game)
       .withName('Weathered Crossbow')
       .withItemLevel(1)
       .withSlot(EquipmentSlot.MAINHAND)
       .withQuality(ItemQuality.COMMON)
+      .withType(EquipmentType.CROSSBOW)
       .withDamage(1, 2, true, true)
       .withSprite(CROSSBOW_SPRITE_1, 0xC0A080FF)
       .build());

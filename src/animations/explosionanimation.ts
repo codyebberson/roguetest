@@ -1,4 +1,5 @@
-import {Colors, Animation, Game, ProjectileAnimation, Sprite, Vec2} from 'wglt';
+import {Animation, Game, ProjectileAnimation, Sprite, Vec2} from 'wglt';
+import { Colors } from '../colors';
 
 export class ExplosionAnimation extends Animation {
   readonly game: Game;

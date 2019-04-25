@@ -1,8 +1,9 @@
-import {Colors, Message, Sprite, Serializable} from 'wglt';
+import {Message, Sprite, Serializable} from 'wglt';
 
 import {Player} from '../entities/player';
 
 import {CharacterRace} from './characterrace';
+import { Colors } from '../colors';
 
 const NAME = 'Undead';
 const ICON = new Sprite(578, 730, 34, 34, undefined, undefined, undefined, 0xD040D0FF);

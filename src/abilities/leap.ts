@@ -1,5 +1,6 @@
-import {Ability, Actor, Colors, fromRgb, Message, SlideAnimation, Sprite, TargetType, TileMapCell, Serializable} from 'wglt';
+import {Ability, Actor, fromRgb, Message, SlideAnimation, Sprite, TargetType, TileMapCell, Serializable} from 'wglt';
 import {Stunned} from '../ai/stunned';
+import { Colors } from '../colors';
 
 const LEAP_RANGE = 3;
 const LEAP_RADIUS = 2;

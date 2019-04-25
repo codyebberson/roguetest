@@ -1,5 +1,5 @@
 import * as wglt from 'wglt';
-import { App, Button, Colors, FadeInAnimation, FadeOutAnimation, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog, Vec2, Serializer } from 'wglt';
+import { App, Button, FadeInAnimation, FadeOutAnimation, ItemContainerDialog, Message, MessageLog, Rect, Sprite, TalentsDialog, Vec2, Serializer } from 'wglt';
 
 import { Cat } from './entities/cat';
 import { Player } from './entities/player';
@@ -11,6 +11,7 @@ import { LevelUpDialog } from './gui/levelupdialog';
 import { EntityFrames } from './gui/entityframes';
 import { HealthPotion } from './items/healthpotion';
 import { Scroll } from './items/scroll';
+import { Colors } from './colors';
 
 const SPRITE_WIDTH = 16;
 const SPRITE_HEIGHT = 24;

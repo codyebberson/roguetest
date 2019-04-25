@@ -1,4 +1,4 @@
-import {Colors, Message, Sprite, Talent, Serializable} from 'wglt';
+import {Message, Sprite, Talent, Serializable} from 'wglt';
 
 import {FlashHealAbility} from '../abilities/flashheal';
 import {LeapAbility} from '../abilities/leap';
@@ -10,8 +10,9 @@ import { EquipmentBuilder } from '../equipment/equipmentbuilder';
 import { Game } from '../game';
 import { SHIRT_SPRITE_1, PANTS_SPRITE_1, MACE_SPRITE_1, BOOTS_SPRITE_1 } from '../equipment/equipmentsprites';
 import { EquipmentSlot } from '../equipment/equipmentslot';
-import { EquipmentMaterial } from '../equipment/equipmentmaterial';
+import { EquipmentType } from '../equipment/equipmenttype';
 import { ItemQuality } from '../items/itemquality';
+import { Colors } from '../colors';
 
 const NAME = 'Paladin';
 const ICON = new Sprite(504, 700, 24, 26, undefined, undefined, undefined, 0xFF8080FF);
@@ -33,44 +34,49 @@ export class Paladin extends CharacterClass {
 
     player.class = this;
     player.sprite = SPRITE;
+    player.proficiencies.push(EquipmentType.CLOTH);
+    player.proficiencies.push(EquipmentType.LEATHER);
+    player.proficiencies.push(EquipmentType.PLATE);
+    player.proficiencies.push(EquipmentType.MACE);
     player.talents.add(new Talent(player, new LeapAbility()));
     player.talents.add(new Talent(player, new LightningAbility()));
     player.talents.add(new Talent(player, new FlashHealAbility()));
 
-    player.equipment.add(new EquipmentBuilder(game)
+    player.equipItem(new EquipmentBuilder(game)
         .withName('Squire\'s Vest')
         .withItemLevel(1)
         .withQuality(ItemQuality.COMMON)
         .withSlot(EquipmentSlot.CHEST)
-        .withMaterial(EquipmentMaterial.PLATE)
+        .withType(EquipmentType.PLATE)
         .withSprite(SHIRT_SPRITE_1, 0xC0A080FF)
         .withArmor(7)
         .build());
 
-    player.equipment.add(new EquipmentBuilder(game)
+    player.equipItem(new EquipmentBuilder(game)
         .withName('Squire\'s Pants')
         .withItemLevel(1)
         .withQuality(ItemQuality.COMMON)
         .withSlot(EquipmentSlot.LEGS)
-        .withMaterial(EquipmentMaterial.PLATE)
+        .withType(EquipmentType.PLATE)
         .withSprite(PANTS_SPRITE_1, 0xC0A080FF)
         .withArmor(6)
         .build());
 
-    player.equipment.add(new EquipmentBuilder(game)
+    player.equipItem(new EquipmentBuilder(game)
         .withName('Squire\'s Boots')
         .withItemLevel(1)
         .withQuality(ItemQuality.COMMON)
         .withSlot(EquipmentSlot.FEET)
-        .withMaterial(EquipmentMaterial.PLATE)
+        .withType(EquipmentType.PLATE)
         .withSprite(BOOTS_SPRITE_1, 0xC0A080FF)
         .withArmor(5)
         .build());
 
-    player.equipment.add(new EquipmentBuilder(game)
+    player.equipItem(new EquipmentBuilder(game)
         .withName('Battleworn Hammer')
         .withItemLevel(1)
         .withQuality(ItemQuality.COMMON)
+        .withType(EquipmentType.SWORD)
         .withSlot(EquipmentSlot.MAINHAND)
         .withDamage(1, 2)
         .withSprite(MACE_SPRITE_1, 0xC0A080FF)

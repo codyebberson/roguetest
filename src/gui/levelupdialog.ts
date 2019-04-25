@@ -1,6 +1,7 @@
-import {ButtonSlot, Colors, Dialog, Rect, Button, Keys, Sprite, Message} from 'wglt';
+import {ButtonSlot, Dialog, Rect, Button, Keys, Sprite, Message} from 'wglt';
 
 import {Player} from '../entities/player';
+import { Colors } from '../colors';
 
 const MARGIN = 5;
 const BUTTON_SPACING = 2;

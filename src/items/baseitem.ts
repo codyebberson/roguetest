@@ -1,6 +1,7 @@
-import { Item, Message, Game, Sprite, Colors, Actor, Vec2, CompoundMessage } from "wglt";
+import { Item, Message, Game, Sprite, Actor, Vec2, CompoundMessage } from "wglt";
 import { ItemQuality } from "./itemquality";
 import { GuiSlideAnimation } from "../animations/guislideanimation";
+import { Colors } from "../colors";
 
 const COLOR_POOR = 0x9D9D9DFF;
 const COLOR_COMMON = 0xFFFFFFFF;
@@ -70,7 +71,7 @@ export abstract class BaseItem extends Item {
       this.tooltipMessages.push(new Message('Max Stack: ' + this.maxStack, Colors.WHITE));
     }
 
-    if (this.sellPrice > 1) {
+    if (this.sellPrice > 0) {
       this.tooltipMessages.push(new Message('Sell Price: ' + this.sellPrice, Colors.WHITE));
     }
   }

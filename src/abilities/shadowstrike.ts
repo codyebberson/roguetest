@@ -1,5 +1,6 @@
-import {Ability, Colors, Message, SlideAnimation, Sprite, TargetType, Vec2, Serializable} from 'wglt';
+import {Ability, Message, SlideAnimation, Sprite, TargetType, Vec2, Serializable} from 'wglt';
 import { StatsActor } from '../entities/statsactor';
+import { Colors } from '../colors';
 
 const RANGE = 10;
 const SPRITE = new Sprite(656, 192, 16, 24, undefined, undefined, undefined, 0xc4c4c4ff);

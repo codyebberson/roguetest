@@ -1,4 +1,4 @@
-import { Colors, Sprite, Vec2, Serializable } from 'wglt';
+import { Sprite, Vec2, Serializable } from 'wglt';
 
 import { CharacterClass } from '../classes/characterclass';
 import { Paladin } from '../classes/paladin';
@@ -7,6 +7,7 @@ import { CharacterRace } from '../races/characterrace';
 import { Human } from '../races/human';
 
 import { StatsActor } from './statsactor';
+import { Colors } from '../colors';
 
 const PLAYER_SPRITE = new Sprite(0, 96, 16, 24, 2, true, undefined, 0xffcf5cff);
 

@@ -1,5 +1,6 @@
-import {AppState, Colors, fromHsv, Keys, Sprite} from 'wglt';
+import {AppState, fromHsv, Keys, Sprite} from 'wglt';
 import { App } from './app';
+import { Colors } from './colors';
 
 const OPTIONS = [
   {display: 'NEW GAME', hash: 'chooseseed', enabled: true},

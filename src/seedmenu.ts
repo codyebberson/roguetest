@@ -1,8 +1,9 @@
-import {AppState, Colors, ComplexSelectDialog, Message, MessagePanel, Rect, SelectOption} from 'wglt';
+import {AppState, ComplexSelectDialog, Message, MessagePanel, Rect, SelectOption} from 'wglt';
 
 import {App} from './app';
 import {MenuItemRenderer} from './gui/menuitemrenderer';
 import {CharacterRace} from './races/characterrace';
+import { Colors } from './colors';
 
 
 class Seed implements SelectOption {

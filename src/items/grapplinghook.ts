@@ -1,9 +1,10 @@
-import { Ability, Actor, Colors, Sprite, TargetType, Serializable, Message, TileMapCell, SlideAnimation } from 'wglt';
+import { Ability, Actor, Sprite, TargetType, Serializable, Message, TileMapCell, SlideAnimation } from 'wglt';
 import { Game } from '../game';
 import { BaseItem } from './baseitem';
 import { ItemQuality } from './itemquality';
 import { StatsActor } from '../entities/statsactor';
 import { Stunned } from '../ai/stunned';
+import { Colors } from '../colors';
 
 const RANGE = 10;
 const SPRITE = new Sprite(832, 120, 16, 24, undefined, undefined, undefined, 0xFF0000FF);

@@ -1,0 +1,23 @@
+export declare enum Colors {
+    BLACK,
+    WHITE,
+    GRAY,
+    LIGHT_GRAY,
+    DARK_GRAY,
+    YELLOW,
+    BROWN,
+    RED,
+    LIGHT_RED,
+    DARK_RED,
+    GREEN,
+    LIGHT_GREEN,
+    DARK_GREEN,
+    LIGHT_CYAN,
+    DARK_CYAN,
+    BLUE,
+    LIGHT_BLUE,
+    DARK_BLUE,
+    LIGHT_MAGENTA,
+    DARK_MAGENTA,
+    ORANGE
+}

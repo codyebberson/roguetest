@@ -1,4 +1,4 @@
-import {AppState, Colors, ComplexSelectDialog, Message, MessagePanel, Rect} from 'wglt';
+import {AppState, ComplexSelectDialog, Message, MessagePanel, Rect} from 'wglt';
 
 import {App} from './app';
 import {MenuItemRenderer} from './gui/menuitemrenderer';
@@ -8,6 +8,7 @@ import {Elf} from './races/elf';
 import {Human} from './races/human';
 import {Orc} from './races/orc';
 import {Undead} from './races/undead';
+import { Colors } from './colors';
 
 const RACES = [new Human(), new Dwarf(), new Elf(), new Orc(), new Undead()];
 

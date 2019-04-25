@@ -1,10 +1,11 @@
-import { AI, Sprite, Vec2, Colors, Serializable, Actor } from 'wglt';
+import { AI, Sprite, Vec2, Serializable, Actor } from 'wglt';
 
 import { Game } from '../game';
 
 import { Monster } from './monster';
 import { Player } from './player';
 import { Sentiment } from './statsactor';
+import { Colors } from '../colors';
 
 const SPRITE = new Sprite(320, 96, 16, 24, 2, true, undefined, 0x5790b7FF);
 

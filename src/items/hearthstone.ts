@@ -1,6 +1,7 @@
-import { Colors, Item, Message, Sprite, Serializable } from 'wglt';
+import { Item, Message, Sprite, Serializable } from 'wglt';
 import { Player } from '../entities/player';
 import { Game } from '../game';
+import { Colors } from '../colors';
 
 const SPRITE = new Sprite(848, 168, 16, 24, 1, true, undefined, 0x80C0C0FF);
 

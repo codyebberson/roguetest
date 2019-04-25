@@ -1,7 +1,8 @@
-import { Panel, Rect, Colors } from "wglt";
+import { Panel, Rect } from "wglt";
 import { Game } from "../game";
 import { StatsActor, Sentiment } from "../entities/statsactor";
 import { Player } from "../entities/player";
+import { Colors } from "../colors";
 
 export class EntityFrames extends Panel {
   readonly game: Game;

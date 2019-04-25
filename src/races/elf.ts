@@ -1,8 +1,9 @@
-import {Colors, Message, Sprite, Serializable} from 'wglt';
+import {Message, Sprite, Serializable} from 'wglt';
 
 import {Player} from '../entities/player';
 
 import {CharacterRace} from './characterrace';
+import { Colors } from '../colors';
 
 const NAME = 'Elf';
 const ICON = new Sprite(238, 730, 34, 34, undefined, undefined, undefined, 0xFF8080FF);

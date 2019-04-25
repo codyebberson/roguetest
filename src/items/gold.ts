@@ -1,4 +1,5 @@
-import {Actor, Colors, Game, Item, Message, Sprite, Serializable} from 'wglt';
+import {Actor, Game, Item, Message, Sprite, Serializable} from 'wglt';
+import { Colors } from '../colors';
 
 const SPRITE = new Sprite(896, 168, 16, 24, 1, true, undefined, 0xFFFF00FF);
 

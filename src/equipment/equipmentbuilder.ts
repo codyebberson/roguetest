@@ -1,10 +1,11 @@
-import { Sprite, Color, Colors } from "wglt";
+import { Sprite, Color } from "wglt";
 import { Game } from "../game";
+import { EquipmentType } from "./equipmenttype";
 import { EquipmentSlot } from "./equipmentslot";
-import { EquipmentMaterial } from "./equipmentmaterial";
 import { Equipment } from "./equipment";
 import { CLOTH_HELM_SPRITES, LEATHER_HELM_SPRITES, PLATE_HELM_SPRITES, ROBE_SPRITES, SHIRT_SPRITES, GLOVES_SPRITES, PANTS_SPRITES, BOOTS_SPRITES, NECKLACE_SPRITE_1, CLOAK_SPRITES, RING_SPRITES, SWORD_SPRITES, AXE_SPRITE_1, MACE_SPRITES, DAGGER_SPRITE_1, BOW_SPRITE_1, CROSSBOW_SPRITE_1, STAFF_SPRITES, SHIELD_SPRITES, BOOK_SPRITE, LANTERN_SPRITE, ORB_SPRITE } from "./equipmentsprites";
 import { ItemQuality } from "../items/itemquality";
+import { Colors } from "../colors";
 
 const DEFAULT_SPRITE = new Sprite(160, 240, 16, 24, 1, false, undefined, 0x808080FF);
 
@@ -13,8 +14,8 @@ export class EquipmentBuilder {
   name: string = '';
   sprite: Sprite = DEFAULT_SPRITE;
   itemLevel: number = 1;
+  type: EquipmentType = EquipmentType.NONE;
   slot: EquipmentSlot = EquipmentSlot.HEAD;
-  material: EquipmentMaterial = EquipmentMaterial.NONE;
   quality: ItemQuality = ItemQuality.POOR;
   armor: number = 0;
   strength: number = 0;
@@ -51,13 +52,13 @@ export class EquipmentBuilder {
     return this;
   }
 
-  withSlot(slot: EquipmentSlot) {
-    this.slot = slot;
+  withType(type: EquipmentType) {
+    this.type = type;
     return this;
   }
 
-  withMaterial(material: EquipmentMaterial) {
-    this.material = material;
+  withSlot(slot: EquipmentSlot) {
+    this.slot = slot;
     return this;
   }
 
@@ -171,19 +172,19 @@ export class EquipmentBuilder {
     this.slot = EquipmentSlot.HEAD;
     switch (this.game.rng.nextRange(0, 3)) {
       case 0:
-        this.material = EquipmentMaterial.CLOTH;
+        this.type = EquipmentType.CLOTH;
         this.name = this.chooseValue('Cowl', 'Crown', 'Hood', 'Wizard Hat');
         this.armor = Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(CLOTH_HELM_SPRITES);
         break;
       case 1:
-        this.material = EquipmentMaterial.LEATHER;
+        this.type = EquipmentType.LEATHER;
         this.name = this.chooseValue('Hood', 'Cover', 'Facemask', 'Mask');
         this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(LEATHER_HELM_SPRITES);
         break;
       case 2:
-        this.material = EquipmentMaterial.PLATE;
+        this.type = EquipmentType.PLATE;
         this.name = this.chooseValue('Helm', 'Helmet', 'Headguard', 'Faceguard', 'Greathelm');
         this.armor = Math.ceil(4.5 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(PLATE_HELM_SPRITES);
@@ -208,19 +209,19 @@ export class EquipmentBuilder {
     this.slot = EquipmentSlot.CHEST;
     switch (this.game.rng.nextRange(0, 3)) {
       case 0:
-        this.material = EquipmentMaterial.CLOTH;
+        this.type = EquipmentType.CLOTH;
         this.name = this.chooseValue('Robe', 'Tunic');
         this.armor = Math.ceil(1.5 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(ROBE_SPRITES);
         break;
       case 1:
-        this.material = EquipmentMaterial.LEATHER;
+        this.type = EquipmentType.LEATHER;
         this.name = this.chooseValue('Vest', 'Chestpiece', 'Tunic');
         this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(SHIRT_SPRITES);
         break;
       case 2:
-        this.material = EquipmentMaterial.PLATE;
+        this.type = EquipmentType.PLATE;
         this.name = this.chooseValue('Breastplate', 'Chestguard');
         this.armor = Math.ceil(4.5 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(SHIRT_SPRITES);
@@ -232,19 +233,19 @@ export class EquipmentBuilder {
     this.slot = EquipmentSlot.HANDS;
     switch (this.game.rng.nextRange(0, 3)) {
       case 0:
-        this.material = EquipmentMaterial.CLOTH;
+        this.type = EquipmentType.CLOTH;
         this.name = this.chooseValue('Gloves', 'Wraps');
         this.armor = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(GLOVES_SPRITES);
         break;
       case 1:
-        this.material = EquipmentMaterial.LEATHER;
+        this.type = EquipmentType.LEATHER;
         this.name = this.chooseValue('Gloves', 'Gauntlets');
         this.armor = Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(GLOVES_SPRITES);
         break;
       case 2:
-        this.material = EquipmentMaterial.PLATE;
+        this.type = EquipmentType.PLATE;
         this.name = this.chooseValue('Gloves', 'Gauntlets');
         this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(GLOVES_SPRITES);
@@ -256,19 +257,19 @@ export class EquipmentBuilder {
     this.slot = EquipmentSlot.LEGS;
     switch (this.game.rng.nextRange(0, 3)) {
       case 0:
-        this.material = EquipmentMaterial.CLOTH;
+        this.type = EquipmentType.CLOTH;
         this.name = this.chooseValue('Leggings', 'Pants');
         this.armor = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(PANTS_SPRITES);
         break;
       case 1:
-        this.material = EquipmentMaterial.LEATHER;
+        this.type = EquipmentType.LEATHER;
         this.name = this.chooseValue('Legguards', 'Pants');
         this.armor = Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(PANTS_SPRITES);
         break;
       case 2:
-        this.material = EquipmentMaterial.PLATE;
+        this.type = EquipmentType.PLATE;
         this.name = this.chooseValue('Legplates', 'Legguards');
         this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(PANTS_SPRITES);
@@ -280,19 +281,19 @@ export class EquipmentBuilder {
     this.slot = EquipmentSlot.FEET;
     switch (this.game.rng.nextRange(0, 3)) {
       case 0:
-        this.material = EquipmentMaterial.CLOTH;
+        this.type = EquipmentType.CLOTH;
         this.name = this.chooseValue('Boots', 'Sandals', 'Shoes', 'Slippers', 'Footpads');
         this.armor = Math.ceil(1.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(BOOTS_SPRITES);
         break;
       case 1:
-        this.material = EquipmentMaterial.LEATHER;
+        this.type = EquipmentType.LEATHER;
         this.name = this.chooseValue('Boots', 'Shoes', 'Treads');
         this.armor = Math.ceil(2.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(BOOTS_SPRITES);
         break;
       case 2:
-        this.material = EquipmentMaterial.PLATE;
+        this.type = EquipmentType.PLATE;
         this.name = this.chooseValue('Boots', 'Greaves', 'Sabatons');
         this.armor = Math.ceil(3.0 * this.itemLevel * this.statMultiplier);
         this.sprite = this.chooseArrayValue(BOOTS_SPRITES);
@@ -312,35 +313,42 @@ export class EquipmentBuilder {
     this.maxDamage = Math.ceil(1.2 * this.itemLevel * this.statMultiplier);
     switch (this.game.rng.nextRange(0, 7)) {
       case 0:
+        this.type = EquipmentType.SWORD;
         this.name = this.chooseValue('Sword', 'Blade', 'Slicer', 'Sabre');
         this.sprite = this.chooseArrayValue(SWORD_SPRITES);
         break;
       case 1:
+        this.type = EquipmentType.AXE;
         this.name = this.chooseValue('Axe', 'Ripper', 'Slicer');
         this.sprite = AXE_SPRITE_1;
         break;
       case 2:
+        this.type = EquipmentType.MACE;
         this.name = this.chooseValue('Mace', 'Hammer', 'Gavel', 'Club');
         this.sprite = this.chooseArrayValue(MACE_SPRITES);
         break;
       case 3:
+        this.type = EquipmentType.DAGGER;
         this.name = this.chooseValue('Dagger', 'Knife', 'Edge');
         this.sprite = DAGGER_SPRITE_1;
         this.finesse = true;
         break;
       case 4:
+        this.type = EquipmentType.BOW;
         this.name = this.chooseValue('Bow', 'Shortbow', 'Longbow', 'Recurve', 'Greatbow');
         this.sprite = BOW_SPRITE_1;
         this.finesse = true;
         this.ranged = true;
         break;
       case 5:
+        this.type = EquipmentType.CROSSBOW;
         this.name = this.chooseValue('Crossbow', 'Bolt-Thrower', 'Speargun', 'Repeater');
         this.sprite = CROSSBOW_SPRITE_1;
         this.finesse = true;
         this.ranged = true;
         break;
       case 6:
+        this.type = EquipmentType.STAFF;
         this.name = this.chooseValue('Staff', 'Spellstaff');
         this.sprite = this.chooseArrayValue(STAFF_SPRITES);
         break;

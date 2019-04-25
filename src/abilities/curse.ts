@@ -1,7 +1,8 @@
-import {Ability, Colors, Message, Sprite, TargetType, Serializable} from 'wglt';
+import {Ability, Message, Sprite, TargetType, Serializable} from 'wglt';
 
 import {Curse} from '../buffs/curse';
 import {StatsActor} from '../entities/statsactor';
+import { Colors } from '../colors';
 
 const RANGE = 8;
 const SPRITE = new Sprite(880, 144, 16, 24, 1, false, undefined, 0xC040C0FF);

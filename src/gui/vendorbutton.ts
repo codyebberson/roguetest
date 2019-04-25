@@ -1,8 +1,9 @@
-import { Button, ArrayList, Item, Serializable, Rect, Actor, Colors } from "wglt";
+import { Button, ArrayList, Item, Serializable, Rect, Actor } from "wglt";
 import { TooltipDialog } from "wglt/dist/gui/tooltipdialog";
 import { Game } from "../game";
 import { Player } from "../entities/player";
 import { BaseItem } from "../items/baseitem";
+import { Colors } from "../colors";
 
 @Serializable('VendorButton')
 export class VendorButton extends Button {

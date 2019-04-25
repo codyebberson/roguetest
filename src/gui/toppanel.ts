@@ -1,6 +1,7 @@
-import { ButtonSlot, Colors, Keys, Panel, Rect } from 'wglt';
+import { ButtonSlot, Keys, Panel, Rect } from 'wglt';
 
 import { Player } from '../entities/player';
+import { Colors } from '../colors';
 
 export class TopPanel extends Panel {
   readonly player: Player;

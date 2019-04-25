@@ -1,7 +1,7 @@
 import { Sprite, Color } from "wglt";
 import { Game } from "../game";
+import { EquipmentType } from "./equipmenttype";
 import { EquipmentSlot } from "./equipmentslot";
-import { EquipmentMaterial } from "./equipmentmaterial";
 import { Equipment } from "./equipment";
 import { ItemQuality } from "../items/itemquality";
 export declare class EquipmentBuilder {
@@ -9,8 +9,8 @@ export declare class EquipmentBuilder {
     name: string;
     sprite: Sprite;
     itemLevel: number;
+    type: EquipmentType;
     slot: EquipmentSlot;
-    material: EquipmentMaterial;
     quality: ItemQuality;
     armor: number;
     strength: number;
@@ -27,8 +27,8 @@ export declare class EquipmentBuilder {
     withSprite(s: Sprite, c: Color): this;
     withColor(color: Color): this;
     withItemLevel(itemLevel: number): this;
+    withType(type: EquipmentType): this;
     withSlot(slot: EquipmentSlot): this;
-    withMaterial(material: EquipmentMaterial): this;
     withQuality(quality: ItemQuality): this;
     withArmor(armor: number): this;
     withStrength(strength: number): this;

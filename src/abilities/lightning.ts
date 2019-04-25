@@ -1,5 +1,6 @@
-import {Ability, Actor, Colors, Entity, Game, Message, ProjectileAnimation, Sprite, TargetType, Vec2, Serializable} from 'wglt';
+import {Ability, Actor, Entity, Game, Message, ProjectileAnimation, Sprite, TargetType, Vec2, Serializable} from 'wglt';
 import { StatsActor } from '../entities/statsactor';
+import { Colors } from '../colors';
 
 const LIGHTNING_RANGE = 5;
 const MANA_COST = 10;

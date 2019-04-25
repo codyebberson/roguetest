@@ -1,5 +1,6 @@
-import {Colors, Dialog, Rect} from 'wglt';
+import {Dialog, Rect} from 'wglt';
 import { Quest } from '../quests/quest';
+import { Colors } from '../colors';
 
 const MARGIN = 8;
 

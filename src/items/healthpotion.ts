@@ -1,6 +1,7 @@
-import {Actor, Colors, Game, Message, Sprite, Serializable} from 'wglt';
+import {Actor, Game, Message, Sprite, Serializable} from 'wglt';
 import { BaseItem } from './baseitem';
 import { ItemQuality } from './itemquality';
+import { Colors } from '../colors';
 
 const HEAL_AMOUNT = 4;
 

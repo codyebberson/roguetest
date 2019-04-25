@@ -1,11 +1,11 @@
 import { Player } from '../entities/player';
 import { EquipmentBuilder } from './equipmentbuilder';
 import { EquipmentSlot } from './equipmentslot';
-import { EquipmentMaterial } from './equipmentmaterial';
 import { BaseItem } from '../items/baseitem';
+import { EquipmentType } from './equipmenttype';
 export declare class Equipment extends BaseItem {
+    readonly type: EquipmentType;
     readonly slot: EquipmentSlot;
-    readonly material: EquipmentMaterial;
     readonly armor: number;
     readonly strength: number;
     readonly dexterity: number;
@@ -17,7 +17,6 @@ export declare class Equipment extends BaseItem {
     readonly finesse: boolean;
     constructor(builder: EquipmentBuilder);
     isStackable(): boolean;
-    onPickup(player: Player): void;
     onUse(player: Player): boolean;
     onUpdateTooltip(): void;
     private buildComparisonTooltip;

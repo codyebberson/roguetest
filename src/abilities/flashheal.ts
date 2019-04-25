@@ -1,5 +1,6 @@
-import {Ability, Colors, Message, Sprite, TargetType, Serializable} from 'wglt';
+import {Ability, Message, Sprite, TargetType, Serializable} from 'wglt';
 import {StatsActor} from '../entities/statsactor';
+import { Colors } from '../colors';
 
 const SPRITE = new Sprite(672, 144, 16, 24, 1, false, undefined, 0xFFD0D0FF);
 const TOOLTIP_MESSAGES = [
