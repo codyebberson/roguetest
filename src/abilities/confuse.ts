@@ -22,7 +22,7 @@ export class ConfuseAbility implements Ability {
 
   constructor() {
     this.sprite = CONFUSE_SPRITE;
-    this.name = 'confuse';
+    this.name = 'Confuse';
     this.targetType = TargetType.ENTITY;
     this.minRange = 1;
     this.maxRange = CONFUSE_RANGE;

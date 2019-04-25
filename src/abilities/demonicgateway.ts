@@ -57,7 +57,9 @@ export class DemonicGatewayAbility implements Ability {
     gateway2.other = gateway1;
     game.entities.add(gateway1);
     game.entities.add(gateway2);
-    caster.move(target.x - caster.x, target.y - caster.y, 16);
+    caster.blocks = false;
+    caster.move(target.x - caster.x, target.y - caster.y, 8);
+    caster.blocks = true;
     caster.ap--;
     return true;
   }

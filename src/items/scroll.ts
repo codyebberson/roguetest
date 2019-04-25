@@ -10,9 +10,10 @@ export class Scroll extends BaseItem {
   readonly ability: Ability;
 
   constructor(game: Game, x: number, y: number, ability: Ability) {
-    super(game, 'scroll of ' + ability.name, SPRITE, ItemQuality.UNCOMMON, 1, 0, 0);
+    super(game, 'Scroll of ' + ability.name, SPRITE, ItemQuality.UNCOMMON, 1, 10, 10);
     this.ability = ability;
     this.tooltipMessages = ability.tooltipMessages;
+    this.onUpdateTooltip();
   }
 
   onUse(user: Actor) {
@@ -29,5 +30,11 @@ export class Scroll extends BaseItem {
       });
     }
     return true;
+  }
+
+  onUpdateTooltip() {
+    if (this.ability) {
+      this.tooltipMessages = this.ability.tooltipMessages;
+    }
   }
 }

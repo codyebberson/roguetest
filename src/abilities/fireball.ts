@@ -31,7 +31,7 @@ export class FireballAbility implements Ability {
 
   constructor() {
     this.sprite = FIREBALL_SPRITE;
-    this.name = 'fireball';
+    this.name = 'Fireball';
     this.targetType = TargetType.TILE;
     this.minRange = 1;
     this.maxRange = FIREBALL_RANGE;

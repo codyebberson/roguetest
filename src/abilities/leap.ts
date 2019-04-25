@@ -24,7 +24,7 @@ export class LeapAbility implements Ability {
 
   constructor() {
     this.sprite = LEAP_SPRITE;
-    this.name = 'leap';
+    this.name = 'Leap';
     this.targetType = TargetType.TILE;
     this.minRange = 1;
     this.maxRange = LEAP_RANGE;

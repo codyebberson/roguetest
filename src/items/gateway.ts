@@ -10,7 +10,7 @@ export class Gateway extends Item {
   other?: Gateway;
 
   constructor(game: Game, x: number, y: number, owner: StatsActor) {
-    super(game, x, y, 'gateway', SPRITE, false);
+    super(game, x, y, 'Gateway', SPRITE, true);
     this.owner = owner;
     this.zIndex = 0;
   }
@@ -20,7 +20,9 @@ export class Gateway extends Item {
     if (!exit) {
       return false;
     }
-    player.move(exit.x - player.x, exit.y - player.y, 16);
+    player.blocks = false;
+    player.move(exit.x - player.x, exit.y - player.y, 8);
+    player.blocks = true;
     return true;
   }
 }

@@ -8,7 +8,7 @@ export class Portal extends Item {
   fade: boolean;
 
   constructor(game: Game, x: number, y: number, name: string, sprite: Sprite) {
-    super(game, x, y, name, sprite, false);
+    super(game, x, y, name, sprite, true);
     this.zIndex = 0;
     this.fade = false;
   }

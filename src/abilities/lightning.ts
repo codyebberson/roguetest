@@ -24,7 +24,7 @@ export class LightningAbility implements Ability {
 
   constructor() {
     this.sprite = new Sprite(158, 10, 16, 24, undefined, undefined, undefined, 0xFFFF00FF);
-    this.name = 'lightning';
+    this.name = 'Lightning';
     this.targetType = TargetType.SELF;
     this.minRange = 1;
     this.maxRange = LIGHTNING_RANGE;

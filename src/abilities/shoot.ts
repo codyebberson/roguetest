@@ -22,7 +22,7 @@ export class ShootAbility implements Ability {
 
   constructor() {
     this.sprite = SPRITE;
-    this.name = 'shoot';
+    this.name = 'Shoot';
     this.targetType = TargetType.ENTITY;
     this.minRange = 1;
     this.maxRange = RANGE;
